@@ -2,6 +2,14 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.15.3 (2026-10-26)
+
+Edgegap OpenAPI spec 2026.10.23 (#25).
+
+- `edgegap-deployments-api` (0.2.5): the API reference lists `PATCH /v1/app/{app}/version/{version}` and says that `ports` and `envs` replace the whole list, as the spec now states. Other fields keep their value when left out.
+- `edgegap` (0.15.3): pack version.
+- Spec pin moved to the current `edgegap/openapi-specification` main. The v2 spec did not change.
+
 ## 0.15.2 (2026-10-22)
 
 Short ticket expiration in every matchmaker config.

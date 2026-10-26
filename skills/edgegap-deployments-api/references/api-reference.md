@@ -95,4 +95,5 @@ Returns `logs`, `crash_logs`, `crash_data` (`exit_code`, `message` such as `OOM 
 
 - `GET /v1/locations/beacons`: ping beacons (`host`, `fqdn`, `udp_port`, `tcp_port`, `location`) for client-side latency measurement.
 - `GET /v1/apps`, `GET /v1/app/{app}/versions`, `POST /v1/app/{app}/version`: applications and versions. Version fields: `req_cpu`, `req_memory`, `docker_repository` (registry host), `docker_image`, `docker_tag`, `private_username` / `private_token` (registry pull credentials), `ports` (`port`, `protocol`, `name`, `to_check`, `tls_upgrade` on WS/HTTP), `envs`, `restart_policy` (`always` default, `never`, `on_failure`), `max_duration` (minutes, default and max 1440, `-1` only for private fleets), `termination_grace_period_seconds` (5 to 3600), `time_to_deploy`, `force_cache`, `verify_image`.
+- `PATCH /v1/app/{app}/version/{version}`: change an existing version. Fields you leave out keep their value, but `ports` and `envs` replace the whole list: read the version first and send every port or variable to keep. Running deployments keep their old settings.
 - `POST /v1/deployments/{request_id}/tags`: add a tag after deploy.
