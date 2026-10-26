@@ -1,0 +1,41 @@
+{
+  "version": "3.3.2",
+  "inspect": true,
+  "max_deployment_retry_count": 3,
+  "profiles": {
+    "casual": {
+      "ticket_expiration_period": "30s",
+      "ticket_removal_period": "1m",
+      "group_inactivity_removal_period": "5m",
+      "application": {
+        "name": "my-game",
+        "version": "20261026-1200"
+      },
+      "rules": {
+        "initial": {
+          "match_size": {
+            "type": "player_count",
+            "attributes": {
+              "team_count": 1,
+              "min_team_size": 2,
+              "max_team_size": 16
+            }
+          },
+          "backfill_group_size": {
+            "type": "intersection",
+            "attributes": {
+              "overlap": 1
+            }
+          }
+        },
+        "expansions": {
+          "15": {
+            "match_size": {
+              "min_team_size": 2
+            }
+          }
+        }
+      }
+    }
+  }
+}

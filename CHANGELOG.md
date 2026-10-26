@@ -2,6 +2,22 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.16.0 (2026-10-26)
+
+Adds matchmaking design for any engine.
+
+- New skill `edgegap-matchmaking` (0.1.0): decides who owns matchmaking (Edgegap's hosted matchmaker, the studio's own allocator, or a matchmaker the game keeps), then designs the profile, server placement and backfill.
+  - `references/profiles.md`: Group Up flow and endpoints, rule types and how groups and teams aggregate, expansions and partial matches, parties, injected `MM_*` variables, matchmaker rate limits per tier.
+  - `references/region-selection.md`: ping beacons (reload per round, backend cache for `GET /v1/locations/beacons`), `player_ip` and Deploy API `users`, region and hub pickers, WebGL and mobile.
+  - `references/backfill.md`: the `backfill_group_size` contract, `POST`/`GET`/`DELETE /backfills` shapes, the assignment built from `ARBITRIUM_*` variables, an engine-agnostic server loop, shutdown and edge cases. Follows the backfill verified on Edgegap with Megacity Metro (2026-10-21); the TypeScript loop was not run as written.
+  - `references/third-party.md`: the allocator shape for any third-party matchmaker, and Unity Matchmaker (`EdgegapAllocator`), EOS and Steam lobbies, Photon, Pragma, AccelByte, Open Match, GameLift FlexMatch, plus the Multiplay, GameLift and Hathora migration guides.
+  - `assets/configs/`: `casual-backfill.json`, `ranked-teams.json`, `modes.json` (30 s tickets, expansions below 30 s, timestamp app versions). Not run as whole configs.
+  - Notes matchmaker 3.3.3 (Edgegap release notes: stability, no config changes); the pack's templates stay on the verified 3.3.2.
+- `edgegap` (0.16.0): routes matchmaking design, parties, regions, backfill and third-party matchmakers to `edgegap-matchmaking`; step 5 of the path points there.
+- `edgegap-deployments-api` (0.2.6): points to `edgegap-matchmaking` for choosing and designing matchmaking; its description no longer claims Unity Matchmaker, which uses Unity's ready-made `EdgegapAllocator` module (now in `edgegap-matchmaking`).
+- `evals/matchmaking-routing-eval.json`: routing between `edgegap-matchmaking`, the engine skills, `edgegap-deployments-api`, `edgegap-nakama`, `edgegap-playfab` and no skill. Run 2026-10-26 with the whole pack, 3 runs each: 62/66; the 12 matchmaking prompts 35/36 (one run loaded no skill); the other miss is the existing exec-format-error prompt going to `edgegap-containerize` instead of `edgegap-troubleshoot`.
+- `evals/routing-eval.json`: the Unity Matchmaker Cloud Code prompt now expects `edgegap-matchmaking`. Whole pack, 2 runs each: 85/92; no other miss picked `edgegap-matchmaking`.
+
 ## 0.15.3 (2026-10-26)
 
 Edgegap OpenAPI spec 2026.10.23 (#25).

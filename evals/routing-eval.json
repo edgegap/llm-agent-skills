@@ -45,7 +45,7 @@
   },
   {
     "query": "We keep Unity Matchmaker (UGS). How do I make the Cloud Code allocator deploy Edgegap servers?",
-    "expected_skill": "edgegap-deployments-api"
+    "expected_skill": "edgegap-matchmaking"
   },
   {
     "query": "how do edgegap deployment webhooks work and what's in the payload",
