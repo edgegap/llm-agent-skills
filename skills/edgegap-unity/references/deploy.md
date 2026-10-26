@@ -84,7 +84,7 @@ Copy `assets/docker/Dockerfile` and `assets/docker/.dockerignore` to the **proje
 
 **Tag**: never `latest`, never reuse a tag (Edgegap caches by tag). Use a UTC timestamp `YYYYMMDD-HHMM` (e.g. `20261022-1430`, from `date -u +%Y%m%d-%H%M`), the same string for the image tag and the app version name, so anyone can see when the server was last updated.
 
-**Registry credentials**: Edgegap Container Registry page, https://app.edgegap.com/registry-management/repositories/list: **Project**, **Username** (`robot$...+client-push`), **Token**. (`edgegap_get_registry_credentials` returns 403 for normal API tokens, so don't rely on it; it only works with plugin quick-start tokens.) Ask the developer to log in themselves so the registry token stays out of the chat:
+**Registry credentials**: Edgegap Container Registry page, https://app.edgegap.com/registry-management/repositories/list: **Project**, **Username** (`robot$...+client-push`), **Token**. (`edgegap_get_registry_credentials` only returns credentials to plugin quick-start tokens; with a normal API token it answers `status: "manual_steps_required"`, which is expected: don't call it again.) Ask the developer to log in themselves so the registry token stays out of the chat:
 
 ```bash
 docker login registry.edgegap.com -u '<username>'
@@ -146,7 +146,7 @@ With `FirstPlayerTimeoutSeconds = 120`, the lifecycle script stops a direct depl
 
 ## 7. MCP tool caveats (@edgegap/mcp 0.3.3+, hosted and npm)
 
-- `edgegap_get_registry_credentials`: 403 with normal API tokens (only plugin quick-start tokens work). Use the dashboard Container Registry page.
+- `edgegap_get_registry_credentials`: `status: "manual_steps_required"` with normal API tokens (only plugin quick-start tokens get credentials). Use the dashboard Container Registry page, or Docker Hub/GHCR with that registry's pull login on the version.
 - `edgegap_list_registry_tags`: image name only.
 - `edgegap_create_app_version`: accepts `tls_upgrade` per WS/HTTP port; still creates a version without registry credentials if you omit them, but says so in `notes`.
 - `edgegap_list_app_versions`: shows `registry_credentials_set` and per-port `tls_upgrade`. Use it to verify the version before deploying.

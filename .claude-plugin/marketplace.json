@@ -10,7 +10,7 @@
       "name": "edgegap",
       "source": "./",
       "description": "Edgegap dedicated servers and matchmaking, end to end: an entry skill, Unity, NGO, FishNet, PurrNet, Photon Fusion, Unreal Engine, Godot, Colyseus, Nakama, PlayFab, Three.js and Manus browser games skills, engine-agnostic skills for server design, containers, testing, the Deploy API, launch and troubleshooting, plus the hosted Edgegap MCP server.",
-      "version": "0.16.0"
+      "version": "0.17.0"
     }
   ]
 }

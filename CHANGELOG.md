@@ -2,6 +2,23 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.17.0 (unreleased)
+
+Matches Edgegap MCP 0.12.0, which returns empty and "not set up" states as results with a `next_step` instead of errors. Ship together with that release, not before: the MCP server bundles this pack.
+
+- `edgegap` `references/agent-rules.md`: new section "Reading what the MCP tools return":
+  - `status` `empty`, `not_configured`, `not_found`, `not_ready` or `expired` with a `next_step` is a normal answer: follow it, don't retry or work around it.
+  - Registry: `manual_steps_required` from `edgegap_get_registry_credentials` is expected with a normal token; ask for the dashboard login or use Docker Hub, GHCR or another registry with `edgegap_create_app_version`.
+  - Token problems (none, a client-issued credential, rejected): what to tell the developer; `edgegap_context` `check_token: true` shows the token's last four characters.
+  - Validate an existing Dockerfile with `edgegap_validate_server_config` before building.
+  - `edgegap_wait_for_deployment`: on a timeout call it again, never deploy a second server; on a failure read the logs first.
+  - Cleanup: stop every deployment you created unless asked to keep it, and confirm with `edgegap_list_deployments` `only_agent_deployments: true`.
+  - The connection check uses `edgegap_context` instead of `edgegap_list_apps`, and the MCP link points to `edgegap/llm-mcp-server`.
+- `edgegap` `SKILL.md` (0.17.0): the same rules in two sentences, under "How you act on Edgegap".
+- `edgegap-unity` (0.1.16), `-ngo` (0.1.4), `-fishnet` (0.2.6), `-purrnet` (0.1.5), `-godot` (0.1.4): their deploy references said `edgegap_get_registry_credentials` "returns 403"; since MCP 0.10.0 it returns `manual_steps_required`, which they now describe, with the external-registry path.
+- Unity `.meta` files stay in the skills (the templates find their scripts by GUID). The MCP server stops listing them in skill file indexes instead.
+- `plugin.json` repository URL: `edgegap/llm-agent-skills`.
+- Wording only; not re-run on Edgegap.
 ## 0.16.0 (2026-10-26)
 
 Adds matchmaking design for any engine.
