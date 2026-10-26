@@ -2,12 +2,12 @@
 name: edgegap
 description: 'Start here for hosting a game on Edgegap (dedicated game servers + matchmaking) when the engine is not Unity, Unreal or Godot, is unknown, or the question is about the platform itself. Use when someone wants to host or deploy a game server, wants a single-player or co-op game to be always online or harder to crack, decompile or pirate, asks how players will connect to matches, wants servers for a custom-engine game, compares hosting options, or asks what Edgegap apps, versions, deployments, fleets or matchmakers are, even if they never say "hosting". It picks the server shape, explains the vocabulary and MCP safety rules, and routes to the right edgegap-* skill. For a Unity project, load edgegap-unity instead (NGO: edgegap-ngo, FishNet: edgegap-fishnet, PurrNet: edgegap-purrnet, Fusion: edgegap-fusion); Unreal: edgegap-unreal; Godot 4: edgegap-godot; Colyseus: edgegap-colyseus; Nakama: edgegap-nakama; Manus: edgegap-manus; Three.js/web: edgegap-threejs; matchmaking design: edgegap-matchmaking.'
 metadata:
-  version: "0.17.0"
+  version: "0.18.0"
 ---
 
 # Edgegap
 
-Pack version: 0.17.0
+Pack version: 0.18.0
 
 Edgegap runs dedicated game servers. You push a **Linux container image** of your game server, register it as an **app version**, and ask for a **deployment** near a group of players. Edgegap picks the location with the best ping for that group, starts the container in seconds, and returns a URL (`<id>.pr.edgegap.net`), a public IP, and an external port per internal port. Players connect. The match ends, the server stops, billing stops.
 
@@ -87,7 +87,7 @@ For a Godot 4 game whose server is Godot itself (high-level multiplayer with ENe
 
 ## How you act on Edgegap
 
-Read [references/agent-rules.md](references/agent-rules.md) before your first Edgegap action. In short: when you act on Edgegap yourself, use the `edgegap_*` MCP tools if they are connected, otherwise guide the developer through the dashboard; code you write for the developer's product always calls HTTP. Confirm before anything that costs money or changes what players get, tag what you start, and stop only what you started. A tool result with `status: "empty"` or `"not_configured"` and a `next_step` is a normal answer, not a failure: follow the next step instead of retrying. When `edgegap_wait_for_deployment` times out, call it again; when a deployment fails, read its logs before redeploying. Before you finish, stop every deployment you started and confirm with `edgegap_list_deployments` `only_agent_deployments: true`.
+Read [references/agent-rules.md](references/agent-rules.md) before your first Edgegap action. In short: when you act on Edgegap yourself, use the `edgegap_*` MCP tools if they are connected, otherwise guide the developer through the dashboard; code you write for the developer's product always calls HTTP. Confirm before anything that costs money or changes what players get, tag what you start, and stop only what you started. A tool result with `status: "empty"` or `"not_configured"` and a `next_step` is a normal answer, not a failure: follow the next step instead of retrying. When `edgegap_wait_for_deployment` times out, call it again; when a deployment fails, read its logs before redeploying. Before you finish, stop every deployment you started and confirm with `edgegap_list_deployments` `only_agent_deployments: true`. A version's registry login and secret env values read back as `This value is set and encrypted`: never copy them into a new or updated version.
 
 ## When the API and these skills disagree
 

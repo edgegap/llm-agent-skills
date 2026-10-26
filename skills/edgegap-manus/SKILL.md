@@ -2,7 +2,7 @@
 name: edgegap-manus
 description: 'Manus + Edgegap: turn a browser game built with Manus (manus.im, Manus Game Dev, a Manus web app, or its code exported to GitHub) into an online multiplayer game with an authoritative dedicated server and matchmaking on Edgegap. Load this before using any Edgegap MCP tool on a Manus project. It has templates: Steam sign-in verified on the backend, backend join/status/cancel/leave routes that create Edgegap matchmaker tickets (mode, region, party, player IP) and return only the server address and a signed join token, a Node.js WebSocket game server that self-stops, a browser client with reconnect, a Dockerfile, a GitHub Actions image build, and a matchmaker config. Use when a Manus user wants online play: "make my Manus game multiplayer", "add matchmaking", "Find Match", "Steam login for my web game", "host my HTML5/JavaScript game server", or is debugging wss, CORS, tickets or deployments for a Manus game. Other Three.js/web games without sign-in: edgegap-threejs. Unity: edgegap-unity.'
 metadata:
-  version: "0.1.3"
+  version: "0.1.4"
 ---
 
 # Edgegap for Manus games: dedicated servers + matchmaking

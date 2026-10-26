@@ -2,6 +2,15 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.18.0 (unreleased)
+
+The Edgegap API never returns stored secrets: reading a version gives the literal string `This value is set and encrypted` for `private_username`, `private_token` and every secret env value (found 2026-10-26). An agent copying a version sent the placeholder back, and pulls failed with "Unable to login". Ships with the MCP release that refuses the placeholder.
+
+- `edgegap` `references/agent-rules.md`, Secrets: copy only non-secret settings from an existing version; the registry login comes from the dashboard's Container Registry page or the developer, secret env values from the developer; leave the registry fields out of an update to keep them. `SKILL.md` (0.18.0) says it in one sentence.
+- `edgegap-deployments-api` (0.2.7) `references/api-reference.md`: the placeholder on version reads, and PATCH needs real values for secret env vars.
+- `edgegap-colyseus` (0.1.4) and `edgegap-manus` (0.1.4) deploy references: "copy/duplicate the previous version" now means the dashboard's Duplicate button, or non-secret settings only through the API or MCP.
+- Wording only; not re-run on Edgegap.
+
 ## 0.17.0 (unreleased)
 
 Matches Edgegap MCP 0.12.0, which returns empty and "not set up" states as results with a `next_step` instead of errors. Ship together with that release, not before: the MCP server bundles this pack.
