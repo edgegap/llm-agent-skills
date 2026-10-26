@@ -1,13 +1,13 @@
 {
   "name": "edgegap",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "description": "Get multiplayer games online on Edgegap: dedicated servers, matchmaking, backend integration, launch and troubleshooting for Unity (including NGO, FishNet, PurrNet and Photon Fusion), Unreal Engine, Godot 4, Colyseus, Nakama, PlayFab, Three.js and Manus browser games and any other engine, driven by your coding agent.",
   "author": {
     "name": "Edgegap",
     "url": "https://edgegap.com"
   },
   "homepage": "https://docs.edgegap.com",
-  "repository": "https://github.com/edgegap/edgegap-agent-skills",
+  "repository": "https://github.com/edgegap/llm-agent-skills",
   "license": "Apache-2.0",
   "privacyPolicyUrl": "https://edgegap.com/legal",
   "userConfig": {

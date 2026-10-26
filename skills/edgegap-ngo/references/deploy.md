@@ -51,7 +51,7 @@ Then:
 docker build --platform linux/amd64 -t registry.edgegap.com/<project>/<image>:<tag> .
 docker push registry.edgegap.com/<project>/<image>:<tag>
 ```
-Confirm with `edgegap_list_registry_tags` (image name only). `edgegap_get_registry_credentials` returns 403 for normal API tokens.
+Confirm with `edgegap_list_registry_tags` (image name only). `edgegap_get_registry_credentials` hands credentials only to plugin quick-start tokens: with a normal API token it returns `status: "manual_steps_required"` and no credentials, which is expected, not a failure. Do not call it again; use the dashboard page, or push to Docker Hub, GHCR or another registry and pass that registry and its pull login to `edgegap_create_app_version`.
 
 Local test: `docker run --rm -p 7777:7777/udp <image>`, two clients on `127.0.0.1:7777` (the server logs `Not running on Edgegap, self-stop disabled.` and `Starting server on 0.0.0.0:7777.`).
 

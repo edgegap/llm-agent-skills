@@ -58,7 +58,7 @@ Then:
 docker build --platform linux/amd64 -t registry.edgegap.com/<project>/<game>:<tag> .
 docker push registry.edgegap.com/<project>/<game>:<tag>
 ```
-Confirm with `edgegap_list_registry_tags` (image name only). `edgegap_get_registry_credentials` returns 403 for normal API tokens.
+Confirm with `edgegap_list_registry_tags` (image name only). `edgegap_get_registry_credentials` hands credentials only to plugin quick-start tokens: with a normal API token it returns `status: "manual_steps_required"` and no credentials, which is expected, not a failure. Do not call it again; use the dashboard page, or push to Docker Hub, GHCR or another registry and pass that registry and its pull login to `edgegap_create_app_version`.
 
 ## 4. App and app version
 
