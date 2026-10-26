@@ -1,0 +1,58 @@
+{
+  "version": "3.3.2",
+  "inspect": true,
+  "max_deployment_retry_count": 3,
+  "profiles": {
+    "ranked": {
+      "ticket_expiration_period": "30s",
+      "ticket_removal_period": "1m",
+      "group_inactivity_removal_period": "5m",
+      "application": {
+        "name": "my-game",
+        "version": "20261026-1200"
+      },
+      "rules": {
+        "initial": {
+          "match_size": {
+            "type": "player_count",
+            "attributes": {
+              "team_count": 2,
+              "min_team_size": 4,
+              "max_team_size": 4
+            }
+          },
+          "beacons": {
+            "type": "latencies",
+            "attributes": {
+              "difference": 75,
+              "max_latency": 150
+            }
+          },
+          "skill": {
+            "type": "number_difference",
+            "attributes": {
+              "max_difference": 200
+            }
+          }
+        },
+        "expansions": {
+          "10": {
+            "beacons": {
+              "difference": 100,
+              "max_latency": 200
+            }
+          },
+          "20": {
+            "beacons": {
+              "difference": 125,
+              "max_latency": 250
+            },
+            "skill": {
+              "max_difference": 400
+            }
+          }
+        }
+      }
+    }
+  }
+}

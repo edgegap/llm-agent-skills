@@ -1,0 +1,90 @@
+[
+  {
+    "query": "Players in our 3v3 arena game wait almost a minute in queue at night. How should we change the Edgegap matchmaker config so they match faster without making matches unfair?",
+    "expected_skill": "edgegap-matchmaking"
+  },
+  {
+    "query": "European players keep ending up on servers in Virginia. We use the Edgegap matchmaker. What controls where servers start and who gets matched together?",
+    "expected_skill": "edgegap-matchmaking"
+  },
+  {
+    "query": "Our co-op survival game runs one Edgegap server per session with up to 12 players. I want people who click Play to join a session that's already running if it has room, instead of always starting a new server.",
+    "expected_skill": "edgegap-matchmaking"
+  },
+  {
+    "query": "When a player rage-quits in the first minute of a 5v5 match, I want the matchmaker to find a replacement and send them to the same server. How does that work on Edgegap?",
+    "expected_skill": "edgegap-matchmaking"
+  },
+  {
+    "query": "Friends should be able to queue together as a party of 2 or 3 in our 4v4 mode and always land on the same team. How do I set that up with Edgegap matchmaking?",
+    "expected_skill": "edgegap-matchmaking"
+  },
+  {
+    "query": "We want skill-based matchmaking with an MMR stored in our backend. Can the Edgegap matchmaker use it, and how do we stop clients from sending a fake rating?",
+    "expected_skill": "edgegap-matchmaking"
+  },
+  {
+    "query": "We're leaving Unity Multiplay but we want to keep Unity Matchmaker. How does Unity Matchmaker start servers on Edgegap, and what about player locations?",
+    "expected_skill": "edgegap-matchmaking"
+  },
+  {
+    "query": "Our studio uses Pragma for accounts and matchmaking. Can Pragma's matches run on Edgegap dedicated servers? What's the architecture?",
+    "expected_skill": "edgegap-matchmaking"
+  },
+  {
+    "query": "Should we use Edgegap's hosted matchmaker, write our own matchmaker service, or keep AccelByte's? Small team, 4-player co-op, no backend yet.",
+    "expected_skill": "edgegap-matchmaking"
+  },
+  {
+    "query": "Players want to pick their region in the menu (EU, NA, Asia) instead of automatic placement. How do I build a region picker with Edgegap ping beacons?",
+    "expected_skill": "edgegap-matchmaking"
+  },
+  {
+    "query": "One matchmaker, two queues: 1v1 duels and 4-team squads with a map vote, and console players only matched with console players. What does the Edgegap config look like?",
+    "expected_skill": "edgegap-matchmaking"
+  },
+  {
+    "query": "Our servers create backfills but players sometimes get sent to a server that already shut down. What are we doing wrong?",
+    "expected_skill": "edgegap-matchmaking"
+  },
+  {
+    "query": "Add a Find Match button to my Unity FishNet game using the Edgegap matchmaker.",
+    "expected_skill": "edgegap-fishnet"
+  },
+  {
+    "query": "My Godot 4 game uses ENet high-level multiplayer. Set up Edgegap dedicated servers and the matchmaker client in GDScript.",
+    "expected_skill": "edgegap-godot"
+  },
+  {
+    "query": "Write the Node.js webhook handler that receives Edgegap's deployment ready webhook and sends the address to our players, with retries on 429.",
+    "expected_skill": "edgegap-deployments-api"
+  },
+  {
+    "query": "We use Nakama for accounts and its matchmaker. Wire the Edgegap Fleet Manager so each Nakama match gets its own server.",
+    "expected_skill": "edgegap-nakama"
+  },
+  {
+    "query": "Keep PlayFab Matchmaking but stop using PlayFab Multiplayer Servers: build the Azure Function that deploys an Edgegap server on match_found.",
+    "expected_skill": "edgegap-playfab"
+  },
+  {
+    "query": "My Unreal Engine 5 shooter needs a Linux dedicated server build and the Edgegap matchmaker subsystem in C++.",
+    "expected_skill": "edgegap-unreal"
+  },
+  {
+    "query": "My Edgegap deployment is in Error and the container logs say exec format error. What happened?",
+    "expected_skill": "edgegap-troubleshoot"
+  },
+  {
+    "query": "How does Elo rating work mathematically, and how many games does a new player need before their rating is stable?",
+    "expected_skill": null
+  },
+  {
+    "query": "In Unity Matchmaker, how do I write a rule that matches players with similar ranks? Nothing to do with hosting.",
+    "expected_skill": null
+  },
+  {
+    "query": "Three.js browser game with a Node ws server: add per-match servers on Edgegap and a Find Match button on the page.",
+    "expected_skill": "edgegap-threejs"
+  }
+]

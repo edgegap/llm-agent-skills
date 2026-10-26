@@ -1,13 +1,13 @@
 ---
 name: edgegap
-description: 'Start here for hosting a game on Edgegap (dedicated game servers + matchmaking) when the engine is not Unity, Unreal or Godot, is unknown, or the question is about the platform itself. Use when someone wants to host or deploy a game server, wants a single-player or co-op game to be always online or harder to crack, decompile or pirate, asks how players will connect to matches, wants servers for a custom-engine game, compares hosting options, or asks what Edgegap apps, versions, deployments, fleets or matchmakers are, even if they never say "hosting". It picks the server shape (per match, per player session, or persistent), explains the vocabulary and MCP safety rules, and routes to the right edgegap-* skill. For a Unity project, load edgegap-unity instead (NGO: edgegap-ngo, FishNet: edgegap-fishnet, PurrNet: edgegap-purrnet, Fusion: edgegap-fusion); Unreal: edgegap-unreal; Godot 4: edgegap-godot; Colyseus: edgegap-colyseus; Nakama: edgegap-nakama; Manus: edgegap-manus; Three.js/web: edgegap-threejs.'
+description: 'Start here for hosting a game on Edgegap (dedicated game servers + matchmaking) when the engine is not Unity, Unreal or Godot, is unknown, or the question is about the platform itself. Use when someone wants to host or deploy a game server, wants a single-player or co-op game to be always online or harder to crack, decompile or pirate, asks how players will connect to matches, wants servers for a custom-engine game, compares hosting options, or asks what Edgegap apps, versions, deployments, fleets or matchmakers are, even if they never say "hosting". It picks the server shape, explains the vocabulary and MCP safety rules, and routes to the right edgegap-* skill. For a Unity project, load edgegap-unity instead (NGO: edgegap-ngo, FishNet: edgegap-fishnet, PurrNet: edgegap-purrnet, Fusion: edgegap-fusion); Unreal: edgegap-unreal; Godot 4: edgegap-godot; Colyseus: edgegap-colyseus; Nakama: edgegap-nakama; Manus: edgegap-manus; Three.js/web: edgegap-threejs; matchmaking design: edgegap-matchmaking.'
 metadata:
-  version: "0.15.3"
+  version: "0.16.0"
 ---
 
 # Edgegap
 
-Pack version: 0.15.3
+Pack version: 0.16.0
 
 Edgegap runs dedicated game servers. You push a **Linux container image** of your game server, register it as an **app version**, and ask for a **deployment** near a group of players. Edgegap picks the location with the best ping for that group, starts the container in seconds, and returns a URL (`<id>.pr.edgegap.net`), a public IP, and an external port per internal port. Players connect. The match ends, the server stops, billing stops.
 
@@ -35,7 +35,7 @@ Work through these in order and skip what is already done:
 | 2 | Engine build (Unity: `edgegap-unity`, `edgegap-ngo` for Netcode for GameObjects games, `edgegap-fishnet` for FishNet games, or `edgegap-purrnet` for PurrNet games, or `edgegap-fusion` for Photon Fusion games; Unreal Engine: `edgegap-unreal`; Godot 4: `edgegap-godot`; Colyseus (Node.js): `edgegap-colyseus`; a Three.js or other browser game with its own Node.js WebSocket server: `edgegap-threejs`; a Nakama backend with any engine: `edgegap-nakama`; each covers every step for its engine) | A headless **linux/amd64** server build exists |
 | 3 | `edgegap-containerize` | `docker run` starts a working server locally, and the image is in a registry Edgegap can pull |
 | 4 | `edgegap-local-testing` | Parity tests pass locally, then one test deployment on Edgegap accepts a real client |
-| 5 | Matchmaking: Edgegap's matchmaker (config, dashboard steps and the ticket contract are engine-agnostic: [edgegap-unity's matchmaker reference](../edgegap-unity/references/matchmaker.md), plus https://docs.edgegap.com/learn/matchmaking), or your own backend with `edgegap-deployments-api` | Players clicking Play land on the same server |
+| 5 | Matchmaking: `edgegap-matchmaking` decides who owns it (Edgegap's hosted matchmaker, your own allocator with `edgegap-deployments-api`, or a matchmaker you keep) and designs the profile, region selection and backfill; the engine skill writes the client | Players clicking Play land on the same server |
 | 6 | `edgegap-launch` | The launch checklist is green |
 
 For a Godot 4 game whose server is Godot itself (high-level multiplayer with ENet or WebSocket), load `edgegap-godot`: GDScript templates for the server lifecycle and the matchmaker client, the dedicated server export and Dockerfile. If the game's server is Colyseus (any client, Godot included), use `edgegap-colyseus`. If the game uses Nakama for accounts and matchmaking, use `edgegap-nakama` (verified with a Godot 4 game; it has Godot and Node server templates). For a Three.js (or other JavaScript) browser game with its own Node.js WebSocket server, load `edgegap-threejs`: an authoritative room with phases and bots, self-stop, a no-build Three.js client with Find Match, one image for several games, verified with five games. When players must sign in through a backend first (Steam), `edgegap-manus` has the backend-owned matchmaking design, which works outside Manus too. Otherwise, use `edgegap-server-design` and `edgegap-containerize`, which are engine-agnostic and cover everything Edgegap actually requires, for other engines. The Edgegap MCP tool `edgegap_generate_dockerfile` knows the headless flags for Unity, Unreal and Godot.
@@ -58,12 +58,13 @@ For a Godot 4 game whose server is Godot itself (high-level multiplayer with ENe
 | A game that keeps PlayFab for players and Matchmaking (or leaves PlayFab Multiplayer Servers): PlayFab Azure Functions start one Edgegap server per match | `edgegap-playfab` |
 | A browser game built with Manus (manus.im): Steam sign-in, backend matchmaking, WebSocket server | `edgegap-manus` |
 | A Three.js (or Babylon.js, PlayCanvas, Phaser, canvas) browser game with its own Node.js WebSocket server: authoritative server per match, Find Match from the page | `edgegap-threejs` |
+| Design matchmaking: queues, parties, skill, modes, region selection, join in progress (backfill), or pick a matchmaker | `edgegap-matchmaking` |
 | Write backend code that starts, finds or stops servers, or receives webhooks | `edgegap-deployments-api` |
 | Write or fix a Dockerfile, push to a registry, pick an image tag | `edgegap-containerize` |
 | Test a server image before spending money | `edgegap-local-testing` |
 | Go live, plan capacity, roll out a new build, control cost | `edgegap-launch` |
 | Find out why a deployment fails, restarts, or nobody can connect | `edgegap-troubleshoot` |
-| Keep Unity Matchmaker or EOS lobbies and host on Edgegap | `edgegap-deployments-api` (their backend calls the Deploy API) |
+| Keep Unity Matchmaker, EOS or Steam lobbies, Pragma, AccelByte or Open Match and host on Edgegap | `edgegap-matchmaking` (the integration shape), then `edgegap-deployments-api` (the allocator code) |
 
 ## Vocabulary
 
