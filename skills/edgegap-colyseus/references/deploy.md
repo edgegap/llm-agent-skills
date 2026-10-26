@@ -56,4 +56,4 @@ Latency placement: desktop clients can add a `latencies` rule with beacon pings 
 
 ## 5. Shipping a new server build
 
-Build → push a new tag → new app version (duplicate the old one, change the tag) → matchmaker: Stop → Edit `application.version` → Start. Direct mode: deploy the new version name. Free tier: the matchmaker stops 3 hours after each start, one deployment at a time, two app versions.
+Build → push a new tag → new app version (duplicate the old one in the dashboard and change the tag, or create it with `edgegap_create_app_version` from the old one's non-secret settings plus the registry login from the dashboard: the API reads it back as `This value is set and encrypted`, never the real value) → matchmaker: Stop → Edit `application.version` → Start. Direct mode: deploy the new version name. Free tier: the matchmaker stops 3 hours after each start, one deployment at a time, two app versions.
