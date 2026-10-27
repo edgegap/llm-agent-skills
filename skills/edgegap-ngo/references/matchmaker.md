@@ -23,7 +23,7 @@ Client ──UnityTransport public_ip:external──▶ NGO server (env: MM_MATC
 
 Start from `assets/matchmaker/casual.json`:
 - `version` `3.3.2`, `inspect: true` for development (off for live), `max_deployment_retry_count: 3`.
-- Profile `casual`: one team of 2-4 players (Boss Room's sample uses 2-8), tickets expire after 30 s (`ticket_expiration_period: "30s"`, so a developer testing alone isn't left waiting 5 minutes), and an expansion stage at 15 s keeps `min_team_size` at 2. That stage is what lets the matchmaker start a match below `max_team_size` early (§6): keep one.
+- Profile `casual`: one team of 2-4 players (Boss Room's sample uses 2-8), tickets expire after 30 s (`ticket_expiration_period: "30s"`, so a developer testing alone isn't left waiting 5 minutes), and no expansion stage: `min_team_size` below `max_team_size` already lets the matchmaker start a smaller match (§6).
 - `application.name` / `version`: the app and version from Phase 4, which must exist and be active.
 - Desktop-only games can add a `latencies` rule for better placement, with `UseLatencyBeacons` on in `EdgegapSettings`. WebGL clients: no `latencies` rule, and add `allowed_cors_origins`.
 
@@ -53,8 +53,8 @@ To validate joiners, send `EdgegapMatchmakingClient.TicketId` in the connection 
 
 ## 6. Expansion stages, lone tickets and testing
 
-The matchmaker fills a match up to `max_team_size` when it can, and only makes a **partial** match (at least `min_team_size`) when an expansion stage elapses or the tickets expire. Measured on 2026-10-19 (matchmaker 3.3.2): with `min 2 / max 8` and no `expansions`, two tickets stayed `SEARCHING` and matched exactly at the 5-minute expiry; after adding `"15": {"match_size": {"min_team_size": 2}}` the same two clients were matched and connected within 40 s of launch. So:
-- Always give a profile with `min_team_size < max_team_size` at least one expansion stage, even one that repeats the initial values.
+A profile with `min_team_size < max_team_size` already allows **partial** matches (at least `min_team_size`, fewer than `max_team_size`): it needs no expansion stage for that. The matchmaker fills a match up to `max_team_size` when it can, and otherwise makes the partial match by the time the tickets reach `ticket_expiration_period`. So keep that period short (`30s`, the template's value) instead of adding an expansion: expansions cost the matchmaker a lot of performance. Measured on matchmaker 3.3.2 (2026-10-19, `min 2 / max 8`, no expansion): with a 5-minute expiration, two tickets stayed `SEARCHING` and matched exactly at expiry, which is why the templates expire tickets after 30 s. Use expansions only to relax a rule over time (a lower `min_team_size` for solo play, wider latency or skill), never just to get partial matches. So:
+- With `edgegap_build_matchmaker_config`, leave `expansions` out unless a rule should relax over time.
 - A lone player needs an expansion that lowers `min_team_size` to 1, and may still wait close to expiry, which is why the template expires tickets after 30 s. Test with **two clients**.
 - `GET <API URL>/inspect/tickets` (with `inspect: true`) lists tickets created with `POST /tickets`; Group Up tickets don't show there. To check the matchmaker without the game, `curl -X POST <API URL>/tickets -H "Authorization: <token>" -H "Content-Type: application/json" -d '{"profile":"casual","attributes":{}}'` twice and poll `GET /tickets/<id>`. A match starts a real deployment, which stops itself 120 s later when nobody joins.
 

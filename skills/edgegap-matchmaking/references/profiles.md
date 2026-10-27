@@ -55,8 +55,9 @@ Keep values that decide fairness (ratings, bans) out of client hands: a client-b
 ```
 
 - Keys are seconds since each ticket was created; each stage overwrites only the attributes it names. Every key must be below `ticket_expiration_period` or it never fires.
-- The matchmaker fills to `max_team_size` when it can. A partial match (at least `min_team_size`) is attempted only when a ticket reaches an expansion stage or its expiration, exactly once; players it can't place get `CANCELLED` and must queue again.
-- So a profile with `min_team_size < max_team_size` needs an expansion stage, even one that repeats the initial minimum. Measured on 3.3.2: without one, two tickets in a `min 2 / max 8` profile matched only at expiry; with `"15": {"match_size": {"min_team_size": 2}}` two clients were matched and connected within 40 s of launch.
+- The matchmaker fills to `max_team_size` when it can. A partial match (at least `min_team_size`) is attempted when a ticket reaches an expansion stage or its expiration, exactly once; players it can't place get `CANCELLED` and must queue again.
+- `min_team_size < max_team_size` is what enables partial matches: no expansion stage is needed. Keep `ticket_expiration_period` short (`30s`) so the partial match comes quickly, instead of adding an expansion: expansions cost the matchmaker a lot of performance. Measured on 3.3.2: with a 5-minute expiration and no expansion, two tickets in a `min 2 / max 8` profile matched only at expiry.
+- Use expansions only to relax a rule over time (latency, skill, a smaller minimum).
 - Never expand `min_team_size` below the game's real minimum. For quick tests, use two clients instead of a solo stage.
 
 ## 4. Parties (Group Up)

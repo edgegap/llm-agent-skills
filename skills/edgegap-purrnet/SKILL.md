@@ -1,8 +1,8 @@
 ---
 name: edgegap-purrnet
-description: 'PurrNet + Edgegap: take a Unity game built on PurrNet to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a PurrNet project (dev.purrnet.purrnet, NetworkManager start flags, UDPTransport, WebTransport, ParrelSync clones). It has PurrNet-ready C# templates verified on Edgegap that add themselves at runtime without editing scenes (server start and self-stop, connect panel with direct and matchmaker modes, settings asset), port 5000 UDP app version, Dockerfile, matchmaker config, and fixes for PurrNet pitfalls: auto start flags, the async StartClient, ObserversRpc that never runs on a dedicated server. Use when a PurrNet dev wants online play: "host my PurrNet game", "nobody should host", "works with a host but not online", "Find Match button", or is debugging PurrNet deployments, ports or matchmaking on Edgegap. Other Unity netcodes: edgegap-unity (NGO, Mirror) or edgegap-fishnet.'
+description: 'PurrNet + Edgegap: take a Unity game built on PurrNet to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a PurrNet project (dev.purrnet.purrnet, NetworkManager start flags, UDPTransport, WebTransport, ParrelSync clones). It has PurrNet-ready C# templates verified on Edgegap that add themselves at runtime without editing scenes (server start and self-stop, connect panel with direct and matchmaker modes, settings asset), port 7777 UDP app version, Dockerfile, matchmaker config, and fixes for PurrNet pitfalls: auto start flags, the async StartClient, ObserversRpc that never runs on a dedicated server. Use when a PurrNet dev wants online play: "host my PurrNet game", "nobody should host", "works with a host but not online", "Find Match button", or is debugging PurrNet deployments, ports or matchmaking on Edgegap. Other Unity netcodes: edgegap-unity (NGO, Mirror) or edgegap-fishnet.'
 metadata:
-  version: "0.1.5"
+  version: "0.2.0"
 ---
 
 # Edgegap for PurrNet: dedicated servers + matchmaking
@@ -27,7 +27,7 @@ Use **dedicated (authoritative) servers**, not a player host, unless the develop
 Read, don't ask:
 - `ProjectSettings/ProjectVersion.txt` (Unity 6 tested; the SDK needs 2021.3+, and before 2022.3 it must be 3.5.6 or newer: older versions break every matchmaker ticket there, `references/troubleshooting.md` §4).
 - `Packages/manifest.json`: `dev.purrnet.purrnet` (git URL and branch), any `com.edgegap.*` package. With `com.edgegap.unity-servers-plugin` installed, PurrNet's transports also auto-configure their port on Edgegap (`references/purrnet.md` §6).
-- The scene with PurrNet's `NetworkManager`: its transport (`UDPTransport` = UDP, `WebTransport` = WebSocket, `CompositeTransport`), port (`serverPort`, 5000 on UDP by default), network rules, and **Start Server Flags / Start Client Flags**.
+- The scene with PurrNet's `NetworkManager`: its transport (`UDPTransport` = UDP, `WebTransport` = WebSocket, `CompositeTransport`), port (`serverPort`, 5000 on UDP by default; the templates replace it with 7777 at runtime), network rules, and **Start Server Flags / Start Client Flags**.
 - How the game connects today: host in the Editor plus a ParrelSync clone is PurrNet's default. Grep `StartServer`, `StartClient`, `StartHost`, `isHost`.
 - Server-side logic that relies on a host's local client: `[ObserversRpc]` and `[TargetRpc]` methods that set up server state (`references/purrnet.md` §3). This is the bug that silently breaks dedicated servers.
 - Targets: desktop clients use UDP; WebGL needs `WebTransport` (not verified on Edgegap yet).
@@ -39,12 +39,12 @@ Then ask, in one message, only what you couldn't infer: players per match, platf
 Read `references/purrnet.md`.
 1. Add the SDK: `"com.edgegap.unity-sdk": "https://github.com/edgegap/edgegap-unity-sdk.git"` in `Packages/manifest.json`, on every Unity version. No `#tag`: that installs the latest SDK (3.5.6+). Never pin an exact version. Nothing to embed or patch; if the project already has an embedded, hand-patched SDK (`Packages/com.edgegap.unity-sdk`), delete it and use the git package.
 2. Copy `assets/unity/*.cs`, `EdgegapSettings.cs.meta` and `link.xml` to `Assets/Edgegap/`, `assets/unity/Editor/EdgegapServerBuild.cs` to `Assets/Edgegap/Editor/`, and `assets/unity/Resources/EdgegapSettings.asset` to `Assets/Edgegap/Resources/`. Copy the `.meta` too: the asset finds its script by that GUID. If the game's scripts live in an asmdef, reference `Edgegap.SDK` and PurrNet's runtime asmdef from it.
-3. Set `ListenPort` / `DirectPort` on the settings asset to the transport's port if it isn't 5000.
+3. Keep port 7777: `ListenPort` / `DirectPort` on the settings asset default to it and are applied to `UDPTransport.serverPort` at runtime, so PurrNet's default 5000 in the scene doesn't matter. Use 7777 on the app version too. Change both only if the game needs another port.
 4. Fix server-only logic that assumed a host (`references/purrnet.md` §3): `[ObserversRpc(runLocally: true, ...)]` where the server must run the RPC body too, players spawned for remote clients, client-only code guarded.
 
 What the templates do: `EdgegapBootstrap` runs before the first scene loads. In builds it calls `NetworkManager.DisableFlags()` (PurrNet's auto start off) and adds `EdgegapServerLifecycle` (server builds: starts the server on `0.0.0.0:<ListenPort>`, self-stops on Edgegap) or `EdgegapConnectPanel` + `EdgegapMatchmakingClient` (clients). The Editor keeps PurrNet's host + clone flow unless **Apply In Editor** is ticked.
 
-✅ Check: the Linux server (or a `-batchmode` instance) logs `Edgegap Server | Starting server on 0.0.0.0:5000.`, two client builds connect to `127.0.0.1:5000`, the server logs `Edgegap Server | 2 player(s) connected.`, and the game's server-side content exists (spawned objects, world state).
+✅ Check: the Linux server (or a `-batchmode` instance) logs `Edgegap Server | Starting server on 0.0.0.0:7777.`, two client builds connect to `127.0.0.1:7777`, the server logs `Edgegap Server | 2 player(s) connected.`, and the game's server-side content exists (spawned objects, world state).
 
 ## Phase 2: Connect to Edgegap
 
@@ -58,14 +58,14 @@ Read `references/deploy.md` §2-3.
 1. `"<Unity>" -batchmode -quit -projectPath "<project>" -executeMethod EdgegapServerBuild.Build -logFile build-server.log` → `Builds/EdgegapServer/ServerBuild`.
 2. Copy `assets/docker/Dockerfile` and `.dockerignore` to the project root.
 3. The developer runs `docker login registry.edgegap.com`; you build with `--platform linux/amd64` and push a fresh tag (UTC timestamp `YYYYMMDD-HHMM`, also the app version name).
-4. `docker run --rm -p 5000:5000/udp <image>` and connect two clients.
+4. `docker run --rm -p 7777:7777/udp <image>` and connect two clients.
 
 ✅ Check: `edgegap_list_registry_tags` shows the tag.
 
 ## Phase 4: App version and a direct deploy
 
 Read `references/deploy.md` §4-5.
-1. Port: name `gameport`, port `5000`, protocol **UDP**. Registry credentials set; `edgegap_list_app_versions` shows `registry_credentials_set: true`. Push the image before creating the version.
+1. Port: name `gameport`, port `7777`, protocol **UDP**. Registry credentials set; `edgegap_list_app_versions` shows `registry_credentials_set: true`. Push the image before creating the version.
 2. `edgegap_deploy` near the developer → `edgegap_wait_for_deployment` → logs.
 3. Two clients connect with the panel to `<fqdn>:<external port>`, or run `Game.exe -edgegapAddress <fqdn> -edgegapPort <external> -edgegapConnect`.
 4. `edgegap_stop_deployment`, or let the server stop itself 30 s after both leave.
@@ -75,7 +75,7 @@ Read `references/deploy.md` §4-5.
 ## Phase 5: Matchmaker
 
 Read `references/matchmaker.md`.
-1. `assets/matchmaker/casual.json` (2-4 players, a 15 s expansion stage that keeps `min_team_size` at 2: without one, two players wait until their tickets expire; keep `ticket_expiration_period` at `30s`) with the app name and version, or `edgegap_build_matchmaker_config`. Save as `matchmaker-config.json` in the project root. If other `matchmaker-config.json` files exist on the machine, give the developer the full path to upload.
+1. `assets/matchmaker/casual.json` (2-4 players, no expansion stage: `min_team_size` below `max_team_size` already allows partial matches; keep `ticket_expiration_period` at `30s` so they come quickly) with the app name and version, or `edgegap_build_matchmaker_config`. Save as `matchmaker-config.json` in the project root. If other `matchmaker-config.json` files exist on the machine, give the developer the full path to upload.
 2. Dashboard: Create Matchmaker → upload → Create and Start → copy **API URL** and **Auth Token**.
 3. `GET <API URL>/monitor` with the token answers.
 
@@ -98,8 +98,8 @@ Hand-off: what was built and where, app/version/matchmaker names, how to ship a 
 ## Reference files
 
 - `references/purrnet.md`: start flags and the bootstrap, transports and ports, host-only logic (ObserversRpc `runLocally`), the async `StartClient`, scene reloads, PurrNet's own Edgegap auto-setup, network rules, WebGL.
-- `references/deploy.md`: MCP connection, server and client builds, Docker and registry, app version for UDP 5000, direct deploy, command-line test flags.
-- `references/matchmaker.md`: config, dashboard steps, ticket contract, injected variables, why a profile needs an expansion stage, lone tickets.
+- `references/deploy.md`: MCP connection, server and client builds, Docker and registry, app version for UDP 7777, direct deploy, command-line test flags.
+- `references/matchmaker.md`: config, dashboard steps, ticket contract, injected variables, why partial matches need no expansion stage, lone tickets.
 - `references/troubleshooting.md`: symptom → fix tables.
 - `assets/unity/`: `EdgegapBootstrap`, `EdgegapSettings` (+ `.meta`, `Resources/EdgegapSettings.asset`), `EdgegapServerLifecycle`, `EdgegapConnectPanel`, `EdgegapMatchmakingClient`, DTOs, `link.xml`, `Editor/EdgegapServerBuild`. `assets/docker/`, `assets/matchmaker/`.
 

@@ -28,7 +28,7 @@ Editing the flags on the NetworkManager instead also works, but it changes the s
 
 | Transport | Default port | App version protocol | Client connects to | Status |
 |---|---|---|---|---|
-| `UDPTransport` (LiteNetLib) | 5000 | **UDP** | `public_ip` | Verified end to end (desktop clients) |
+| `UDPTransport` (LiteNetLib) | 5000 (the templates set 7777 at runtime) | **UDP** | `public_ip` | Verified end to end (desktop clients) |
 | `WebTransport` (WebSocket) | 5001 | **WS** + `tls_upgrade: true` | `fqdn` over `wss` | Not verified on Edgegap (§8) |
 | `CompositeTransport` | one per sub-transport | one app version port per sub-transport, distinct names | the matching one | Not verified |
 

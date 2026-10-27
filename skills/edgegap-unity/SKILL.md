@@ -2,7 +2,7 @@
 name: edgegap-unity
 description: 'Unity + Edgegap: get a Unity multiplayer game online with dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a Unity project: it has the Unity workflow, tested C# templates (matchmaker client, server self-stop), Linux server build, Dockerfile, matchmaker config and fixes for known pitfalls. Use when a Unity dev wants online play: "put my game online", "play with people over the internet", "works on LAN/same wifi but not online", "nobody should have to host", "click Play and get matched", how Fall Guys/Among Us match players, servers for a playtest, "where do I start with servers". Also for Mirror host/client games moving to dedicated servers, WebGL multiplayer, or debugging Edgegap deployments, ports or matchmaking for a Unity game. Use even for beginners who never say Edgegap, servers or Docker. Not for NGO (edgegap-ngo), FishNet (edgegap-fishnet), PurrNet (edgegap-purrnet) or Fusion (edgegap-fusion) projects, Unreal (edgegap-unreal), Godot or non-game backends.'
 metadata:
-  version: "0.1.16"
+  version: "0.1.17"
 ---
 
 # Edgegap for Unity: dedicated servers + matchmaking
@@ -77,7 +77,7 @@ Read `references/deploy.md` §5-6.
 ## Phase 5: Matchmaker
 
 Read `references/matchmaker.md`.
-1. Design the profile from the answers in Phase 0. Keep `min_team_size` at the game's real minimum: no expansion that lowers it unless the developer explicitly wants solo or smaller matches. If `min_team_size < max_team_size`, add an expansion stage (15 s) that keeps it, or two players wait until their tickets expire (`references/matchmaker.md`). Keep `ticket_expiration_period` at `30s`. Plan the first test with two clients.
+1. Design the profile from the answers in Phase 0. Keep `min_team_size` at the game's real minimum: no expansion that lowers it unless the developer explicitly wants solo or smaller matches. `min_team_size < max_team_size` already allows partial matches: don't add an expansion stage for them (expansions cost the matchmaker a lot of performance; `references/matchmaker.md`). Keep `ticket_expiration_period` at `30s`. Plan the first test with two clients.
 2. Generate it with `edgegap_build_matchmaker_config` (or from `assets/matchmaker/*.json`). For WebGL pass `allowed_cors_origins` (every origin that serves the build, e.g. `http://localhost:8080`). Validate the JSON and save it as `matchmaker-config.json` in the project root.
 3. Walk the developer through the dashboard (§5): Create Matchmaker → upload → Create and Start → copy **API URL** + **Auth Token**.
 4. Check `GET <API URL>/monitor` with the token responds (DNS can take ~5 min).

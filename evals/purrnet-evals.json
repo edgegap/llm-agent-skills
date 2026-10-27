@@ -33,7 +33,7 @@
       "id": 2,
       "name": "orbitbrawl-host-to-dedicated",
       "prompt": "my purrnet party brawler is in the project folder (unity 6, UDPTransport). 2-4 players, right now someone hosts and presses Start Round. I want a Find Match button, nobody hosting, a dedicated server that runs the rounds by itself. desktop only. set it up on edgegap please",
-      "expected_output": "SDK 3.5.6+, auto start flags off in builds, isHost logic moved to the server, SetupRound runLocally / server-side pickup spawn, headless guards, server-driven round start, self-stop, async StartClient, UDP 5000 app version, client to public_ip + external port, matchmaker 2-4 no solo expansion, Dockerfile amd64 unique tag, dashboard steps.",
+      "expected_output": "SDK 3.5.6+, auto start flags off in builds, isHost logic moved to the server, SetupRound runLocally / server-side pickup spawn, headless guards, server-driven round start, self-stop, async StartClient, UDP 7777 app version, client to public_ip + external port, matchmaker 2-4 no solo expansion, Dockerfile amd64 unique tag, dashboard steps.",
       "files": [
         "fixtures/orbitbrawl"
       ],
@@ -48,7 +48,7 @@
         "Server stops its own deployment via ARBITRIUM_DELETE_URL/TOKEN when empty or after the match ends",
         "Client connect code waits for PurrNet's async StartClient (doesn't treat the initial Disconnected state as a failed attempt)",
         "Client connects UDPTransport to the assignment's public_ip (or fqdn) and the external port of the named game port",
-        "App version port is UDP with internal port 5000 (the UDPTransport port) and a name matching the client's port lookup",
+        "App version port is UDP with internal port 7777 (the templates' ListenPort, applied to UDPTransport) and a name matching the client's port lookup",
         "Matchmaker config is valid JSON, max team size 4, profile name equals the client's profile, and no expansion lowers min_team_size below 2",
         "Docker build uses --platform linux/amd64",
         "Each build is pushed under a new unique tag (not latest, not a fixed reused tag)",

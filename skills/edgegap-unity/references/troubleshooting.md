@@ -52,7 +52,7 @@ Checklist, in order:
 9. `Assignment has no port named 'gameport'`: port name mismatch between app version and `PortName`.
 
 ## Matchmaker
-See `matchmaker.md` section 8. Most common: profile/attribute mismatch (400), no expansion stage when `min_team_size < max_team_size` (two players wait until their tickets expire), CORS for WebGL, free-tier single deployment blocking matches (MATCH_FOUND ↔ SEARCHING), forgot to update `application.version` after a new build, matchmaker offline after 3 h.
+See `matchmaker.md` section 8. Most common: profile/attribute mismatch (400), a long `ticket_expiration_period` (two players wait until their tickets expire; use `30s`, not an expansion), CORS for WebGL, free-tier single deployment blocking matches (MATCH_FOUND ↔ SEARCHING), forgot to update `application.version` after a new build, matchmaker offline after 3 h.
 
 ## SDK behaviors that look like bugs
 - First `CreateGroup` fails with "conflict, abandon and restart" → pass `abandon: true` (template does).

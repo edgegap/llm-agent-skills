@@ -2,7 +2,7 @@
 name: edgegap-ngo
 description: 'Netcode for GameObjects (NGO) + Edgegap: take a Unity game built on NGO to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on an NGO project (com.unity.netcode.gameobjects, NetworkManager, UnityTransport, StartHost, ConnectionManager, Boss Room). It has NGO C# templates verified on Edgegap that add themselves at runtime, no scene edits (server start and self-stop, Find Match panel, settings asset), a Boss Room ConnectionManager adapter, port 7777 UDP app version, Dockerfile, matchmaker config, and fixes for NGO pitfalls: host-only logic, connection payloads and approval, UnityTransport needing an IP, client-only code on the server, Relay leftovers. Use when an NGO dev wants online play: "host my NGO game", "nobody should host", "replace Unity Relay or Multiplay", "Boss Room on Edgegap", "Find Match button", or is debugging NGO deployments, ports or matchmaking on Edgegap. Mirror or WebGL-first games: edgegap-unity. FishNet: edgegap-fishnet. PurrNet: edgegap-purrnet.'
 metadata:
-  version: "0.1.4"
+  version: "0.1.5"
 ---
 
 # Edgegap for Netcode for GameObjects: dedicated servers + matchmaking
@@ -74,7 +74,7 @@ Read `references/deploy.md` §4-5.
 ## Phase 5: Matchmaker
 
 Read `references/matchmaker.md`.
-1. `assets/matchmaker/casual.json` with the app name and version, or `edgegap_build_matchmaker_config`. **Keep an expansion stage**: without one, a match smaller than `max_team_size` only starts when the tickets expire (30 s in the template; keep `ticket_expiration_period` at `30s`). Save as `matchmaker-config.json` in the project root and give the developer its full path to upload.
+1. `assets/matchmaker/casual.json` with the app name and version, or `edgegap_build_matchmaker_config`. **Don't add an expansion stage** for partial matches: `min_team_size` below `max_team_size` already enables them, and they start by the time tickets expire, so keep `ticket_expiration_period` at `30s` (expansions cost the matchmaker a lot of performance). Save as `matchmaker-config.json` in the project root and give the developer its full path to upload.
 2. Dashboard: Create Matchmaker → upload → Create and Start → copy **API URL** and **Auth Token**.
 3. `GET <API URL>/monitor` with the token answers `HEALTHY`.
 

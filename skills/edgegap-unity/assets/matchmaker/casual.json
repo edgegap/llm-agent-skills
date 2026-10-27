@@ -16,9 +16,7 @@
             "attributes": { "team_count": 1, "min_team_size": 2, "max_team_size": 4 }
           }
         },
-        "expansions": {
-          "15": { "match_size": { "min_team_size": 2 } }
-        }
+        "expansions": {}
       }
     }
   }

@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UseEdgegapMatchmaker: 0
   ApplyInEditor: 0
-  ListenPort: 5000
+  ListenPort: 7777
   FirstPlayerTimeoutSeconds: 120
   EmptyServerTimeoutSeconds: 30
   DirectAddress: 127.0.0.1
-  DirectPort: 5000
+  DirectPort: 7777
   MatchmakerUrl: 
   MatchmakerAuthToken: 
   Profile: casual

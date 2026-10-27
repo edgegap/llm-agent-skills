@@ -35,7 +35,7 @@ Find the layer first: image → deployment → client ↔ server → matchmaker.
 | 401 | wrong Auth Token, or `Bearer `/`token ` was added: send it raw |
 | 400 on create | profile name doesn't exist in the config, or attributes the rules don't expect (a `latencies` rule needs beacon pings) |
 | 404 polling the ticket | polling `/memberships/{id}` (old MCP hint): use `GET /tickets/{id}` |
-| Two players stuck `SEARCHING` until their tickets expire | `min_team_size < max_team_size` with no expansion stage: add the `15` s expansion from `assets/matchmaker/casual.json` |
+| Two players stuck `SEARCHING` until their tickets expire | `ticket_expiration_period` is long (e.g. `5m`), so the partial match waits until expiry. Set it to `30s`; don't add an expansion for this (expansions cost the matchmaker a lot of performance), as in `assets/matchmaker/casual.json` |
 | One player alone never matches | expected: the template needs 2 players. Open two clients (different engines are fine) |
 | `MATCH_FOUND` then back to searching, or tickets cancelled | the deployment failed: free tier allows one deployment at a time (stop leftovers), registry credentials, bad tag. Test a direct deployment first |
 | Matchmaker URL stopped answering | free tier stops the matchmaker 3 hours after each start: Start it again |

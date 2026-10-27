@@ -2,6 +2,18 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.20.0 (unreleased)
+
+Partial matches no longer get an expansion stage, and PurrNet uses port 7777.
+
+- Matchmaker guidance (user, 2026-10-27): a profile with `min_team_size < max_team_size` already allows partial matches, and they form by the time tickets reach `ticket_expiration_period`. The fix for a slow partial match is the short `30s` expiration, not an expansion: expansions cost the matchmaker a lot of performance. This replaces the 0.13.x rule that every such profile needs an expansion stage.
+  - The `15` s expansion that only repeated `min_team_size` is gone from the `casual` templates (Colyseus, FishNet, Godot, NGO, PurrNet, Unity) and from `casual-backfill.json` and `modes.json` `squads` in `edgegap-matchmaking`. Expansions that relax a rule (solo play, latency, skill) stay.
+  - `SKILL.md`, `references/matchmaker.md` and `references/troubleshooting.md` in those skills, `edgegap-matchmaking` `references/profiles.md`, `edgegap-troubleshoot`, and `edgegap` `references/agent-rules.md`: say so, and tell agents to leave `expansions` out of `edgegap_build_matchmaker_config` unless a rule should relax over time.
+  - `evals/godot-evals.json`: assertions check for a 30 s expiration instead of an expansion stage.
+- `edgegap-purrnet` (0.2.0): templates listen on 7777 instead of PurrNet's default 5000 (`EdgegapSettings`, settings asset, `EdgegapServerLifecycle`, Dockerfile), so the app version uses the same port as the other samples. `ListenPort` is applied to `UDPTransport.serverPort` at runtime, so the scene's port doesn't need changing. Matches the fork's change (edgegap/netcode-game-sample-unity-purrnet-incremental PR #4).
+- Versions: `edgegap` 0.20.0, `edgegap-colyseus` 0.1.5, `edgegap-fishnet` 0.2.7, `edgegap-godot` 0.1.5, `edgegap-matchmaking` 0.1.1, `edgegap-ngo` 0.1.5, `edgegap-troubleshoot` 0.2.1, `edgegap-unity` 0.1.17.
+- Not re-run on Edgegap: neither the no-expansion templates nor PurrNet on 7777.
+
 ## 0.19.0 (unreleased)
 
 Points CI and release work at Edgegap's GitHub Action, [edgegap/deploy-action](https://github.com/edgegap/deploy-action) (v0.1.0, e2e passed on GitHub 2026-10-26). The action creates the version for a pushed image tag from an existing version's settings, optionally smoke-tests it on a real deployment, and promotes it. Agents now recommend it instead of hand-written Deploy API calls in CI.
