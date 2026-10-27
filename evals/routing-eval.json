@@ -182,5 +182,29 @@
   {
     "query": "nakama-edgegap fleet manager: my Godot server sends READY but Nakama logs 'instance is ready but has no address'",
     "expected_skill": "edgegap-nakama"
+  },
+  {
+    "query": "Every push to main should build our game server image, put it on Edgegap and make it live if it boots. How do I set that up in GitHub Actions?",
+    "expected_skill": "edgegap-launch"
+  },
+  {
+    "query": "Our CI pushes a new server image to registry.edgegap.com on each merge. How do we automatically create the Edgegap app version and check the server starts before players get it?",
+    "expected_skill": "edgegap-launch"
+  },
+  {
+    "query": "Is there a GitHub Action for Edgegap that smoke-tests a new build and then promotes it to our prod version?",
+    "expected_skill": "edgegap-launch"
+  },
+  {
+    "query": "Write the GitHub Actions workflow step that builds my Godot dedicated server Docker image for linux/amd64 and pushes it to the Edgegap registry.",
+    "expected_skill": "edgegap-containerize"
+  },
+  {
+    "query": "Our Node.js lobby service needs to start an Edgegap server when a lobby fills and tell players where to connect. Write that code.",
+    "expected_skill": "edgegap-deployments-api"
+  },
+  {
+    "query": "How should we roll out a new server build to live players on Edgegap without breaking matches in progress?",
+    "expected_skill": "edgegap-launch"
   }
 ]
