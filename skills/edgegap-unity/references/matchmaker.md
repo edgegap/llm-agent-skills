@@ -38,7 +38,7 @@ Top level: `version` ("3.3.2"), `inspect` (true in dev: enables `GET /inspect/ti
 Profile: `ticket_expiration_period` ("30s"; unmatched tickets become CANCELLED. Keep it short: a lone or partial ticket may only match near expiry, so with "5m" a developer testing alone waits 5 minutes), `ticket_removal_period` ("1m"), `group_inactivity_removal_period` ("5m"), `application {name, version}`, `rules {initial, expansions}`.
 
 Rule types in `rules.initial` (each `{ "type": ..., "attributes": {...} }`, rule names are free-form; the name is also the ticket attribute key):
-- `player_count` (required, exactly once): `team_count`, `min_team_size`, `max_team_size`. Fills to max if possible, otherwise makes a partial match (≥ min) only when an expansion stage or the expiration elapses. Never below min. So a profile with `min_team_size < max_team_size` needs at least one expansion stage, even one that repeats the initial `min_team_size`: without it, two players wait until their tickets expire. Measured on matchmaker 3.3.2 (2026-10-19, `min 2 / max 8`): with no `expansions`, two tickets stayed `SEARCHING` and matched exactly at the 5-minute expiry; with `"15": {"match_size": {"min_team_size": 2}}` two clients were matched and connected within 40 s of launch.
+- `player_count` (required, exactly once): `team_count`, `min_team_size`, `max_team_size`. Fills to max if possible, otherwise makes a partial match (≥ min) when an expansion stage or the expiration elapses. Never below min. `min_team_size < max_team_size` is what enables partial matches: no expansion stage is needed; keep `ticket_expiration_period` short (`30s`) instead, because expansions cost the matchmaker a lot of performance. Measured on matchmaker 3.3.2 (2026-10-19, `min 2 / max 8`, no expansion): with a 5-minute expiration, two tickets stayed `SEARCHING` and matched exactly at expiry.
 - `latencies` (optional, once): `difference` (max ms difference between players to the same beacon), `max_latency` (beacons above are discarded). Ticket attribute: `{"Chicago": 12.3, ...}`.
 - `number_difference`: `max_difference`. Ticket attribute: a number (e.g. `elo_rating`).
 - `string_equality`: no attributes. Ticket attribute: a string; case-sensitive exact match.
@@ -52,7 +52,7 @@ Duration strings: `"30s"`, `"5m"`. Validate the final JSON (`python -m json.tool
 
 Write the final file as `matchmaker-config.json` in the project root (it contains no secrets). Replace `application.name`/`version` with the real ones.
 
-**Casual, WebGL-safe (no beacons), 2-4 players**: the verified end-to-end shape, with a 15 s expansion stage that keeps `min_team_size` at 2 instead of the solo expansion it was tested with (`assets/matchmaker/casual.json`):
+**Casual, WebGL-safe (no beacons), 2-4 players**: the verified end-to-end shape, with no expansion stage (it was tested with a solo expansion; `assets/matchmaker/casual.json`):
 ```json
 {
   "version": "3.3.2",
@@ -72,9 +72,7 @@ Write the final file as `matchmaker-config.json` in the project root (it contain
             "attributes": { "team_count": 1, "min_team_size": 2, "max_team_size": 4 }
           }
         },
-        "expansions": {
-          "15": { "match_size": { "min_team_size": 2 } }
-        }
+        "expansions": {}
       }
     }
   }
@@ -88,7 +86,7 @@ Remove `allowed_cors_origins` if there is no WebGL client.
 ```
 to `initial`, `team_count: 2`, `min_team_size: 2`, `max_team_size: 2`, and an expansion that relaxes latency (`"20": {"beacons": {"max_latency": 300}}`). Match size stays 2v2.
 
-Prefer generating with `edgegap_build_matchmaker_config` (it also checks the app version exists and has ports). It takes `profile_name`, `application`, `version`, `team_count`, `min_team_size`, `max_team_size`, optional `max_latency_ms`, `latency_difference_ms`, `expansions[{after_seconds, min_team_size?, max_latency_ms?}]` (when min < max, pass at least `{after_seconds: 15, min_team_size: <the real minimum>}`), `ticket_expiration`, and `allowed_cors_origins` (needed for WebGL; older MCP servers without this field: add the top-level key to the JSON yourself).
+Prefer generating with `edgegap_build_matchmaker_config` (it also checks the app version exists and has ports). It takes `profile_name`, `application`, `version`, `team_count`, `min_team_size`, `max_team_size`, optional `max_latency_ms`, `latency_difference_ms`, `expansions[{after_seconds, min_team_size?, max_latency_ms?}]` (leave it out unless a rule should relax over time; partial matches don't need it), `ticket_expiration`, and `allowed_cors_origins` (needed for WebGL; older MCP servers without this field: add the top-level key to the JSON yourself).
 
 ## 5. Creating the matchmaker in the dashboard
 
@@ -129,10 +127,10 @@ The server should allow ~60 s for matched players to connect before giving up on
 | CORS error in browser console | origin missing from `allowed_cors_origins` (scheme + host + port exactly) |
 | 400 on create group | profile name or attributes don't match the config (section 6) |
 | 401 | wrong matchmaker token, or "Bearer "/"token " prefix added (send it raw) |
-| Two players stay SEARCHING until their tickets expire, then match | the profile has `min_team_size < max_team_size` and no expansion stage, so the matchmaker waits to fill `max_team_size` (section 3). Add one that keeps `min_team_size`, e.g. `"15": {"match_size": {"min_team_size": 2}}` |
+| Two players stay SEARCHING until their tickets expire, then match | `ticket_expiration_period` is long (e.g. `5m`), so the partial match waits until expiry (section 3). Set it to `30s`; don't add an expansion for this (expansions cost the matchmaker a lot of performance) |
 | Stuck in SEARCHING | not enough compatible tickets: expected for a lone ticket, so test with two clients; check latency rule isn't excluding players |
 | Flips MATCH_FOUND ↔ SEARCHING | deployment can't start: free tier allows **1 concurrent deployment**. Stop leftover test deployments (`edgegap_list_deployments`, `edgegap_stop_deployment`). Also check the app version (registry credentials, image tag) by doing a direct deploy |
-| Straight to CANCELLED | ticket expired before a match: add expansions below the 30 s expiration, or test with two clients. Raise `ticket_expiration_period` only for production queues |
+| Straight to CANCELLED | ticket expired before a match: test with two clients (a lone ticket can't meet a minimum of 2). Raise `ticket_expiration_period` only for production queues |
 | Matches at random times ignoring player count | stale tickets from earlier tests: restart the matchmaker |
 | 404 while polling | ticket/group removed (expired, or deleted) |
 | Matchmaker OFFLINE | free tier 3-hour shutdown: restart it |

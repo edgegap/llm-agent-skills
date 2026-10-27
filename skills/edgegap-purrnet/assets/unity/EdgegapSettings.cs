@@ -17,7 +17,7 @@ public class EdgegapSettings : ScriptableObject
 
     [Header("Dedicated Server")]
     [Tooltip("UDP port the server listens on. Must equal the internal port of the Edgegap app version.")]
-    public ushort ListenPort = 5000;
+    public ushort ListenPort = 7777;
 
     [Tooltip("Stop the Edgegap deployment if nobody connects within this time.")]
     public float FirstPlayerTimeoutSeconds = 120f;
@@ -30,8 +30,8 @@ public class EdgegapSettings : ScriptableObject
         + "or a deployment's host, e.g. <request-id>.pr.edgegap.net.")]
     public string DirectAddress = "127.0.0.1";
 
-    [Tooltip("Default server port: 5000 locally, or the deployment's external port.")]
-    public ushort DirectPort = 5000;
+    [Tooltip("Default server port: 7777 locally, or the deployment's external port.")]
+    public ushort DirectPort = 7777;
 
     [Header("Edgegap Matchmaker (matchmaker on)")]
     [Tooltip("Matchmaker API URL from the Edgegap dashboard.")]

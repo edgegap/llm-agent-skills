@@ -20,7 +20,7 @@ public class EdgegapServerLifecycle : MonoBehaviour
     public bool AutoStartServer = true;
 
     [Tooltip("Internal port the transport listens on. Must equal the app version's internal port.")]
-    public ushort ListenPort = 5000;
+    public ushort ListenPort = 7777;
 
     [Tooltip("Stop the deployment if nobody connects within this time (matched players gave up).")]
     public float FirstPlayerTimeoutSeconds = 120f;

@@ -2,7 +2,7 @@
 name: edgegap-fishnet
 description: 'FishNet (Fish-Networking) + Edgegap: take a Unity game built on FishNet to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a FishNet project (Assets/FishNet, Tugboat, Bayou, Multipass, ServerManager, NetworkHudCanvas). It has FishNet-ready C# templates verified on Edgegap (matchmaker client, server self-stop, scene-change persistence), the Start On Headless and WebGL/Bayou wss setup, port 7770 app version, Dockerfile, matchmaker config and fixes for known pitfalls, including the SDK JSON bug on Unity before 2022.3. Use when a FishNet dev wants online play: "host my FishNet game", "players should not host", "works on LAN but not online", "Find Match button", "FishNet WebGL on Edgegap", moving off the old FishNet Edgegap samples that call the API from the client, or debugging FishNet deployments, ports or matchmaking. Other Unity netcodes (NGO, Mirror): edgegap-unity.'
 metadata:
-  version: "0.2.6"
+  version: "0.2.7"
 ---
 
 # Edgegap for FishNet: dedicated servers + matchmaking
@@ -75,7 +75,7 @@ Read `references/deploy.md` §4-5.
 ## Phase 5: Matchmaker
 
 Read `references/matchmaker.md`.
-1. Start from `assets/matchmaker/casual-webgl.json` (2-4 players, no latency rule, a 15 s expansion stage that keeps `min_team_size` at 2: without one, two players wait until their tickets expire; keep `ticket_expiration_period` at `30s`) or build one with `edgegap_build_matchmaker_config`. Set `application.name`/`version`, and `allowed_cors_origins` for every WebGL origin.
+1. Start from `assets/matchmaker/casual-webgl.json` (2-4 players, no latency rule, no expansion stage: `min_team_size` below `max_team_size` already allows partial matches; keep `ticket_expiration_period` at `30s` so they come quickly) or build one with `edgegap_build_matchmaker_config`. Set `application.name`/`version`, and `allowed_cors_origins` for every WebGL origin.
 2. Walk the developer through the dashboard: Create Matchmaker → upload → Create and Start → copy **API URL** and **Auth Token**.
 3. `GET <API URL>/monitor` with the token answers (DNS can take ~5 min).
 
@@ -99,7 +99,7 @@ Hand-off: what was built and where, app/version/matchmaker names, how to ship a 
 
 - `references/fishnet.md`: FishNet server conversion, transports and ports, Start On Headless, scene changes, WebGL/Bayou, removing client-side API calls, FishNet 2.x/3.x notes.
 - `references/deploy.md`: MCP connection, server build, Docker and registry, app version for 7770, direct deploy and probes.
-- `references/matchmaker.md`: config, dashboard steps, ticket contract, injected variables, why a profile needs an expansion stage, the lone-ticket quirk.
+- `references/matchmaker.md`: config, dashboard steps, ticket contract, injected variables, why partial matches need no expansion stage, the lone-ticket quirk.
 - `references/troubleshooting.md`: the SDK version Unity before 2022.3 needs, and symptom → fix tables.
 - `assets/unity/`: FishNet-ready `EdgegapMatchmakingClient`, `EdgegapServerLifecycle`, `EdgegapPersistence`, DTOs, `link.xml`; `Editor/` build and scene tools; `Examples/MatchmakingSystem.cs` menu bridge. `assets/docker/`: Dockerfile + .dockerignore. `assets/matchmaker/`: config template.
 

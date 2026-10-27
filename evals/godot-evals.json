@@ -6,7 +6,7 @@
       "id": 1,
       "name": "skyarena-host-to-dedicated",
       "prompt": "Sky Arena (it's in the project folder) is our Godot 4 arena game. Right now one player hosts and the others type an IP. We want nobody to host: players click Find Match, get matched 2-4 per game and play on an Edgegap dedicated server. Windows and Linux clients. Can you set it up?",
-      "expected_output": "Server launch that starts ENet at boot on all interfaces with no player for peer 1, match start without the host's Start button, self-stop via ARBITRIUM_DELETE_URL with the raw token, a /tickets matchmaker client with the raw Auth Token, joining public_ip/fqdn + external port without join_game's IP/name validation silently refusing, flush_stdout_on_print, a Linux dedicated server export preset, an amd64 Dockerfile with tini, a UDP app version, a matchmaker config with an expansion stage, unique tags, dashboard steps.",
+      "expected_output": "Server launch that starts ENet at boot on all interfaces with no player for peer 1, match start without the host's Start button, self-stop via ARBITRIUM_DELETE_URL with the raw token, a /tickets matchmaker client with the raw Auth Token, joining public_ip/fqdn + external port without join_game's IP/name validation silently refusing, flush_stdout_on_print, a Linux dedicated server export preset, an amd64 Dockerfile with tini, a UDP app version, a matchmaker config with a 30s ticket expiration and no expansion that only repeats initial values, unique tags, dashboard steps.",
       "files": [
         "fixtures/skyarena"
       ],
@@ -24,7 +24,7 @@
         "Dockerfile targets linux/amd64, runs the server with --headless, and runs it under an init that forwards SIGTERM (tini, dumb-init or equivalent) or explains the PID 1 issue",
         "Dockerfile and start command don't print the environment",
         "App version port is UDP with the internal port equal to the server port and a name matching the client's port lookup",
-        "Matchmaker config is valid JSON, its profile name equals the client's profile, team size 2-4, and it has an expansion stage",
+        "Matchmaker config is valid JSON, its profile name equals the client's profile, team size 2-4, and it has a 30s ticket_expiration_period with no expansion that only repeats initial values",
         "Each build is pushed under a new unique tag (not latest, not a fixed reused tag)",
         "No Edgegap API token written to project files; the matchmaker Auth Token is the only token in the client",
         "HANDOFF.md gives dashboard steps to create/start the matchmaker and copy the API URL + Auth Token",
@@ -35,7 +35,7 @@
       "id": 2,
       "name": "pixelparty-web-wss",
       "prompt": "Pixel Party is our Godot browser party game on itch.io (project folder). Hosting from a player doesn't work from itch and needs port forwarding. Put it on Edgegap: dedicated servers, players click Play and get matched 3-8 per game. Web is the main platform, Windows too.",
-      "expected_output": "Keeps WebSocketMultiplayerPeer, a server launch with no host player, rounds without the host's Start, self-stop, wss://fqdn:external with TLS Upgrade on a WS port, allowed_cors_origins for the itch origins and no latencies rule, the export allowlists extended with the new scripts, a Linux dedicated server preset, flush_stdout_on_print, a Dockerfile with tini, matchmaker 3-8 with an expansion stage.",
+      "expected_output": "Keeps WebSocketMultiplayerPeer, a server launch with no host player, rounds without the host's Start, self-stop, wss://fqdn:external with TLS Upgrade on a WS port, allowed_cors_origins for the itch origins and no latencies rule, the export allowlists extended with the new scripts, a Linux dedicated server preset, flush_stdout_on_print, a Dockerfile with tini, matchmaker 3-8 with a 30s ticket expiration.",
       "files": [
         "fixtures/pixelparty"
       ],
@@ -54,7 +54,7 @@
         "application/run/flush_stdout_on_print is turned on",
         "Dockerfile targets linux/amd64, runs the server with --headless, exposes the TCP port, and runs it under an init that forwards SIGTERM (tini, dumb-init or equivalent) or explains the PID 1 issue",
         "Client matchmaking: POST /tickets, polls GET /tickets/{id}, raw Authorization header",
-        "Matchmaker profile is 3-8 players and has an expansion stage",
+        "Matchmaker profile is 3-8 players with a 30s ticket_expiration_period",
         "No Edgegap API token written to project files; the matchmaker Auth Token is the only token in the client",
         "HANDOFF.md gives dashboard steps to create/start the matchmaker and copy the API URL + Auth Token",
         "The delivered project loads in Godot 4.7.2 with no script errors, as a client and as a server launch (checked by running it headless)"
@@ -64,7 +64,7 @@
       "id": 3,
       "name": "broken-skyarena-debug",
       "prompt": "our godot game on edgegap is half working. notes are in EDGEGAP-NOTES.md in the project folder: find match does nothing in the exported build, players get stuck on Joining, logs are empty, servers never stop, matching takes 5 minutes and security flagged the image. find and fix what you can.",
-      "expected_output": "Finds and fixes: export allowlist drops edgegap/matchmaking.gd, bind 127.0.0.1, join_game rejects the fqdn and empty name and uses internal port 9050, no flush_stdout_on_print, self-stop only in _exit_tree with Bearer, server never starts the round and adds a Server player, Dockerfile prints env and has no tini/platform, app version port TCP instead of UDP, latest tag reused, no expansion stage.",
+      "expected_output": "Finds and fixes: export allowlist drops edgegap/matchmaking.gd, bind 127.0.0.1, join_game rejects the fqdn and empty name and uses internal port 9050, no flush_stdout_on_print, self-stop only in _exit_tree with Bearer, server never starts the round and adds a Server player, Dockerfile prints env and has no tini/platform, app version port TCP instead of UDP, latest tag reused, 5-minute ticket expiration.",
       "files": [
         "fixtures/broken-skyarena"
       ],
@@ -80,7 +80,7 @@
         "Dockerfile runs the server under an init that forwards SIGTERM (tini, dumb-init or equivalent) instead of sh -c as PID 1",
         "App version port changed to UDP (ENet), not TCP",
         "Unique image tags with a new app version and matchmaker version update instead of re-pushing latest",
-        "Matchmaker config gets an expansion stage (the 5-minute match)",
+        "Matchmaker ticket_expiration_period lowered to 30s (the 5-minute match), without an expansion added only for partial matches",
         "HANDOFF.md maps each symptom to its cause and fix",
         "The delivered project loads in Godot 4.7.2 with no script errors, as a client and as a server launch (checked by running it headless)"
       ]

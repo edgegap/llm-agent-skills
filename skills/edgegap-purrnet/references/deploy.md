@@ -53,7 +53,7 @@ docker push registry.edgegap.com/<project>/<image>:<tag>
 ```
 Confirm with `edgegap_list_registry_tags` (image name only). `edgegap_get_registry_credentials` hands credentials only to plugin quick-start tokens: with a normal API token it returns `status: "manual_steps_required"` and no credentials, which is expected, not a failure. Do not call it again; use the dashboard page, or push to Docker Hub, GHCR or another registry and pass that registry and its pull login to `edgegap_create_app_version`.
 
-Local test: `docker run --rm -p 5000:5000/udp <image>`, two clients on `127.0.0.1:5000`.
+Local test: `docker run --rm -p 7777:7777/udp <image>`, two clients on `127.0.0.1:7777`.
 
 ## 4. App and app version
 
@@ -64,7 +64,7 @@ Local test: `docker run --rm -p 5000:5000/udp <image>`, two clients on `127.0.0.
 | docker_repository | `registry.edgegap.com` |
 | docker_image / docker_tag | `<project>/<image>` / the pushed tag (push first: the dashboard checks the tag exists) |
 | cpu_units / memory_mb | `1024` / `2048` to start (free tier max 1536 / 3072) |
-| ports | `[{"port": 5000, "protocol": "UDP", "name": "gameport"}]` |
+| ports | `[{"port": 7777, "protocol": "UDP", "name": "gameport"}]` |
 | registry_username / registry_token | **required**, even for registry.edgegap.com. The developer pastes them for this call or sets them in the dashboard (version → Edit → Private registry) |
 
 Verify with `edgegap_list_app_versions`: `registry_credentials_set: true`. A version without credentials fails every deploy with `Unable to pull image from registry`. A duplicated version keeps its own registry fields; check them on the copy too.
@@ -72,7 +72,7 @@ Verify with `edgegap_list_app_versions`: `registry_credentials_set: true`. A ver
 ## 5. Direct test deployment
 
 1. `edgegap_deploy` with the app, version, the developer's public IP (`curl -s https://api.ipify.org`) and `tags: ["mcp-test"]`.
-2. `edgegap_wait_for_deployment` → `fqdn`, `public_ip`, external port of `gameport`. `edgegap_get_deployment_logs`: `Edgegap Server | Starting server on 0.0.0.0:5000.` and `Deployment '<id>' started ... 0 matched player(s)`.
+2. `edgegap_wait_for_deployment` → `fqdn`, `public_ip`, external port of `gameport`. `edgegap_get_deployment_logs`: `Edgegap Server | Starting server on 0.0.0.0:7777.` and `Deployment '<id>' started ... 0 matched player(s)`.
 3. Two clients connect to `<fqdn or public_ip>:<external>` (panel, or the flags in §6). Logs: `Edgegap Server | 2 player(s) connected.`
 4. `edgegap_stop_deployment`, or close both clients and watch the server stop itself 30 s later. Nobody joining within 120 s also stops it.
 

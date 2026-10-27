@@ -25,7 +25,7 @@ Get evidence first: the Unity build log, `docker logs`, `edgegap_get_deployment_
 ## 2. Connection
 
 In order:
-1. Logs show `Starting server on 0.0.0.0:5000` and no crash.
+1. Logs show `Starting server on 0.0.0.0:7777` and no crash.
 2. App version internal port = `ListenPort` = `UDPTransport.serverPort`; protocol **UDP**.
 3. Client uses the **external** port and `public_ip` (or the `fqdn`).
 4. A connect loop that gives up instantly: PurrNet's `StartClient` is async and `clientState` reads `Disconnected` for a few frames (`purrnet.md` §4). The templates handle it; custom code must too.
@@ -42,7 +42,7 @@ In order:
 | 400 on tickets, Unity 2022.3+ | Profile name or attributes don't match the config |
 | 401 | Wrong Auth Token, or a `Bearer`/`token` prefix |
 | Matchmaker deploys another game's server | The wrong `matchmaker-config.json` was uploaded: give the full path, check `application.name` |
-| Two players stay `SEARCHING` until their tickets expire, then match | The profile has no expansion stage, so the matchmaker waits to fill `max_team_size` (`matchmaker.md` §6). Add one that keeps `min_team_size`, e.g. `"15": {"match_size": {"min_team_size": 2}}` |
+| Two players stay `SEARCHING` until their tickets expire, then match | `ticket_expiration_period` is long (e.g. `5m`), so the partial match waits until expiry (`matchmaker.md` §6). Set it to `30s`; don't add an expansion for this (expansions cost the matchmaker a lot of performance) |
 | A lone player waits ~5 minutes | `ticket_expiration_period` is `5m`: a lone ticket may only match near expiry on matchmaker 3.3.2. Set it to `30s`, or test with two clients |
 | Flips MATCH_FOUND ↔ SEARCHING | Free tier's one deployment is busy (stop test deployments), or the version can't deploy (registry credentials; do a direct deploy) |
 | New build not used | `application.version` not updated (Stop → Edit → Start) |

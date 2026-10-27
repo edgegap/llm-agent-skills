@@ -2,7 +2,7 @@
 name: edgegap-troubleshoot
 description: 'Diagnose why a game server on Edgegap will not start, keeps restarting, stops early, or cannot be reached, for any engine: image push and pull failures (401, 403, 424 "unable to pull image"), exec format errors, 422 couldn''t allocate, Error deployments, crash loops and OOM kills, 100% CPU, deployments stopping after 60 minutes or 24 hours, missing logs, clients timing out or failing to connect (internal vs external port, protocol, 0.0.0.0 binding, wss and TLS Upgrade), and matchmaker players stuck searching. Use when someone says their Edgegap deployment, server or matchmaking "isn''t working", or pastes an Edgegap error. Unity-specific build and SDK issues are in edgegap-unity.'
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # Troubleshooting an Edgegap deployment
@@ -71,7 +71,7 @@ Prove the port independently of the game: for WS ports, `curl --http1.1 -H "Conn
 | Symptom | Cause / fix |
 |---|---|
 | Ticket rejected `400` | Profile name or ticket attributes don't match the config's rules |
-| Stuck SEARCHING | Not enough players for the rules yet; add an expansion that relaxes them over time for testing |
+| Stuck SEARCHING | Not enough players for the rules yet: test with enough clients, and keep `ticket_expiration_period` at `30s` so a partial match (minimum below maximum) forms quickly |
 | Flips MATCH_FOUND ↔ SEARCHING | The deployment failed: free tier deployment already in use, broken version, or pull error. Check deployments |
 | Clients still get the old build | The matchmaker profile still points at the old app version. Stop → edit → start the matchmaker |
 | `401` from the matchmaker | Auth Token sent with a `Bearer`/`token ` prefix; it is sent raw |

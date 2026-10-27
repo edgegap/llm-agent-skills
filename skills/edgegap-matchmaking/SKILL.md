@@ -2,7 +2,7 @@
 name: edgegap-matchmaking
 description: 'Design matchmaking for a game hosted on Edgegap, any engine: choose between Edgegap''s hosted matchmaker, your own allocator on the Deploy API, or a matchmaker you already use (Unity Matchmaker, Nakama, PlayFab, EOS or Steam lobbies, Pragma, AccelByte, Open Match); design the profile (teams, parties, skill, modes, expansions, queue times); place servers near players (ping beacons, player IPs, region and hub pickers); and add backfill (join in progress, replacing leavers, server-owned backfill tickets). Use for "players wait too long", "EU players land on US servers", "let players join a running match", "replace a player who left", "parties in a 4v4 queue", "skill-based matchmaking", "which matchmaker should we use", "leaving Multiplay or GameLift FlexMatch", or matchmaker config questions not tied to one engine''s client code. Engine skills (edgegap-unity, -ngo, -fishnet, -purrnet, -godot, -unreal, -threejs) own their Find Match client code; edgegap-nakama and edgegap-playfab own those integrations.'
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # Matchmaking for games on Edgegap
@@ -33,7 +33,7 @@ A small proxy in front of the hosted matchmaker (any FaaS or Edgegap's Managed C
 Ask only what the game doesn't tell you, then write the rules. [references/profiles.md](references/profiles.md) has the rule types, how groups and teams aggregate, and annotated configs in `assets/configs/`.
 
 - **Players per match and teams.** `player_count` sets `team_count`, `min_team_size` and `max_team_size`. One team covers co-op, free-for-all and battle royale. Never set a minimum below the game's real minimum: a race or duel with one player is not a match.
-- **Queue time.** `ticket_expiration_period` is `"30s"`, with expansion stages below it (15, 20). A profile whose minimum is below its maximum needs at least one expansion stage, even one that repeats the minimum: without it, a partial match only forms when tickets expire. Longer queues are a production decision for the developer, not a default.
+- **Queue time.** `ticket_expiration_period` is `"30s"`, with expansion stages below it (15, 20). Partial matches need no expansion stage: a minimum below the maximum enables them, and they form by the time tickets expire, so the short expiration keeps the wait short. Use expansions only to relax a rule over time: expansions cost the matchmaker a lot of performance. Longer queues are a production decision for the developer, not a default.
 - **Parties.** Use groups (Group Up): one owner creates the group, friends join it with the group ID, everyone marks ready, and the whole party lands on the same team. Groups only join a team that has room for all of them.
 - **Skill.** `number_difference` on a rating the client can't forge. If the rating lives in the developer's backend, that means a proxy or the backend creates tickets, not the client. Widen `max_difference` in expansions.
 - **Modes and maps.** `string_equality` for one exact value (mode, platform, build version); `intersection` for "any of these" (maps). Separate profiles when modes deploy different app versions or need different team sizes.
@@ -87,7 +87,7 @@ Say which of these the developer's setup relies on when it matters.
 | Symptom | Likely cause |
 |---|---|
 | 400 when creating a ticket or group | profile name or attributes don't match the config: a missing rule attribute (`beacons`, `backfill_group_size`) or an unknown one |
-| Two players wait until their tickets expire, then match | `min_team_size < max_team_size` and no expansion stage |
+| Two players wait until their tickets expire, then match | Long `ticket_expiration_period` (e.g. `5m`): set it to `30s`, don't add an expansion |
 | Players far apart are matched or placed badly | no `player_ip` / `users`, no `latencies` rule, or the client sends beacons with failed pings (0 values) |
 | New players always get a new server, never the running one | the server opens no backfill (not a matchmaker deployment, no matchmaker URL/token on the server, no free seats), or tickets lack `backfill_group_size` |
 | Players are sent to a server that is gone | backfills left open after the server stopped; delete them on shutdown |

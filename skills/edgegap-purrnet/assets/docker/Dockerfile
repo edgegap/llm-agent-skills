@@ -15,7 +15,7 @@ WORKDIR /root/
 RUN chmod +x /root/build/ServerBuild
 
 # Documentation only: Edgegap exposes the ports declared on the app version.
-EXPOSE 5000/udp
+EXPOSE 7777/udp
 
 # Shell form so $UNITY_COMMANDLINE_ARGS (set as an app version / deployment env var) expands.
 # Unlike the plugin's Dockerfile this does not run `env;` first, which would print the
