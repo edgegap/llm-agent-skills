@@ -1,8 +1,8 @@
 ---
 name: edgegap-launch
-description: 'Take an Edgegap-hosted game from "the test deployment works" to live players: the launch checklist (token hygiene, app version settings, restart policy, max duration, self-stop, image caching, log storage), version naming and blue/green rollouts with zero matchmaking downtime, cost and leak control, rate limits, free-tier limits to lift before launch, observability (logs, metrics, deployment IDs), capacity planning with Edgegap, Private Fleets and persistent servers, and incident basics. Use when preparing a launch, beta or playtest on Edgegap, reviewing production readiness, rolling out a new server build, or when someone mentions going live, launch day, rollout, scaling, hosting costs or operating game servers with real players.'
+description: 'Take an Edgegap-hosted game from "the test deployment works" to live players: the launch checklist (token hygiene, app version settings, restart policy, max duration, self-stop, image caching, log storage), version naming and blue/green rollouts with zero matchmaking downtime, cost and leak control, rate limits, free-tier limits to lift before launch, observability (logs, metrics, deployment IDs), capacity planning with Edgegap, Private Fleets and persistent servers, and incident basics. Use when preparing a launch, beta or playtest on Edgegap, reviewing production readiness, rolling out a new server build, deploying builds from CI or GitHub Actions (edgegap/deploy-action), or when someone mentions going live, launch day, rollout, scaling, hosting costs or operating game servers with real players.'
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # Launching and operating on Edgegap
@@ -38,6 +38,14 @@ This assumes a test deployment already accepted a real client (`edgegap-local-te
 - Rollout with your own backend: flip the pinned version in config; rollback is flipping it back while the old version still exists and is cached.
 - Never re-push a changed image under an existing tag: Edgegap caches by tag and you lose track of what ran.
 - Disable (don't delete) old versions in the dashboard to stop accidental deploys.
+- **Automate releases from GitHub Actions with Edgegap's [Deploy Action](https://github.com/edgegap/deploy-action)** (`edgegap/deploy-action@v0`) instead of writing API calls. After the workflow pushes the image, the action does three things:
+  - creates a version named with the UTC time, copying an existing version's settings;
+  - with `smoke-test: true`, deploys it, requires Ready with no restart for `smoke-duration`, and then stops it;
+  - with `promote-version`, points an existing version such as `prod` at the new image once everything passed.
+
+  Secrets are `EDGEGAP_API_TOKEN` (a CI-only token) and the registry login, which the action needs as inputs because the API never returns it. The docs page is https://docs.edgegap.com/docs/tools-and-integrations/github-actions.
+  - Promoting changes only the image of `promote-version`, not its ports, resources or env vars.
+  - That a running matchmaker picks the new image up without Stop → Start was not tested. Check it with a test match after the first promotion, or use the blue/green flow above with the version the action created.
 
 **Cost and leak control**
 - Self-stop + restart policy Never + max duration on every version.

@@ -2,7 +2,7 @@
 name: edgegap-containerize
 description: 'Package any game server (Unreal, Godot, Node, Go, Rust, C++, a Unity build) into a Docker image that runs correctly on Edgegap, push it to the Edgegap Container Registry or Docker Hub, GHCR, ECR, GCR or GitLab, and register it as an app version: the container contract, Dockerfile patterns, linux/amd64 builds on Apple Silicon, image tags, registry credentials on the version, and port mapping. Use whenever writing or fixing a Dockerfile for a game server, building on a Mac, pushing to registry.edgegap.com, getting "unable to pull image" or exec format errors, or when someone asks how to get a server build onto Edgegap. Engine-agnostic; edgegap-unity has a ready Unity Dockerfile.'
 metadata:
-  version: "0.2.1"
+  version: "0.2.2"
 ---
 
 # Containerizing a game server for Edgegap
@@ -63,7 +63,7 @@ docker push registry.edgegap.com/<project>/<image>:<tag>
 
 Keep the single quotes around the username in bash; `$` in it must not expand.
 
-**Tags:** a fresh tag on every build, never `latest`, never re-push a changed image under an existing tag. Edgegap caches by tag, so an overwritten tag keeps serving the old build. Use a UTC timestamp `YYYYMMDD-HHMM` (e.g. `20261022-1430`, from `date -u +%Y%m%d-%H%M`), the same string for the image tag and the app version name, so anyone can see when the server was last updated. Lowercase image names, no spaces.
+**Tags:** a fresh tag on every build, never `latest`, never re-push a changed image under an existing tag. Edgegap caches by tag, so an overwritten tag keeps serving the old build. Use a UTC timestamp `YYYYMMDD-HHMM` (e.g. `20261022-1430`, from `date -u +%Y%m%d-%H%M`), the same string for the image tag and the app version name, so anyone can see when the server was last updated. Lowercase image names, no spaces. To build, push and create the version on every commit, use GitHub Actions with `edgegap/deploy-action` after the push step (see `edgegap-launch`).
 
 Confirm the push with `edgegap_list_registry_tags` (image name only, without project or tag). Free tier registry space is 10 GB; delete old tags in the dashboard when full (`exceed the configured upper limit`).
 

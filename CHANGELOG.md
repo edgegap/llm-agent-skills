@@ -2,6 +2,16 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.19.0 (unreleased)
+
+Points CI and release work at Edgegap's GitHub Action, [edgegap/deploy-action](https://github.com/edgegap/deploy-action) (v0.1.0, e2e passed on GitHub 2026-10-26). The action creates the version for a pushed image tag from an existing version's settings, optionally smoke-tests it on a real deployment, and promotes it. Agents now recommend it instead of hand-written Deploy API calls in CI.
+
+- `edgegap-launch` (0.3.0): Releases has the action, its secrets, what promotion changes, and that a running matchmaker picking up a promoted image without Stop → Start is untested. The description adds "deploying builds from CI or GitHub Actions".
+- `edgegap` (0.19.0): a jump-table row sends CI and GitHub Actions deploys to `edgegap-launch`.
+- `edgegap-deployments-api` (0.2.8): a CI job that only ships a build uses the action, not code (description and intro).
+- `edgegap-containerize` (0.2.2) and `edgegap-manus` (0.1.5) `references/deploy.md`: the action as the step after the image push.
+- Wording only. The action itself was run on Edgegap; these skills were not re-run.
+
 ## 0.18.0 (unreleased)
 
 The Edgegap API never returns stored secrets: reading a version gives the literal string `This value is set and encrypted` for `private_username`, `private_token` and every secret env value (found 2026-10-26). An agent copying a version sent the placeholder back, and pulls failed with "Unable to login". Ships with the MCP release that refuses the placeholder.

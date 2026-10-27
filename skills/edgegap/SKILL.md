@@ -2,12 +2,12 @@
 name: edgegap
 description: 'Start here for hosting a game on Edgegap (dedicated game servers + matchmaking) when the engine is not Unity, Unreal or Godot, is unknown, or the question is about the platform itself. Use when someone wants to host or deploy a game server, wants a single-player or co-op game to be always online or harder to crack, decompile or pirate, asks how players will connect to matches, wants servers for a custom-engine game, compares hosting options, or asks what Edgegap apps, versions, deployments, fleets or matchmakers are, even if they never say "hosting". It picks the server shape, explains the vocabulary and MCP safety rules, and routes to the right edgegap-* skill. For a Unity project, load edgegap-unity instead (NGO: edgegap-ngo, FishNet: edgegap-fishnet, PurrNet: edgegap-purrnet, Fusion: edgegap-fusion); Unreal: edgegap-unreal; Godot 4: edgegap-godot; Colyseus: edgegap-colyseus; Nakama: edgegap-nakama; Manus: edgegap-manus; Three.js/web: edgegap-threejs; matchmaking design: edgegap-matchmaking.'
 metadata:
-  version: "0.18.0"
+  version: "0.19.0"
 ---
 
 # Edgegap
 
-Pack version: 0.18.0
+Pack version: 0.19.0
 
 Edgegap runs dedicated game servers. You push a **Linux container image** of your game server, register it as an **app version**, and ask for a **deployment** near a group of players. Edgegap picks the location with the best ping for that group, starts the container in seconds, and returns a URL (`<id>.pr.edgegap.net`), a public IP, and an external port per internal port. Players connect. The match ends, the server stops, billing stops.
 
@@ -63,6 +63,7 @@ For a Godot 4 game whose server is Godot itself (high-level multiplayer with ENe
 | Write or fix a Dockerfile, push to a registry, pick an image tag | `edgegap-containerize` |
 | Test a server image before spending money | `edgegap-local-testing` |
 | Go live, plan capacity, roll out a new build, control cost | `edgegap-launch` |
+| Deploy every new server build from CI or GitHub Actions (create the version, smoke-test it, promote it) | `edgegap-launch` (it uses `edgegap/deploy-action`) |
 | Find out why a deployment fails, restarts, or nobody can connect | `edgegap-troubleshoot` |
 | Keep Unity Matchmaker, EOS or Steam lobbies, Pragma, AccelByte or Open Match and host on Edgegap | `edgegap-matchmaking` (the integration shape), then `edgegap-deployments-api` (the allocator code) |
 
