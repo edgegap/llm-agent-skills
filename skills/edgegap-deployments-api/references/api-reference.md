@@ -96,4 +96,17 @@ Returns `logs`, `crash_logs`, `crash_data` (`exit_code`, `message` such as `OOM 
 - `GET /v1/locations/beacons`: ping beacons (`host`, `fqdn`, `udp_port`, `tcp_port`, `location`) for client-side latency measurement.
 - `GET /v1/apps`, `GET /v1/app/{app}/versions`, `POST /v1/app/{app}/version`: applications and versions. Version fields: `req_cpu`, `req_memory`, `docker_repository` (registry host), `docker_image`, `docker_tag`, `private_username` / `private_token` (registry pull credentials), `ports` (`port`, `protocol`, `name`, `to_check`, `tls_upgrade` on WS/HTTP), `envs`, `restart_policy` (`always` default, `never`, `on_failure`), `max_duration` (minutes, default and max 1440, `-1` only for private fleets), `termination_grace_period_seconds` (5 to 3600), `time_to_deploy`, `force_cache`, `verify_image`. Reads never return stored secrets: `private_username`, `private_token` and the `value` of every env var with `is_secret: true` come back as the literal string `This value is set and encrypted`. Never send that string back in a create or update; get the registry login from the dashboard's Container Registry page and secret values from the developer.
 - `PATCH /v1/app/{app}/version/{version}`: change an existing version. Fields you leave out keep their value, but `ports` and `envs` replace the whole list: read the version first and send every port or variable to keep, with real values for secret variables (the read returns the placeholder above). Leave `private_username` / `private_token` out to keep the current login. Running deployments keep their old settings.
-- `POST /v1/deployments/{request_id}/tags`: add a tag after deploy.
+- `POST /v1/deployments/{request_id}/tags` (`{ "name": "..." }`, 1 to 40 characters), `GET` the same path to list, `DELETE /v1/deployments/{request_id}/tags/{tag}` to remove: tags after deploy. Tags are labels; the running server does not see the change.
+- `POST /v1/deployments/{request_id}:report` with `{ "reason": "...", "metadata": { ... } }`: report a deployment from your moderation backend. It does not stop it.
+- `DELETE /v1/app/{app}/version/{version}` and `DELETE /v1/app/{app}` (the app and all its versions): clean up. Check `GET /v1/deployments` for running deployments of it first.
+
+## Private fleets (v2)
+
+- `GET https://api.edgegap.com/v2/private-fleets/{fleet}/hosts`: the fleet's hosts, with `host_id`, `status` (only `ACTIVE` accepts deployments), IP and location.
+- `POST https://api.edgegap.com/v2/private-fleets/deployments`: the deploy body above plus `private_host_ids` (in order of preference). Edgegap overflows to its cloud when those hosts are full.
+
+## Endpoint Storage (keep logs, pull files into containers)
+
+- `POST /v1/storage/endpoint` with `name`, `endpoint` (https URL of the S3-compatible service, without the bucket), `bucket`, `access_key_id`, `secret_access_key`, optional `output_format` (`TEXT` or `NDJSON`) and `container_log_version` (`v1`: one file per deployment; `v2`: chunks streamed while it runs). `GET /v1/storage/endpoints` lists them (never the secret key).
+- Set `endpoint_storage` on the version (create or `PATCH`) to export each deployment's logs there when it ends.
+- Pull profiles copy a file or folder from the bucket into the container at boot: `POST /v1/storage/endpoint/{endpoint}/pull-profile` with `name`, `source`, `source_type` (`File` or `Folder`), `destination` (absolute path in the container), then link it to a version with `PUT /v1/storage/endpoint/{endpoint}/pull-profile/{profile}/app/{app}/version/{version}` (`DELETE` unlinks). An unlinked profile does nothing.

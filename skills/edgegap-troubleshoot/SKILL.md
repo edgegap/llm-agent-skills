@@ -2,14 +2,14 @@
 name: edgegap-troubleshoot
 description: 'Diagnose why a game server on Edgegap will not start, keeps restarting, stops early, or cannot be reached, for any engine: image push and pull failures (401, 403, 424 "unable to pull image"), exec format errors, 422 couldn''t allocate, Error deployments, crash loops and OOM kills, 100% CPU, deployments stopping after 60 minutes or 24 hours, missing logs, clients timing out or failing to connect (internal vs external port, protocol, 0.0.0.0 binding, wss and TLS Upgrade), and matchmaker players stuck searching. Use when someone says their Edgegap deployment, server or matchmaking "isn''t working", or pastes an Edgegap error. Unity-specific build and SDK issues are in edgegap-unity.'
 metadata:
-  version: "0.2.1"
+  version: "0.2.2"
 ---
 
 # Troubleshooting an Edgegap deployment
 
 Find the layer that failed, get evidence from it, then fix the root cause. Layers, in order: **build → image → registry → app version → deployment → server process → network → matchmaker**. Don't change two layers at once.
 
-Evidence first, with the `edgegap_*` MCP tools when connected (rules: the `edgegap` skill's [references/agent-rules.md](../edgegap/references/agent-rules.md)): `edgegap_list_app_versions`, `edgegap_get_deployment`, `edgegap_get_deployment_logs` (container logs plus crash data: exit code, OOM, restart count), `edgegap_list_deployments`. **Read logs before stopping anything**: they are deleted when a deployment stops, unless Endpoint Storage is configured. Without tools, the dashboard deployment page shows the same.
+Evidence first, with the `edgegap_*` MCP tools when connected (rules: the `edgegap` skill's [references/agent-rules.md](../edgegap/references/agent-rules.md)): `edgegap_list_app_versions`, `edgegap_get_deployment`, `edgegap_get_deployment_logs` (container logs plus crash data: exit code, OOM, restart count), `edgegap_list_deployments`. **Read logs before stopping anything**: they are deleted when a deployment stops, unless Endpoint Storage is configured. For crashes that are hard to catch live, suggest keeping logs: `edgegap_list_endpoint_storage` shows whether a bucket exists, and `edgegap_update_app_version` with `endpoint_storage` exports each deployment's logs there when it ends. Without tools, the dashboard deployment page shows the same.
 
 Also check https://status.edgegap.com before deep debugging.
 
