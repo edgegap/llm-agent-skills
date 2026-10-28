@@ -2,6 +2,16 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.21.0 (unreleased)
+
+Guidance for the tools @edgegap/mcp 0.14.0 adds (not released yet), and a once-per-conversation skills update check, as Gameye's skill asks of agents.
+
+- `edgegap` `references/agent-rules.md`: check the installed skills with `edgegap_update_skills` once per conversation and ask before `apply` (the local server only runs updaters with `EDGEGAP_ENABLE_SKILLS_UPDATE=1`); `allow_long_running` only after asking, without lowering `max_duration` on a live version; delete only test apps and versions you created; stop deployments a refused deploy still created; deploy webhooks only to the developer's own URLs; private fleet hosts and `private_host_ids`; Endpoint Storage to keep logs; asking before deletes and Endpoint Storage. `SKILL.md` summary and the update hint mention `edgegap_update_skills`.
+- `edgegap-troubleshoot`: how to keep logs with Endpoint Storage.
+- `edgegap-deployments-api` `references/api-reference.md`: deployment tags (list, remove), report, deleting apps and versions, private fleets, Endpoint Storage and pull profiles, from the public spec (pin unchanged).
+- Versions: `edgegap` 0.21.0, `edgegap-troubleshoot` 0.2.2, `edgegap-deployments-api` 0.2.9.
+- The new MCP tools are tested against a mock API only; none of this guidance was run on Edgegap.
+
 ## 0.20.0 (unreleased)
 
 Partial matches no longer get an expansion stage, and PurrNet uses port 7777.
