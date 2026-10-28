@@ -76,7 +76,7 @@ First run imports the whole project and can take many minutes, so run it in the 
 
 **Option B, in the Editor (developer clicks).** Menu **Tools → Edgegap → Build Linux Dedicated Server** (from the same script), or File → Build Profiles → **Linux Server** (Dedicated Server) → build to `Builds/EdgegapServer/ServerBuild`. The executable must be named `ServerBuild` for the Dockerfile.
 
-**Option C, the Edgegap Unity plugin** (`https://github.com/edgegap/edgegap-unity-plugin.git#3.2.1`, menu **Tools → Edgegap Server Hosting**). It builds, containerizes and pushes with buttons, and is a good choice for developers who prefer a UI. Caveats: it pre-fills the dashboard version with port 7770/UDP named "Game Port" (change it to your transport's port/protocol and name `gameport`); its Dockerfile prints all env vars, including the self-stop token, into logs; its local-test mock env keys ports by number, not name.
+**Option C, the Edgegap Unity plugin** (`https://github.com/edgegap/buildtool-unity-plugin.git`, menu **Tools → Edgegap Server Hosting**). It builds, containerizes and pushes with buttons, and is a good choice for developers who prefer a UI. Caveats: it pre-fills the dashboard version with port 7770/UDP named "Game Port" (change it to your transport's port/protocol and name `gameport`); its Dockerfile prints all env vars, including the self-stop token, into logs; its local-test mock env keys ports by number, not name.
 
 ## 4. Docker image and registry push
 
