@@ -1,2 +1,5 @@
+# The Edgegap plugin builds the image with the project root as context.
+# Keep only the server export, or Docker uploads the whole project.
 *
-!build/server/
+!build/edgegap-linux-server.x86_64
+!build/edgegap-linux-server.pck

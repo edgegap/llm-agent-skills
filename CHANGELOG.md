@@ -2,6 +2,18 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.22.0 (unreleased)
+
+`edgegap-godot` (0.2.0) builds the server with the [Edgegap Godot plugin](https://github.com/edgegap/buildtool-godot-plugin) instead of a hand-written preset, Dockerfile and registry login. The plugin's editor dock exports the Linux dedicated server, builds and runs the image, pushes it with the account's own registry credentials and deploys a test server; the agent writes the game code, the app version and the matchmaker. Validated on [game-sample-godot-arena-shooter](https://github.com/edgegap/game-sample-godot-arena-shooter), which now uses the plugin.
+
+- Phases 2 and 3 install the plugin into `addons/edgegap` and follow its dock (Export server, Containerize, Deploy locally, Upload). The command-line equivalent (`--export-release "Edgegap Linux Server"` and `docker build -f addons/edgegap/defaults/Dockerfile --build-arg SERVER_BUILD_PATH=build/edgegap-linux-server .`) stays for CI and editor-less runs.
+- The settings template's class is now `EdgegapGameSettings`: the plugin declares a global `class_name EdgegapSettings`, and the clash stops the plugin from loading (measured on the sample: `Class "EdgegapSettings" hides a global script class`). Troubleshooting lists all of the plugin's class names.
+- `assets/docker/Dockerfile` removed: the plugin's default Dockerfile runs a Dedicated Server export with no arguments (it starts headless, and `EdgegapServer` starts from the `dedicated_server` feature). `assets/docker/.dockerignore` now keeps only `build/edgegap-linux-server.*`, since the plugin sends the project root as build context. `assets/godot/export_presets.server.cfg` is the plugin's preset (`build/edgegap-linux-server.x86_64`, `embed_pck=false`), for allowlist projects and headless exports.
+- `references/deploy.md` documents each dock step, two caveats of the plugin's Dockerfile (Godot as PID 1 ignores SIGTERM; it prints the environment, `ARBITRIUM_DELETE_TOKEN` included, to the deployment logs), and keeps the timestamp tag rule over the plugin's default tag.
+- `evals/godot-evals.json`: tasks 1 and 2 expect the plugin build instead of a tini Dockerfile.
+- Versions: `edgegap` 0.22.0, `edgegap-godot` 0.2.0.
+- Not re-run: the Godot task and routing evals.
+
 ## 0.21.1 (unreleased)
 
 Matchmaker templates no longer carry an empty `expansions` object (review feedback on the Boss Room sample, 2026-10-28): an empty `"expansions": {}` read as "fill in an expansion here". The key is optional, so profiles without an expansion stage now leave it out.

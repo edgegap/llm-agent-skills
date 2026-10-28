@@ -1,8 +1,8 @@
 ---
 name: edgegap-godot
-description: 'Godot 4 + Edgegap: take a Godot multiplayer game (high-level multiplayer: MultiplayerAPI, @rpc, ENetMultiplayerPeer, WebSocketMultiplayerPeer, MultiplayerSpawner, netfox) to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a Godot project (project.godot, .gd, .tscn, export_presets.cfg). It has tested GDScript templates (a server lifecycle autoload that waits for the matched players and stops its own deployment, a matchmaker client and Find Match button), the headless Linux dedicated server export, Dockerfile, app version ports (UDP for ENet, WS + TLS Upgrade for web and wss), matchmaker config, and fixes for Godot pitfalls: empty server logs, export allowlists that drop new scripts, SIGTERM ignored in containers, join validation that silently blocks matched players. Use when a Godot dev wants online play: "host my Godot game", "nobody should host", "Find Match button", "Godot web multiplayer", or is debugging Godot deployments, ports or matchmaking on Edgegap.'
+description: 'Godot 4 + Edgegap: take a Godot multiplayer game (MultiplayerAPI, @rpc, ENetMultiplayerPeer, WebSocketMultiplayerPeer, MultiplayerSpawner, netfox) to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a Godot project (project.godot, .gd, .tscn, export_presets.cfg). It has tested GDScript templates (a server lifecycle autoload that waits for the matched players and stops its own deployment, a matchmaker client and Find Match button), the Edgegap Godot plugin build (export, image, push from the editor), app version ports (UDP for ENet, WS + TLS Upgrade for web and wss), matchmaker config, and fixes for Godot pitfalls: empty server logs, export allowlists that drop new scripts, class name clashes with the plugin, join validation that silently blocks matched players. Use when a Godot dev wants online play: "host my Godot game", "nobody should host", "Find Match button", "Godot web multiplayer", or is debugging Godot deployments, ports or matchmaking on Edgegap.'
 metadata:
-  version: "0.1.6"
+  version: "0.2.0"
 ---
 
 # Edgegap for Godot 4: dedicated servers + matchmaking
@@ -10,7 +10,7 @@ metadata:
 Goal: a player clicks **Find Match**, the Edgegap matchmaker starts a headless Godot server near the matched players, every client joins it, the server starts the match when they're all in, and it stops its own deployment when the match is over. Done means that loop works with real exports, not that the scripts parse.
 
 Where this comes from:
-- [edgegap/godot-sample-arena-shooter](https://github.com/edgegap/godot-sample-arena-shooter) (Godot 4.7.2, server-authoritative, `WebSocketMultiplayerPeer` on port 7000) ran end to end on Edgegap on 2026-10-20: two Windows clients pressed FIND MATCH, were matched onto the same deployment over `wss://` (TLS Upgrade), played, and the deployment stopped itself. Its `EDGEGAP.md` is a working reference.
+- [edgegap/game-sample-godot-arena-shooter](https://github.com/edgegap/game-sample-godot-arena-shooter) (Godot 4.7.2, server-authoritative, `WebSocketMultiplayerPeer` on port 7000) ran end to end on Edgegap on 2026-10-20: two Windows clients pressed FIND MATCH, were matched onto the same deployment over `wss://` (TLS Upgrade), played, and the deployment stopped itself. Its `EDGEGAP.md` is a working reference. On 2026-10-28 it moved to the Edgegap Godot plugin's build: its preset and the plugin's default Dockerfile, unchanged, ran in a local container and on an Edgegap deployment: two `wss://` clients played a match and the deployment stopped itself.
 - The templates in `assets/godot/edgegap/` are that sample's server lifecycle and matchmaker client made game-agnostic. They were tested on 2026-10-20 with Godot 4.7.2 in a minimal project: a Linux dedicated server export in Docker, a fake matchmaker and two clients, with both ENet (UDP) and WebSocket. Two tickets → assignment → both clients joined → `match_ready` → `match_ended` → self-stop call with the raw token. ENet on a real Edgegap deployment wasn't run yet: prove it with Phase 4 before adding the matchmaker.
 
 Use **dedicated (authoritative) servers**, not a player host, unless the developer explicitly wants host/client.
@@ -49,20 +49,24 @@ Read `references/godot.md` §2-§5.
 
 ✅ Check: `godot --headless --path . -- --server` logs `EDGEGAP listening ...` and `EDGEGAP ready ...`; two clients (`godot --path .` twice, or with `--headless` and a test env var) connect to `127.0.0.1:<port>`; the server logs `player_joined` twice and the game's server-side content runs. With `MM_TICKET_IDS='["a","b"]'` set, `match_ready players=2` fires as soon as the second joins.
 
-## Phase 2: Connect to Edgegap
+## Phase 2: Install the Edgegap plugin and connect
 
-Edgegap account, Docker running, the Godot **export templates** for the exact engine version (Linux x86_64). Edgegap MCP connected (`references/deploy.md` §1).
+The [Edgegap Godot plugin](https://github.com/edgegap/buildtool-godot-plugin) (Godot 4.3+) exports the Linux server, builds the image, tests it locally, pushes it and deploys it from an **Edgegap** editor dock. Use it instead of writing export presets, Dockerfiles and registry logins.
+1. Install into `res://addons/edgegap/`: the Godot Asset Store ("edgegap"), or `git clone --depth 1 https://github.com/edgegap/buildtool-godot-plugin.git addons/edgegap` then delete `addons/edgegap/.git`. Enable it: Project Settings → Plugins, or add `[editor_plugins] enabled=PackedStringArray("res://addons/edgegap/plugin.cfg")` to `project.godot`.
+2. Copy `assets/docker/.dockerignore` to the project root: the plugin builds with the whole project as context.
+3. Edgegap account and Docker running. The developer pastes an Edgegap API token into the dock (it stays in their editor settings); the dock fetches registry credentials itself, so no `docker login`. Edgegap MCP connected for your part (`references/deploy.md` §1).
 
-✅ Check: `edgegap_list_apps` succeeds.
+✅ Check: the editor's Output shows no `Edgegap` errors (a `class_name ... hides a global script class` error means a name clash with the plugin's own classes, `references/troubleshooting.md` §4), and `edgegap_list_apps` succeeds.
 
 ## Phase 3: Export, containerize, push
 
-Read `references/deploy.md` §2-§3.
-1. Append `assets/godot/export_presets.server.cfg` to `export_presets.cfg` (renumber the preset index). If the project uses an export allowlist, the client presets too, the new scripts must be exported: list them under `"resources"`, and switch `"scenes"` presets, which ignore listed scripts (`references/godot.md` §6). Check with `--export-pack`.
-2. `godot --headless --path . --export-release "Edgegap Linux Server" build/server/server.x86_64`.
-3. Copy `assets/docker/Dockerfile` and `.dockerignore` to the project root; set `EXPOSE` to the port and protocol.
-4. The developer runs `docker login registry.edgegap.com`; you build with `--platform linux/amd64` and push a fresh tag (UTC timestamp `YYYYMMDD-HHMM`, also the app version name).
-5. Test the container with simulated Edgegap variables (`references/deploy.md` §3): two clients connect, `docker logs` shows the `EDGEGAP` lines live, and `docker stop` ends it in about a second.
+The developer clicks through the dock; you only fix what it reports (`references/deploy.md` §2-§3):
+1. **Validate export templates** → **Export server**. The plugin creates the `Edgegap Linux Server` preset (Dedicated Server mode, `build/edgegap-linux-server`) if it's missing. With an export allowlist, add the preset yourself first from `assets/godot/export_presets.server.cfg` with the game's filter plus `res://edgegap/*.gd` (`references/godot.md` §6); the plugin never changes an existing preset.
+2. **Containerize** with **Image tag** set to a UTC timestamp `YYYYMMDD-HHMM` (also the app version name). The plugin's default Dockerfile works unchanged: a Dedicated Server export starts headless and `EdgegapServer` starts the server on `PORT`, so no arguments are needed.
+3. **Deploy locally** with **Docker run parameters** `-p <PORT>:<PORT>/udp` (ENet) or `-p <PORT>:<PORT>` (WebSocket): two clients connect and `docker logs` shows the `EDGEGAP` lines.
+4. **Upload** with the application name: it pushes to the Edgegap registry and opens the dashboard's new-version page. Create the version yourself in Phase 4 instead, with the right ports.
+
+No editor at hand (CI, or the developer wants you to do it): the same build is two commands (`references/deploy.md` §2), plus `docker login` and `docker push`.
 
 ✅ Check: `edgegap_list_registry_tags` shows the tag.
 
@@ -103,11 +107,11 @@ Hand-off: what was built and where, app/version/matchmaker names, how to ship a 
 ## Reference files
 
 - `references/godot.md`: reading the project, transports and ports, host → dedicated server, wiring the templates, logs, exports and allowlists, web exports, validating joiners.
-- `references/deploy.md`: MCP connection, the export, Docker and a local test with simulated Edgegap variables, app version ports (UDP / WS + TLS Upgrade), direct deploy, env vars.
+- `references/deploy.md`: MCP connection, the plugin's build and its command-line equivalent, a local test with simulated Edgegap variables, app version ports (UDP / WS + TLS Upgrade), direct deploy, env vars.
 - `references/matchmaker.md`: config, dashboard steps, the `/tickets` contract, injected variables, expansion stages, CORS for web clients.
 - `references/troubleshooting.md`: symptom → fix tables.
-- `assets/godot/edgegap/`: `edgegap_settings.gd`, `edgegap_server.gd` (autoload), `edgegap_matchmaker.gd`, `edgegap_find_match_button.gd`. `assets/godot/export_presets.server.cfg`, `assets/docker/`, `assets/matchmaker/`.
+- `assets/godot/edgegap/`: `edgegap_settings.gd` (`EdgegapGameSettings`), `edgegap_server.gd` (autoload), `edgegap_matchmaker.gd`, `edgegap_find_match_button.gd`. `assets/godot/export_presets.server.cfg` (the plugin's preset, for allowlists and headless exports), `assets/docker/.dockerignore`, `assets/matchmaker/`.
 
 Related skills in this pack: `edgegap-server-design` (the lifecycle contract in any engine), `edgegap-deployments-api` for a studio's own backend or matchmaker, `edgegap-launch` before going live, `edgegap-troubleshoot` for platform-side failures.
 
-Sources of truth: https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html, https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_dedicated_servers.html, https://docs.edgegap.com/godot, and the sample https://github.com/edgegap/godot-sample-arena-shooter.
+Sources of truth: https://docs.godotengine.org/en/stable/tutorials/networking/high_level_multiplayer.html, https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_dedicated_servers.html, https://docs.edgegap.com/godot, and the sample https://github.com/edgegap/game-sample-godot-arena-shooter.

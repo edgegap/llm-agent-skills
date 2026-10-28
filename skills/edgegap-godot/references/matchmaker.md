@@ -43,7 +43,7 @@ Put both in `edgegap_settings.gd` (`MATCHMAKER_URL`, `MATCHMAKER_AUTH_TOKEN`), o
 ## 4. Ticket API contract
 
 - Header `Authorization: <auth token>`, **raw**: no `Bearer` or `token` prefix (401 otherwise). `Content-Type: application/json` on the POST.
-- `POST /tickets` `{"profile": "casual", "attributes": {}}` → 200/201 `{"id": ...}`. The `profile` equals `EdgegapSettings.PROFILE`. Every rule except `player_count` needs an attribute with the rule's name; unknown attributes are rejected. A mismatch is HTTP 400.
+- `POST /tickets` `{"profile": "casual", "attributes": {}}` → 200/201 `{"id": ...}`. The `profile` equals `EdgegapGameSettings.PROFILE`. Every rule except `player_count` needs an attribute with the rule's name; unknown attributes are rejected. A mismatch is HTTP 400.
 - `GET /tickets/{id}` → `status`: `SEARCHING`, `MATCH_FOUND` / `TEAM_FOUND`, `HOST_ASSIGNED` with `assignment.fqdn`, `assignment.public_ip` and `assignment.ports.<name>.external`, or `CANCELLED`. 404 = expired or removed.
 - `DELETE /tickets/{id}` cancels. 409 means it was already matched: keep polling and join (the template does).
 - Poll every 2 s, one request in flight; give up and delete the ticket after a timeout (`SEARCH_TIMEOUT_SECONDS`, 300).

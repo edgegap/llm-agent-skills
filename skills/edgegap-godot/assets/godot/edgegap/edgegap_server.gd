@@ -24,8 +24,8 @@ extends Node
 ##   EMPTY_GRACE. Without the self-stop an empty server bills until it hits the
 ##   app version's max duration.
 ## - Quits by itself if the self-stop call fails or SIGTERM never arrives.
-##   Godot has no SIGTERM handler, so SIGTERM ends the process at once; in a
-##   container that only works when PID 1 forwards it (tini, see the Dockerfile).
+##   Godot has no SIGTERM handler, and as PID 1 in a container (the Edgegap
+##   plugin's Dockerfile) it ignores SIGTERM, so this quit is what ends it.
 ## Log lines start with "EDGEGAP". Godot only flushes print() per line when
 ## application/run/flush_stdout_on_print is on (see the skill's godot.md §5);
 ## without it, docker and Edgegap logs show nothing until the buffer fills.
@@ -89,13 +89,13 @@ func matched_ticket_ids() -> Array:
 	return parsed if parsed is Array else []
 
 
-## Creates the server peer for EdgegapSettings.transport() on all interfaces.
+## Creates the server peer for EdgegapGameSettings.transport() on all interfaces.
 ## Returns null (and logs why) when the port can't be bound.
 func create_server_peer(max_clients: int = 32) -> MultiplayerPeer:
-	var port := EdgegapSettings.port()
+	var port := EdgegapGameSettings.port()
 	var error: Error
 	var peer: MultiplayerPeer
-	if EdgegapSettings.transport() == EdgegapSettings.Transport.WEBSOCKET:
+	if EdgegapGameSettings.transport() == EdgegapGameSettings.Transport.WEBSOCKET:
 		var ws := WebSocketMultiplayerPeer.new()
 		# Plain ws inside the container: Edgegap's TLS Upgrade terminates wss.
 		error = ws.create_server(port, "*")
@@ -132,11 +132,11 @@ func begin(mp: MultiplayerAPI = null) -> void:
 		return
 	_mp = mp if mp != null else multiplayer
 	expected_players = matched_ticket_ids().size()
-	var default_grace := EdgegapSettings.START_GRACE_SECONDS if expected_players > 0 else 10.0
-	_start_grace = EdgegapSettings.seconds("EDGEGAP_START_GRACE", default_grace)
-	_join_timeout = EdgegapSettings.seconds("EDGEGAP_JOIN_TIMEOUT", EdgegapSettings.JOIN_TIMEOUT_SECONDS)
-	_empty_grace = EdgegapSettings.seconds("EDGEGAP_EMPTY_GRACE", EdgegapSettings.EMPTY_GRACE_SECONDS)
-	_end_grace = EdgegapSettings.seconds("EDGEGAP_END_GRACE", EdgegapSettings.END_GRACE_SECONDS)
+	var default_grace := EdgegapGameSettings.START_GRACE_SECONDS if expected_players > 0 else 10.0
+	_start_grace = EdgegapGameSettings.seconds("EDGEGAP_START_GRACE", default_grace)
+	_join_timeout = EdgegapGameSettings.seconds("EDGEGAP_JOIN_TIMEOUT", EdgegapGameSettings.JOIN_TIMEOUT_SECONDS)
+	_empty_grace = EdgegapGameSettings.seconds("EDGEGAP_EMPTY_GRACE", EdgegapGameSettings.EMPTY_GRACE_SECONDS)
+	_end_grace = EdgegapGameSettings.seconds("EDGEGAP_END_GRACE", EdgegapGameSettings.END_GRACE_SECONDS)
 	_mp.peer_connected.connect(_on_peer_connected)
 	_mp.peer_disconnected.connect(_on_peer_disconnected)
 	phase = Phase.WAITING
