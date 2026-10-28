@@ -2,8 +2,8 @@
 
 Contents
 1. Edgegap access and the MCP connection
-2. Export the Linux dedicated server and the clients
-3. Docker image, local test and registry push
+2. The server build: plugin dock or command line
+3. Local test and registry push
 4. App and app version
 5. Direct test deployment
 6. Environment variables
@@ -20,42 +20,51 @@ Contents
   and restarts the session. "does not contain an Edgegap API token" usually means the header became `token token <uuid>`. Claude Desktop and claude.ai custom connectors can't send the header; use `npx -y @edgegap/mcp` there.
 - Without MCP, guide the developer through the dashboard and ask them to paste results.
 
-## 2. Export the Linux dedicated server and the clients
+## 2. The server build: plugin dock or command line
 
-Prerequisites: the Godot editor of the project's exact version, its export templates (Linux x86_64 for the server, plus each client platform), Docker. Use the console build on Windows (`Godot_v<ver>_win64_console.exe`) so command-line output shows.
+Prerequisites: the Godot editor of the project's exact version (4.3+ for the plugin), its Linux x86_64 export templates (plus each client platform), Docker, the plugin in `res://addons/edgegap/` and `assets/docker/.dockerignore` at the project root.
 
+The dock's steps, each with a status line and details in Output (Docker build and push logs go to `<OS cache dir>/edgegap-godot/docker-*.log`, path printed there):
+
+| Dock step | What it does |
+|---|---|
+| Connect Account | Checks the API token (`POST /v1/wizard/init-quick-start`) and stores registry credentials in editor settings |
+| Validate export templates / Export server | Creates the `Edgegap Linux Server` preset if missing (never edits an existing one), then `--headless --export-debug` to `build/edgegap-linux-server.x86_64` + `.pck` |
+| Containerize | `docker build -f addons/edgegap/defaults/Dockerfile --build-arg SERVER_BUILD_PATH=build/edgegap-linux-server -t <image>:<tag> <project root>`; `--platform linux/amd64` added on ARM. Image name defaults to `application/config/name` in kebab case |
+| Deploy locally / Stop | `docker run` with the run parameters (default `-p 7777/udp`: change it to the game's port and protocol) |
+| Upload | Logs in to the registry, tags and pushes, then opens the dashboard's create-version page |
+| Deploy to cloud | `POST /v2/deployments` near your public IP, tagged `quickstart`; polls until ready; Stop ends it |
+| Rebuild from source | Export + Containerize in one click |
+
+The default Dockerfile (`ubuntu:22.04` + `ca-certificates`) copies the binary and `.pck` and runs `./server.x86_64 -- ${GODOT_COMMANDLINE_ARGS}`. It needs nothing per game:
+- a Dedicated Server export starts headless, and `EdgegapServer.is_server_launch()` is true from the `dedicated_server` feature, so no `--server` argument. A game that needs arguments reads them from `GODOT_COMMANDLINE_ARGS`, set as an app version env var;
+- Godot runs as PID 1 and ignores SIGTERM: `docker stop` waits out its timeout. On Edgegap it doesn't matter, because `EdgegapServer` quits by itself after its self-stop call;
+- it prints the environment at start, so deployment logs show `ARBITRIUM_DELETE_TOKEN`. Don't paste those logs anywhere public. A game that can't accept that gets its own Dockerfile (same `SERVER_BUILD_PATH` contract) in the dock's Dockerfile path field, which resets to the default each time the editor starts.
+
+Command line, same artifacts (CI, or no editor open):
 ```bash
 godot --headless --path . --import          # first run on a fresh clone
-godot --headless --path . --export-release "Edgegap Linux Server" build/server/server.x86_64
-godot --headless --path . --export-release "<client preset>" build/client/<name>
+godot --headless --path . --export-release "Edgegap Linux Server" build/edgegap-linux-server.x86_64
+docker build --platform linux/amd64 -f addons/edgegap/defaults/Dockerfile --build-arg SERVER_BUILD_PATH=build/edgegap-linux-server -t <game>-server:<tag> .
 ```
-`--export-release` needs the preset name exactly as in `export_presets.cfg` and an existing output folder. `ERROR: Cannot export project with preset ... due to configuration errors` lists what's missing (often the templates). Exports don't fail on script errors: run the exported server once (Docker, §3) before pushing.
+The preset must exist (the plugin's Export button, or `assets/godot/export_presets.server.cfg`), the `build/` folder too, and the output path is project-relative. Use the console build on Windows (`Godot_v<ver>_win64_console.exe`) so output shows. `ERROR: Cannot export project with preset ... due to configuration errors` lists what's missing (often the templates). Exports don't fail on script errors: run the exported server once (§3) before pushing.
 
 Quick checks without exporting: `godot --headless --path . -- --server` runs the server from the project, and `godot --headless --path . --check-only --script res://edgegap/edgegap_matchmaker.gd` parses a script (autoload names aren't known in `--check-only`, so scripts that use `EdgegapServer` report it missing there; run the project instead).
 
-## 3. Docker image, local test and registry push
+## 3. Local test and registry push
 
-Copy `assets/docker/Dockerfile` and `assets/docker/.dockerignore` to the project root (the context is only `build/server/`). The Dockerfile:
-- uses `debian:bookworm-slim` (the official Linux export templates run there with no extra libraries under `--headless`);
-- installs `ca-certificates` and **tini**: Godot has no SIGTERM handler and the kernel drops unhandled signals sent to PID 1, so without tini `docker stop` and Edgegap's stop wait out the grace period and kill the server (measured: 20 s and exit 137 without tini, 1 s with it);
-- runs `server.x86_64 --headless -- --server`; never prints the environment, which holds `ARBITRIUM_DELETE_TOKEN`.
+Tags: never `latest`, never reuse a tag (Edgegap caches by tag). Use a UTC timestamp `YYYYMMDD-HHMM` (e.g. `20261022-1430`, from `date -u +%Y%m%d-%H%M`) in the dock's Image tag field, the same string for the app version name. The plugin's own default (`yy.MM.dd-HH.mm.ss-UTC`) is only used when the field is empty.
 
-Set `EXPOSE <port>/udp` (ENet) or `<port>/tcp` (WebSocket). Tags: never `latest`, never reuse a tag (Edgegap caches by tag). Use a UTC timestamp `YYYYMMDD-HHMM` (e.g. `20261022-1430`, from `date -u +%Y%m%d-%H%M`), the same string for the image tag and the app version name, so anyone can see when the server was last updated.
-
-Local test with simulated Edgegap variables, before pushing:
+Local test with simulated Edgegap variables, before uploading (the dock's Deploy locally runs the same image without them):
 ```bash
-docker build --platform linux/amd64 -t <game>-server:test .
-docker run --rm -p 7777:7777/udp -e ARBITRIUM_REQUEST_ID=localtest -e 'MM_TICKET_IDS=["a","b"]' <game>-server:test
+docker run --rm -p 7777:7777/udp -e ARBITRIUM_REQUEST_ID=localtest -e 'MM_TICKET_IDS=["a","b"]' <game>-server:<tag>
 ```
 (`-p 7777:7777` without `/udp` for WebSocket.) Logs must show `EDGEGAP listening ...` and `EDGEGAP ready edgegap=true ...` right away; empty logs mean `flush_stdout_on_print` is off (`godot.md` §5). Connect two clients to `127.0.0.1:7777` (or `ws://127.0.0.1:7777`): `player_joined` ×2, then `match_ready players=2`. With `ARBITRIUM_REQUEST_ID` set and no delete URL, the server quits by itself when it would self-stop. To exercise the self-stop call too, point `ARBITRIUM_DELETE_URL` at any local HTTP endpoint (`http://host.docker.internal:<port>/...`) with `ARBITRIUM_DELETE_TOKEN`; the server sends `DELETE` with `Authorization: <token>` raw.
 
-The developer logs in (Container Registry page in the dashboard):
+Push: the dock's **Upload** (no `docker login` needed). From the command line, the developer logs in first (Container Registry page in the dashboard):
 ```bash
 docker login registry.edgegap.com -u '<username>'
-```
-Then:
-```bash
-docker build --platform linux/amd64 -t registry.edgegap.com/<project>/<game>:<tag> .
+docker tag <game>-server:<tag> registry.edgegap.com/<project>/<game>:<tag>
 docker push registry.edgegap.com/<project>/<game>:<tag>
 ```
 Confirm with `edgegap_list_registry_tags` (image name only). `edgegap_get_registry_credentials` hands credentials only to plugin quick-start tokens: with a normal API token it returns `status: "manual_steps_required"` and no credentials, which is expected, not a failure. Do not call it again; use the dashboard page, or push to Docker Hub, GHCR or another registry and pass that registry and its pull login to `edgegap_create_app_version`.

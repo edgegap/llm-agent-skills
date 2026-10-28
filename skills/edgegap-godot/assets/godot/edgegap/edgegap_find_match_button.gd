@@ -28,7 +28,7 @@ func _ready() -> void:
 	matchmaker.status_changed.connect(_on_status)
 	matchmaker.assigned.connect(_on_assigned)
 	pressed.connect(_on_pressed)
-	disabled = not EdgegapSettings.is_matchmaker_configured()
+	disabled = not EdgegapGameSettings.is_matchmaker_configured()
 	_show("Ready." if not disabled else "Matchmaker not configured.")
 	if OS.get_environment("EDGEGAP_FIND_MATCH") == "1" and not disabled:
 		_on_pressed.call_deferred()

@@ -45,7 +45,7 @@ var _search := 0
 
 func _ready() -> void:
 	_poll_timer = Timer.new()
-	_poll_timer.wait_time = EdgegapSettings.POLL_SECONDS
+	_poll_timer.wait_time = EdgegapGameSettings.POLL_SECONDS
 	_poll_timer.timeout.connect(_poll)
 	add_child(_poll_timer)
 
@@ -55,13 +55,13 @@ func _ready() -> void:
 func find_match(attributes: Dictionary = {}) -> void:
 	if state not in [State.IDLE, State.JOINED]:
 		return
-	if not EdgegapSettings.is_matchmaker_configured():
+	if not EdgegapGameSettings.is_matchmaker_configured():
 		_fail("Set the matchmaker URL and Auth Token in edgegap_settings.gd.")
 		return
 	_searching_since = _now()
 	_search += 1
 	_set_state(State.CREATING, "Joining the queue…")
-	var body := JSON.stringify({"profile": EdgegapSettings.profile(), "attributes": attributes})
+	var body := JSON.stringify({"profile": EdgegapGameSettings.profile(), "attributes": attributes})
 	_send(HTTPClient.METHOD_POST, "/tickets", body, _on_ticket_created.bind(_search))
 
 
@@ -116,7 +116,7 @@ func join(address: Dictionary, mp: MultiplayerAPI = null) -> void:
 static func create_client_peer(address: Dictionary) -> MultiplayerPeer:
 	var error: Error
 	var peer: MultiplayerPeer
-	if EdgegapSettings.transport() == EdgegapSettings.Transport.WEBSOCKET:
+	if EdgegapGameSettings.transport() == EdgegapGameSettings.Transport.WEBSOCKET:
 		var ws := WebSocketMultiplayerPeer.new()
 		# wss:// to Edgegap's TLS Upgrade uses a public certificate: default options.
 		error = ws.create_client(String(address.url), TLSOptions.client() if String(address.url).begins_with("wss://") else null)
@@ -132,21 +132,21 @@ static func create_client_peer(address: Dictionary) -> MultiplayerPeer:
 
 
 ## {host, port, url, fqdn, public_ip} from a HOST_ASSIGNED assignment, or {} if
-## it has no port named EdgegapSettings.PORT_NAME.
+## it has no port named EdgegapGameSettings.PORT_NAME.
 static func address_from_assignment(assignment: Variant) -> Dictionary:
 	if not assignment is Dictionary:
 		return {}
 	var fqdn := String(assignment.get("fqdn", ""))
 	var public_ip := String(assignment.get("public_ip", ""))
 	var ports: Variant = assignment.get("ports", {})
-	if fqdn.is_empty() or not ports is Dictionary or not ports.has(EdgegapSettings.PORT_NAME):
+	if fqdn.is_empty() or not ports is Dictionary or not ports.has(EdgegapGameSettings.PORT_NAME):
 		return {}
-	var port := int((ports[EdgegapSettings.PORT_NAME] as Dictionary).get("external", 0))
+	var port := int((ports[EdgegapGameSettings.PORT_NAME] as Dictionary).get("external", 0))
 	if port <= 0:
 		return {}
-	var websocket := EdgegapSettings.transport() == EdgegapSettings.Transport.WEBSOCKET
+	var websocket := EdgegapGameSettings.transport() == EdgegapGameSettings.Transport.WEBSOCKET
 	var host := fqdn if websocket or public_ip.is_empty() else public_ip
-	var url := "%s://%s:%d" % ["wss" if EdgegapSettings.USE_TLS else "ws", fqdn, port] if websocket else "%s:%d" % [host, port]
+	var url := "%s://%s:%d" % ["wss" if EdgegapGameSettings.USE_TLS else "ws", fqdn, port] if websocket else "%s:%d" % [host, port]
 	return {"host": host, "port": port, "url": url, "fqdn": fqdn, "public_ip": public_ip}
 
 
@@ -169,7 +169,7 @@ func _on_ticket_created(code: int, data: Variant, search: int) -> void:
 func _poll() -> void:
 	if ticket_id.is_empty() or _poll_in_flight or state not in [State.SEARCHING, State.MATCH_FOUND]:
 		return
-	if _now() - _searching_since > EdgegapSettings.SEARCH_TIMEOUT_SECONDS:
+	if _now() - _searching_since > EdgegapGameSettings.SEARCH_TIMEOUT_SECONDS:
 		_poll_timer.stop()
 		_send(HTTPClient.METHOD_DELETE, "/tickets/%s" % ticket_id, "", Callable())
 		_fail("No match found in time. Try again.")
@@ -196,7 +196,7 @@ func _on_ticket_status(code: int, data: Variant) -> void:
 			_poll_timer.stop()
 			var address := address_from_assignment(data.get("assignment", {}))
 			if address.is_empty():
-				_fail("The server has no port named '%s'. Check the app version." % EdgegapSettings.PORT_NAME)
+				_fail("The server has no port named '%s'. Check the app version." % EdgegapGameSettings.PORT_NAME)
 				return
 			matched_ticket_id = ticket_id
 			ticket_id = ""
@@ -208,7 +208,7 @@ func _on_ticket_status(code: int, data: Variant) -> void:
 
 
 func _send(method: int, path: String, body: String, on_done: Callable) -> void:
-	var headers := PackedStringArray(["Authorization: %s" % EdgegapSettings.auth_token()])
+	var headers := PackedStringArray(["Authorization: %s" % EdgegapGameSettings.auth_token()])
 	if not body.is_empty():
 		headers.append("Content-Type: application/json")
 	var http := HTTPRequest.new()
@@ -224,7 +224,7 @@ func _send(method: int, path: String, body: String, on_done: Callable) -> void:
 		if on_done.is_valid():
 			on_done.call(code, JSON.parse_string(text) if not text.is_empty() else null)
 	, CONNECT_ONE_SHOT)
-	var error := http.request(EdgegapSettings.matchmaker_url() + path, headers, method, body)
+	var error := http.request(EdgegapGameSettings.matchmaker_url() + path, headers, method, body)
 	if error != OK:
 		http.queue_free()
 		if on_done.is_valid():

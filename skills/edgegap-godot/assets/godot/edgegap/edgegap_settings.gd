@@ -1,4 +1,4 @@
-class_name EdgegapSettings
+class_name EdgegapGameSettings
 extends RefCounted
 
 ## Edgegap settings shared by the server lifecycle and the matchmaker client.
@@ -16,7 +16,7 @@ enum Transport { ENET, WEBSOCKET }
 ## with TLS Upgrade on for web exports and any wss:// client).
 const TRANSPORT := Transport.ENET
 ## Port the server binds inside the container. Must equal the app version's
-## internal port and the Dockerfile's EXPOSE. Env: EDGEGAP_PORT.
+## internal port (and the plugin dock's Docker run parameters). Env: EDGEGAP_PORT.
 const PORT := 7777
 ## Port name on the app version. The client reads the external port by name.
 const PORT_NAME := "gameport"

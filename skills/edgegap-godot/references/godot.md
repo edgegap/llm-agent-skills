@@ -35,7 +35,7 @@ Grep before asking:
 | `WebSocketMultiplayerPeer` | **WS**, **TLS Upgrade** on | `wss://<fqdn>:<external>` | Required for web exports. The server stays plain `ws` in the container: Edgegap terminates TLS. Without TLS Upgrade, use `ws://` (desktop only, never from an https page) |
 | `WebRTCMultiplayerPeer` | not used | | P2P with signaling; replace with ENet or WebSocket for a dedicated server |
 
-One fixed port inside the container (the templates default to 7777, the sample used 7000), set in three places that must agree: `EdgegapSettings.PORT` (or `EDGEGAP_PORT`), the Dockerfile `EXPOSE`, and the app version's internal port. Players always get a **random external port**: never ship the internal port to clients. Bind all interfaces: the templates use `set_bind_ip("*")` for ENet and `"*"` for WebSocket. A server bound to `127.0.0.1` accepts nothing on Edgegap.
+One fixed port inside the container (the templates default to 7777, the sample used 7000), set in two places that must agree: `EdgegapGameSettings.PORT` (or `EDGEGAP_PORT`) and the app version's internal port (the plugin's Dockerfile has no `EXPOSE`, and Edgegap doesn't need one). Players always get a **random external port**: never ship the internal port to clients. Bind all interfaces: the templates use `set_bind_ip("*")` for ENet and `"*"` for WebSocket. A server bound to `127.0.0.1` accepts nothing on Edgegap.
 
 ## 3. From host/client to a dedicated server
 
@@ -51,7 +51,7 @@ Most Godot tutorials and demos host from a player's game: a Host button calls `c
 ## 4. Wiring the templates
 
 `EdgegapServer` (autoload, `edgegap_server.gd`):
-- `host(mp = null)` creates the peer from `EdgegapSettings` and calls `begin()`. Games that already create their peer call `begin(multiplayer)` after setting it.
+- `host(mp = null)` creates the peer from `EdgegapGameSettings` and calls `begin()`. Games that already create their peer call `begin(multiplayer)` after setting it.
 - `match_ready(count)`: once `MM_TICKET_IDS.size()` players are in, or `START_GRACE` (30 s; 10 s without the matchmaker) after the first join, so one no-show doesn't hold the others.
 - `match_ended()`: stop `END_GRACE` (15 s) later. Also stops when nobody joins in `JOIN_TIMEOUT` (120 s) or everyone left for `EMPTY_GRACE` (30 s). The self-stop only runs on Edgegap (`ARBITRIUM_REQUEST_ID` set); local runs quit only with `EDGEGAP_QUIT_LOCALLY=1`.
 - `count_registered_only = true` + `player_registered(peer_id)`: count a player only after the game's own handshake (name, auth), so a peer that connects and stalls isn't counted.
@@ -73,14 +73,14 @@ The `.dedicated_server` override (`run/flush_stdout_on_print.dedicated_server=tr
 
 ## 6. Exports, feature tags and allowlists
 
-- **Dedicated Server export mode** (`dedicated_server=true` in the preset, `assets/godot/export_presets.server.cfg`) adds the `dedicated_server` feature tag and replaces textures, meshes and audio with placeholders. Run it with `--headless`. Resources that server code reads (a texture's size, image pixels for a map) can be kept with the per-resource "Keep" option in the export dialog's Resources tab.
+- **Dedicated Server export mode** (`dedicated_server=true` in the plugin's `Edgegap Linux Server` preset, `assets/godot/export_presets.server.cfg`) adds the `dedicated_server` feature tag, starts headless without `--headless`, and replaces textures, meshes and audio with placeholders. Resources that server code reads (a texture's size, image pixels for a map) can be kept with the per-resource "Keep" option in the export dialog's Resources tab.
 - **Export templates** must match the editor version exactly (`4.7.2.stable`). Headless CI: download `Godot_v<ver>_export_templates.tpz` and extract to the templates folder, or use a self-contained editor (`_sc_` file) with `editor_data/export_templates/<ver>/`.
-- **Allowlists.** With `export_filter="resources"` or `"scenes"`, only the listed files and their dependencies are exported. An autoload is exported, but scripts it reaches only through `class_name` (`EdgegapSettings`, `EdgegapMatchmaker`) are not. Measured: the export runs and fails at runtime with `Identifier "EdgegapSettings" not declared in the current scope`. Fix it per preset, client and server:
+- **Allowlists.** With `export_filter="resources"` or `"scenes"`, only the listed files and their dependencies are exported. An autoload is exported, but scripts it reaches only through `class_name` (`EdgegapGameSettings`, `EdgegapMatchmaker`) are not. Measured: the export runs and fails at runtime with `Identifier "EdgegapGameSettings" not declared in the current scope`. Fix it per preset, client and server:
   - `export_filter="resources"`: add every `res://edgegap/*.gd` to `export_files`.
   - `export_filter="scenes"`: listing scripts there does nothing, because that mode only takes scenes from the list (measured: the listed `.gd` files were not packed). Switch the preset to `"resources"` and list the scenes plus the scripts, or to `all_resources`.
   - Regenerate the list if the project has a script that writes it (the sample: `tools/update-export-policy.py`), and check `exclude_filter` doesn't drop the scripts.
   - Verify with `godot --headless --path . --export-pack "<preset>" /tmp/check.pck`: the output lists every stored file, and each `res://edgegap/*.gdc` must be there.
-- **`.pck`**: `binary_format/embed_pck=true` gives one file. Otherwise the `.pck` must sit next to the binary with the same base name.
+- **`.pck`**: the plugin needs `binary_format/embed_pck=false`, with the `.pck` next to the binary under the same base name.
 - **Godot .NET (C#)**: the GDScript templates work beside C# scripts. The Linux export needs the .NET export templates; not verified on Edgegap yet.
 
 ## 7. Web exports
