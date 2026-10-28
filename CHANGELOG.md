@@ -2,6 +2,15 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.21.1 (unreleased)
+
+Matchmaker templates no longer carry an empty `expansions` object (review feedback on the Boss Room sample, 2026-10-28): an empty `"expansions": {}` read as "fill in an expansion here". The key is optional, so profiles without an expansion stage now leave it out.
+
+- Removed `"expansions": {}` from the `casual` templates (Colyseus, FishNet WebGL, Godot, NGO, PurrNet, Unity), `edgegap-manus` `manus-modes-regions.json`, `edgegap-threejs` `several-games.json`, and `edgegap-matchmaking` `casual-backfill.json` and `modes.json`. Templates with real expansion stages are unchanged.
+- `edgegap-unity` `references/matchmaker.md`: the inline example drops the key, and the field list says `expansions` appears only when a rule relaxes over time.
+- Versions: `edgegap` 0.21.1, `edgegap-colyseus` 0.1.6, `edgegap-fishnet` 0.2.8, `edgegap-godot` 0.1.6, `edgegap-manus` 0.1.6, `edgegap-matchmaking` 0.1.2, `edgegap-ngo` 0.1.6, `edgegap-purrnet` 0.2.1, `edgegap-threejs` 0.1.3, `edgegap-unity` 0.1.18.
+- Not uploaded to a matchmaker: Edgegap's docs call `expansions` optional but every docs example includes it.
+
 ## 0.21.0 (unreleased)
 
 Guidance for the tools @edgegap/mcp 0.14.0 adds (not released yet), and a once-per-conversation skills update check, as Gameye's skill asks of agents.

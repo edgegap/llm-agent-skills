@@ -39,8 +39,7 @@
             "type": "intersection",
             "attributes": { "overlap": 1 }
           }
-        },
-        "expansions": {}
+        }
       }
     }
   }

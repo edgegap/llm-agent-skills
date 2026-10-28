@@ -35,7 +35,7 @@ Ask only what you can't infer from the game:
 
 Top level: `version` ("3.3.2"), `inspect` (true in dev: enables `GET /inspect/tickets|matches`; turn off for live), `max_deployment_retry_count` (3), optional `allowed_cors_origins` (exact origins `https://host[:port]`, no path/trailing slash; wildcard subdomains `https://*.example.com` allowed), `profiles` (map name → profile).
 
-Profile: `ticket_expiration_period` ("30s"; unmatched tickets become CANCELLED. Keep it short: a lone or partial ticket may only match near expiry, so with "5m" a developer testing alone waits 5 minutes), `ticket_removal_period` ("1m"), `group_inactivity_removal_period` ("5m"), `application {name, version}`, `rules {initial, expansions}`.
+Profile: `ticket_expiration_period` ("30s"; unmatched tickets become CANCELLED. Keep it short: a lone or partial ticket may only match near expiry, so with "5m" a developer testing alone waits 5 minutes), `ticket_removal_period` ("1m"), `group_inactivity_removal_period` ("5m"), `application {name, version}`, `rules {initial}`, plus `expansions` only when a rule should relax over time (leave the key out otherwise).
 
 Rule types in `rules.initial` (each `{ "type": ..., "attributes": {...} }`, rule names are free-form; the name is also the ticket attribute key):
 - `player_count` (required, exactly once): `team_count`, `min_team_size`, `max_team_size`. Fills to max if possible, otherwise makes a partial match (≥ min) when an expansion stage or the expiration elapses. Never below min. `min_team_size < max_team_size` is what enables partial matches: no expansion stage is needed; keep `ticket_expiration_period` short (`30s`) instead, because expansions cost the matchmaker a lot of performance. Measured on matchmaker 3.3.2 (2026-10-19, `min 2 / max 8`, no expansion): with a 5-minute expiration, two tickets stayed `SEARCHING` and matched exactly at expiry.
@@ -71,8 +71,7 @@ Write the final file as `matchmaker-config.json` in the project root (it contain
             "type": "player_count",
             "attributes": { "team_count": 1, "min_team_size": 2, "max_team_size": 4 }
           }
-        },
-        "expansions": {}
+        }
       }
     }
   }
