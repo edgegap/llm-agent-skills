@@ -22,42 +22,37 @@ Contents
 
 ## 2. Build the Linux dedicated server and clients
 
-Prerequisites: Unity Hub modules **Linux Build Support (Mono)** and **Linux Dedicated Server Build Support**, plus the client platform's module; Docker (`docker version`); git (PurrNet and the SDK are git packages).
+Prerequisites: Unity Hub modules **Linux Build Support (Mono)** and **Linux Dedicated Server Build Support** (the plugin's **Linux Server Build Requirements → Install** adds them), plus the client platform's module; Docker Desktop running; git. Every scene the game loads must be enabled in Build Settings.
 
-The project must be **closed** in the Editor for batch mode, and the game scene enabled in Build Settings.
+**Plugin (Editor open):** **Tools → Edgegap Server Hosting → Build server** → `Builds/EdgegapServer/ServerBuild` (Linux, Dedicated Server subtarget, enabled scenes; Addressables rebuilt when present).
 
+**Command line (Editor closed):** copy `assets/unity/Editor/EdgegapPluginBuild.cs` to an `Editor/` folder; it calls the plugin's build (the plugin's `EdgegapBuildUtils` is internal, so it uses reflection) and exits Unity itself:
 ```bash
-"<Unity>" -batchmode -quit -projectPath "<project>" -executeMethod EdgegapServerBuild.Build -logFile build-server.log
-"<Unity>" -batchmode -quit -projectPath "<project>" -executeMethod EdgegapServerBuild.BuildClient -edgegapClientTarget win64 -logFile build-client.log
+"<Unity>" -batchmode -projectPath "<project>" -executeMethod EdgegapPluginBuild.BuildServer -logFile build-server.log
+"<Unity>" -batchmode -projectPath "<project>" -executeMethod EdgegapClientBuild.Build -edgegapClientTarget win64 -logFile build-client.log
 ```
-Outputs: `Builds/EdgegapServer/ServerBuild`, `Builds/Client/<target>`. Menu equivalents: **Tools → Edgegap → Build Linux Dedicated Server**. The first import takes minutes: run in the background and read the log for `error CS`.
+Don't replace it with `-standaloneBuildSubtarget Server -buildLinux64Player`: on Unity 6000.0 that produced a regular player twice the size of the Dedicated Server build. The first import takes minutes: run it in the background and read the log for `error CS`. Builds switch the active build target and can re-serialize settings assets; don't commit that churn.
 
-Unity editor paths: Windows `C:\Program Files\Unity\Hub\Editor\<ver>\Editor\Unity.exe`, macOS `/Applications/Unity/Hub/Editor/<ver>/Unity.app/Contents/MacOS/Unity`, Linux `~/Unity/Hub/Editor/<ver>/Editor/Unity`. On Windows, Unity 6 Linux builds may need the `com.unity.toolchain.win-x86_64-linux` package.
+Unity editor paths: Windows `C:\Program Files\Unity\Hub\Editor\<ver>\Editor\Unity.exe`, macOS `/Applications/Unity/Hub/Editor/<ver>/Unity.app/Contents/MacOS/Unity`, Linux `~/Unity/Hub/Editor/<ver>/Editor/Unity`.
 
-Opening the project in a newer Unity re-serializes assets and bumps packages. Don't commit that churn with the Edgegap changes unless the developer wants the upgrade.
+## 3. Docker image, local test and registry push
 
-## 3. Docker image and registry push
+The plugin's Dockerfile is `Library/PackageCache/com.edgegap.unity-servers-plugin@<hash>/Editor/Dockerfile`: Ubuntu 22.04 with CA certificates (for the HTTPS self-stop call), copies `Builds/EdgegapServer` and runs `ServerBuild -batchmode -nographics $UNITY_COMMANDLINE_ARGS`. It runs `env` first, so the deployment logs show the injected variables, the self-stop token included; only the account sees them. Its context is the project root: `assets/docker/.dockerignore` keeps it to `Builds/EdgegapServer`.
 
-Copy `assets/docker/Dockerfile` and `.dockerignore` to the project root. The build context is only `Builds/EdgegapServer` (minus `*_DoNotShip`). The Dockerfile installs CA certificates (for the HTTPS self-stop call), passes `$UNITY_COMMANDLINE_ARGS` to the server, and doesn't print the environment, which would leak the self-stop token.
+**Plugin:** **Containerize with Docker** (Image Name; empty Image Tag = `yy.MM.dd-HH.mm.ss-UTC`), then **Test Your Server Locally** with Optional Docker Run Parameters `-p 7777:7777/udp` → **Deploy local container** (the default `-p 7777/udp` maps a random host port). It passes `EdgegapMock.env` (fake `ARBITRIUM_*` values, `gameport` 7777/UDP), so the self-stop timers run: the server quits 120 s after start with nobody connected, or 30 s after the last player leaves. **Terminate** removes the container before the next run. **Upload image and Create app version** pushes with the account's own registry login.
 
-Tags: never `latest`, never reuse a tag (Edgegap caches by tag). Use a UTC timestamp `YYYYMMDD-HHMM` (e.g. `20261022-1430`, from `date -u +%Y%m%d-%H%M`), the same string for the image tag and the app version name, so anyone can see when the server was last updated.
-
-The developer logs in (Container Registry page in the dashboard):
+**Command line:**
 ```bash
-docker login registry.edgegap.com -u '<username>'
+docker build --platform linux/amd64 -f "<plugin>/Editor/Dockerfile" -t registry.edgegap.com/<project>/<image>:<tag> .
+docker run --rm -p 7777:7777/udp --env-file "<plugin>/Editor/EdgegapMock.env" registry.edgegap.com/<project>/<image>:<tag>
 ```
-Then:
-```bash
-docker build --platform linux/amd64 -t registry.edgegap.com/<project>/<image>:<tag> .
-docker push registry.edgegap.com/<project>/<image>:<tag>
-```
-Confirm with `edgegap_list_registry_tags` (image name only). `edgegap_get_registry_credentials` hands credentials only to plugin quick-start tokens: with a normal API token it returns `status: "manual_steps_required"` and no credentials, which is expected, not a failure. Do not call it again; use the dashboard page, or push to Docker Hub, GHCR or another registry and pass that registry and its pull login to `edgegap_create_app_version`.
-
-Local test: `docker run --rm -p 7777:7777/udp <image>`, two clients on `127.0.0.1:7777`.
+The developer runs `docker login registry.edgegap.com -u '<username>'` (Container Registry page) before you `docker push`. Tags: never `latest`, never reused; UTC `YYYYMMDD-HHMM` (`date -u +%Y%m%d-%H%M`), the same string as the app version name. Confirm with `edgegap_list_registry_tags` (image name only). `edgegap_get_registry_credentials` only answers plugin quick-start tokens: with an API token it returns `manual_steps_required`, which is expected; don't call it again.
 
 ## 4. App and app version
 
-`edgegap_list_apps` first (free tier: 2 apps, 2 versions). `edgegap_create_app` if needed, then `edgegap_create_app_version`:
+**Plugin (preferred):** **Upload image and Create app version** creates the application if needed and opens the dashboard's version form with the version name, image and tag filled in. The developer replaces the default port with `gameport` and the game's port and protocol, adds the registry credentials if the form asks, and saves. **Rebuild from Source** later does build, image, push and opens the form again. Registry tokens get rotated: if saving or `verify_image` fails with `Unable to login with the given credentials`, the stored login is stale; re-enter it from the Container Registry page.
+
+**MCP:** `edgegap_list_apps` first (free tier: 2 apps, 2 versions). `edgegap_create_app` if needed, then `edgegap_create_app_version`:
 
 | Field | Value |
 |---|---|

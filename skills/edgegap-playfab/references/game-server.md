@@ -2,7 +2,7 @@
 
 ## 1. What it needs
 
-- A **headless mode** that starts listening on a fixed internal port with no player and no menu. Unity: a Linux Dedicated Server build (`assets/unity/Editor/EdgegapServerBuild.cs`). FishNet: leave *Start On Headless* off; `EdgegapServer` starts the server itself on `ListenPort` (7770).
+- A **headless mode** that starts listening on a fixed internal port with no player and no menu. Unity: a Linux Dedicated Server build (the Edgegap plugin's **Build server**, or `assets/unity/Editor/EdgegapPluginBuild.cs` from the command line). FishNet: leave *Start On Headless* off; `EdgegapServer` starts the server itself on `ListenPort` (7770).
 - **No PlayFab secret, no Edgegap token.** Everything it needs comes from Edgegap's injected variables. If an old bridge passes `PLAYFAB_TITLE_SECRET` to the server, remove it, and have the developer rotate the key: every server log or crash dump was a place it could leak.
 - **Self-stop.** An empty server keeps costing until its max duration. `assets/unity/EdgegapServer.cs` calls `DELETE $ARBITRIUM_DELETE_URL` with header `authorization: $ARBITRIUM_DELETE_TOKEN`:
   - when no player connects within 120 s (players gave up, or a duplicate deployment);

@@ -27,7 +27,7 @@ The verified FishNet run used 3.5.5 with this exact change patched in; 3.5.6 shi
 | "already started" / second start fails | Start On Headless on **and** `AutoStartServer` on, or a NetworkHudCanvas auto-starting in batch mode. Keep one starter |
 | High CPU on an idle server | ServerManager **Frame Rate** set high (e.g. 500): lower it to 30-60 |
 | Server never stops after players leave | The `Edgegap` object was destroyed by a scene change: add `EdgegapPersistence` (`fishnet.md` §4). Or a WebSocket probe or bot keeps a connection open |
-| Self-stop fails with an SSL/certificate error | Base image without CA certificates: use `assets/docker/Dockerfile` |
+| Self-stop fails with an SSL/certificate error | Base image without CA certificates: use the plugin's Dockerfile, which installs them |
 | `NullReferenceException` in `DeploymentEnvironmentDTO` locally | Parsed without Edgegap variables; the template checks `ARBITRIUM_REQUEST_ID` first |
 | Stops after 120 s during manual testing | `FirstPlayerTimeoutSeconds`: connect sooner, or raise it while debugging |
 | Ready, then restarts or OOM | Crash in server code (read the logs before stopping), missing scene in Build Settings, memory too low |

@@ -2,7 +2,7 @@
 name: edgegap-unity
 description: 'Unity + Edgegap: get a Unity multiplayer game online with dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a Unity project: it has the Unity workflow, tested C# templates (matchmaker client, server self-stop), Linux server build, Dockerfile, matchmaker config and fixes for known pitfalls. Use when a Unity dev wants online play: "put my game online", "play with people over the internet", "works on LAN/same wifi but not online", "nobody should have to host", "click Play and get matched", how Fall Guys/Among Us match players, servers for a playtest, "where do I start with servers". Also for Mirror host/client games moving to dedicated servers, WebGL multiplayer, or debugging Edgegap deployments, ports or matchmaking for a Unity game. Use even for beginners who never say Edgegap, servers or Docker. Not for NGO (edgegap-ngo), FishNet (edgegap-fishnet), PurrNet (edgegap-purrnet) or Fusion (edgegap-fusion) projects, Unreal (edgegap-unreal), Godot or non-game backends.'
 metadata:
-  version: "0.1.18"
+  version: "0.2.0"
 ---
 
 # Edgegap for Unity: dedicated servers + matchmaking
@@ -39,7 +39,7 @@ Then ask, in a single message, only what you couldn't infer. Typically: players 
 Read `references/netcode.md`.
 1. Convert host/client assumptions to a headless server path (§2): server builds call `StartServer`, players spawn on client connect, no local player on the server, headless-unsafe code guarded.
 2. Server listens on `0.0.0.0` at a fixed internal port (7777 typical; WebSocket transports often 7778).
-3. Install the Edgegap SDK. Add `"com.edgegap.unity-sdk": "https://github.com/edgegap/edgegap-unity-sdk.git"` to `Packages/manifest.json` (needs git), on every Unity version. No `#tag`: that installs the latest SDK (3.5.6+). Never pin an exact version. Newtonsoft comes with it. Older SDKs fail WebGL builds and, on Unity before 2022.3, every matchmaker ticket (`references/troubleshooting.md`). If the project already has an embedded, hand-patched SDK (a `Packages/com.edgegap.unity-sdk` folder), delete it and use the git package.
+3. Install the Edgegap packages. Add `"com.edgegap.unity-servers-plugin": "https://github.com/edgegap/buildtool-unity-plugin.git"` (the Edgegap Unity plugin, Editor only: build, image, push, deploy from **Tools → Edgegap Server Hosting**; no `#tag`) and the SDK, `"com.edgegap.unity-sdk": "https://github.com/edgegap/edgegap-unity-sdk.git"`, to `Packages/manifest.json` (needs git), on every Unity version. No `#tag`: that installs the latest SDK (3.5.6+). Never pin an exact version. Newtonsoft comes with it. Older SDKs fail WebGL builds and, on Unity before 2022.3, every matchmaker ticket (`references/troubleshooting.md`). If the project already has an embedded, hand-patched SDK (a `Packages/com.edgegap.unity-sdk` folder), delete it and use the git package.
 4. Copy `assets/unity/EdgegapMatchmakingDTOs.cs`, `EdgegapServerLifecycle.cs`, `EdgegapMatchmakingClient.cs`, `link.xml` and `Editor/*.cs` into `Assets/Edgegap/` (the Editor scripts go in `Assets/Edgegap/Editor/`). Fill both `NETCODE ADAPTER` regions with the snippets for the project's netcode (§4). If the project's code lives in an asmdef, put these scripts in or reference it from that asmdef, and reference `Edgegap.SDK`.
 5. Add both components to the network scene with `EdgegapSceneSetup` instead of hand-editing scene YAML (project closed in the Editor):
    `"<Unity>" -batchmode -quit -projectPath "<project>" -executeMethod EdgegapSceneSetup.Setup -edgegapListenPort <port> -edgegapAutoStart <false if the netcode already auto-starts headless> -edgegapProfile <profile> -logFile setup.log`
@@ -53,26 +53,24 @@ Read `references/deploy.md` §1-2. Make sure the developer has an account, Docke
 
 ✅ Check: `edgegap_list_apps` succeeds.
 
-## Phase 3: Build, containerize, push
+## Phase 3: Build, test and upload with the plugin
 
-Read `references/deploy.md` §3-4.
-1. Build the Linux dedicated server to `Builds/EdgegapServer/ServerBuild`: by command line with `assets/unity/Editor/EdgegapServerBuild.cs` (project must be closed in the Editor), or the developer clicks the menu item.
-2. Copy `assets/docker/Dockerfile` and `.dockerignore` to the project root.
-3. Developer runs `docker login registry.edgegap.com` with the credentials from the dashboard Container Registry page. You run `docker build --platform linux/amd64 -t registry.edgegap.com/<project>/<image>:<tag> .` and `docker push`, with a fresh tag every build (UTC timestamp `YYYYMMDD-HHMM`, also the app version name), never `latest`.
-4. Optional but cheap: `docker run` locally and connect a client to it.
+Copy `assets/docker/.dockerignore` to the project root (the plugin's Docker context is the project root; without it Docker sends the whole project). Then the developer opens **Tools → Edgegap Server Hosting** and goes top to bottom:
+1. **Sign in with Edgegap** → **Build server** → **Containerize with Docker** (Image Name; empty tag = UTC timestamp).
+2. **Test Your Server Locally**: Optional Docker Run Parameters `-p <port>:<port>/udp (WebSocket: -p <port>:<port>)` → **Deploy local container**; connect a client to `127.0.0.1:<listen port>`; **Terminate**.
+3. **Upload image and Create app version** (Application Name). It pushes and opens the dashboard version form: replace the default port with `gameport` / `<listen port>` / the transport's protocol (`WS` with TLS Upgrade on for WebGL), add registry credentials if asked, save.
 
-✅ Check: `edgegap_list_registry_tags` shows the tag.
+No Editor (CI, or you run it): the same steps from the command line in `references/deploy.md` §2-4.
 
-## Phase 4: App, version, direct deploy
+✅ Check: `edgegap_list_app_versions` shows the version with `registry_credentials_set: true` and the `gameport` port.
 
-Read `references/deploy.md` §5-6.
-1. `edgegap_list_apps` → `edgegap_create_app` if needed → `edgegap_create_app_version`. Port named `gameport`, internal port = listen port, protocol matches the transport, **registry credentials set** (deploys fail to pull without them). WebSocket/WebGL: `WS` with `"tls_upgrade": true` on that port. Then `edgegap_list_app_versions` must show `registry_credentials_set: true` (and `tls_upgrade` on WS ports) before you deploy.
-2. `edgegap_deploy` near the developer → `edgegap_wait_for_deployment` → `edgegap_get_deployment_logs`.
-3. Prove the port answers: for WS ports, `curl --http1.1 -H "Connection: Upgrade" -H "Upgrade: websocket" -H "Sec-WebSocket-Version: 13" -H "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==" --max-time 5 https://<fqdn>:<external>/` must print HTTP 101 (that also proves TLS Upgrade). Then the developer, or you, connects a real client directly to `fqdn`/`public_ip` + external port.
-   `Unable to pull image from registry` here almost always means the version has no registry credentials. Developers often skip that dashboard field, so ask them to re-check it.
-4. `edgegap_stop_deployment`.
+## Phase 4: Direct deploy
 
-✅ Check: a client played on the Edgegap server, and logs show the lifecycle script detected Edgegap. Don't build the matchmaker on top of an unproven server. Matchmaker symptoms of a broken server are confusing.
+1. **Deploy to cloud** in the plugin, or `edgegap_deploy` near the developer → `edgegap_wait_for_deployment` → `edgegap_get_deployment_logs`.
+2. Prove the port answers: for WS ports, `curl --http1.1 -H "Connection: Upgrade" -H "Upgrade: websocket" -H "Sec-WebSocket-Version: 13" -H "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==" --max-time 5 https://<fqdn>:<external>/` prints HTTP 101 (that also proves TLS Upgrade). Then connect a real client to `fqdn`/`public_ip` + external port. `Unable to pull image from registry` almost always means the version has no registry credentials.
+3. Close the clients: the server stops itself 30 s later (or `edgegap_stop_deployment`).
+
+✅ Check: a client played on the Edgegap server. Don't build the matchmaker on an unproven server.
 
 ## Phase 5: Matchmaker
 
@@ -93,7 +91,7 @@ Read `references/matchmaker.md`.
 ## Phase 7: End-to-end test and hand-off
 
 1. Make sure no test deployment is running (`edgegap_list_deployments`).
-2. Build the client with `-executeMethod EdgegapServerBuild.BuildClient -edgegapClientTarget webgl|win64|mac|linux` (output `Builds/Client/<target>`). For WebGL, serve it from an origin listed in `allowed_cors_origins`, e.g. `python -m http.server 8080 --bind 127.0.0.1` in `Builds/Client/webgl` and open `http://localhost:8080`. If you have a browser tool you can run the two-tab test yourself: open two tabs and bring each to the front before clicking (background tabs throttle Unity WebGL and can miss clicks), then click Find Match in both. Otherwise the developer runs two clients (Editor + build, two builds, or two browser tabs). Watch: SEARCHING → MATCH_FOUND → HOST_ASSIGNED → connected, both in the same match. A lone client stays in SEARCHING until a second one joins (or its ticket expires): that is expected.
+2. Build the client with `-executeMethod EdgegapClientBuild.Build -edgegapClientTarget webgl|win64|mac|linux` (`assets/unity/Editor/EdgegapClientBuild.cs`) (output `Builds/Client/<target>`). For WebGL, serve it from an origin listed in `allowed_cors_origins`, e.g. `python -m http.server 8080 --bind 127.0.0.1` in `Builds/Client/webgl` and open `http://localhost:8080`. If you have a browser tool you can run the two-tab test yourself: open two tabs and bring each to the front before clicking (background tabs throttle Unity WebGL and can miss clicks), then click Find Match in both. Otherwise the developer runs two clients (Editor + build, two builds, or two browser tabs). Watch: SEARCHING → MATCH_FOUND → HOST_ASSIGNED → connected, both in the same match. A lone client stays in SEARCHING until a second one joins (or its ticket expires): that is expected.
 3. While it runs: `edgegap_list_deployments` shows the matchmaker's deployment (tagged with ticket IDs); read its logs and confirm `N matched player(s)`.
 4. Leave the match → server logs "Stopping deployment" → deployment disappears. That proves self-stop, which protects the developer's bill.
 5. Debug with `references/troubleshooting.md` until this passes. Fix the root cause rather than working around it.
@@ -106,7 +104,7 @@ Hand-off summary: what was built, where the files are, the app/version/matchmake
 - `references/deploy.md`: MCP connection and token handling, prerequisites, server build commands, Docker/registry, app version fields, direct deploy, MCP caveats, free tier.
 - `references/matchmaker.md`: config schema, templates, dashboard steps, ticket/profile contract, injected env vars, matchmaker troubleshooting.
 - `references/troubleshooting.md`: symptom → fix tables for build, Docker, deployment, connection, SDK quirks.
-- `assets/unity/`: drop-in C# (matchmaking client, server lifecycle, DTOs, link.xml). `assets/unity/Editor/`: `EdgegapServerBuild` (Linux server + test client builds) and `EdgegapSceneSetup` (adds/configures the components from the command line). `assets/docker/`: Dockerfile + .dockerignore. `assets/matchmaker/`: config templates.
+- `assets/unity/`: drop-in C# (matchmaking client, server lifecycle, DTOs, link.xml). `assets/unity/Editor/`: `EdgegapPluginBuild` (command-line plugin server build), `EdgegapClientBuild` (test clients) and `EdgegapSceneSetup` (adds/configures the components from the command line). `assets/docker/.dockerignore` (the Dockerfile is the plugin's). `assets/matchmaker/`: config templates.
 
 Related skills in this pack, if installed: `edgegap-nakama` when the studio keeps Nakama for matchmaking (with the Unity server plugin edgegap-server-nakama-plugin-unity), `edgegap-playfab` when it keeps PlayFab Matchmaking, `edgegap-deployments-api` when it keeps another backend or matchmaker (UGS) instead of Edgegap's, and `edgegap-launch` before going live.
 

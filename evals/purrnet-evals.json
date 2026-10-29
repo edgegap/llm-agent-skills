@@ -6,7 +6,7 @@
       "id": 1,
       "name": "incremental-host-to-dedicated",
       "prompt": "This is the PurrNet Incremental sample (it's in the project folder), we're using it as the base for our co-op game. Right now in builds one player ends up hosting. We want nobody to host: players click Play, get matched with others and land on a dedicated server on Edgegap. Windows clients. Can you set it up?",
-      "expected_output": "SDK 3.5.6+, auto start flags off in builds (Editor host+clone kept), server-only start on the UDP port, InitSeed runLocally fix, async StartClient handled, self-stop, UDP app version on the transport port, client to public_ip + external port, matchmaker config, Dockerfile amd64 unique tag, dashboard steps.",
+      "expected_output": "SDK 3.5.6+, auto start flags off in builds (Editor host+clone kept), server-only start on the UDP port, InitSeed runLocally fix, async StartClient handled, self-stop, UDP app version on the transport port, client to public_ip + external port, matchmaker config, plugin build/image amd64 unique tag, dashboard steps.",
       "files": [
         "fixtures/incremental"
       ],
@@ -33,7 +33,7 @@
       "id": 2,
       "name": "orbitbrawl-host-to-dedicated",
       "prompt": "my purrnet party brawler is in the project folder (unity 6, UDPTransport). 2-4 players, right now someone hosts and presses Start Round. I want a Find Match button, nobody hosting, a dedicated server that runs the rounds by itself. desktop only. set it up on edgegap please",
-      "expected_output": "SDK 3.5.6+, auto start flags off in builds, isHost logic moved to the server, SetupRound runLocally / server-side pickup spawn, headless guards, server-driven round start, self-stop, async StartClient, UDP 7777 app version, client to public_ip + external port, matchmaker 2-4 no solo expansion, Dockerfile amd64 unique tag, dashboard steps.",
+      "expected_output": "SDK 3.5.6+, auto start flags off in builds, isHost logic moved to the server, SetupRound runLocally / server-side pickup spawn, headless guards, server-driven round start, self-stop, async StartClient, UDP 7777 app version, client to public_ip + external port, matchmaker 2-4 no solo expansion, plugin build/image amd64 unique tag, dashboard steps.",
       "files": [
         "fixtures/orbitbrawl"
       ],

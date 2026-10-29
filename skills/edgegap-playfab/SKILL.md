@@ -2,7 +2,7 @@
 name: edgegap-playfab
 description: 'PlayFab + Edgegap: keep PlayFab for players, login and Matchmaking, and run each match on its own Edgegap dedicated server near the players, started by PlayFab Azure Functions (CloudScript using Azure Functions), end to end. Load this before using any Edgegap MCP tool on a project that uses PlayFab for matchmaking (a PlayFab title ID, playfabapi.com, PlayFabMultiplayerAPI, CreateMatchmakingTicket) or is leaving PlayFab Multiplayer Servers (MPS, GSDK). Verified on Edgegap with a Unity FishNet game: match_found rule, StartEdgegapDeployment (POST /v2/deployments near the players), ready webhook, server address in player read-only data. Ships the Azure Functions, setup scripts, a dependency-free Unity client, server self-stop, and fixes for PlayFab pitfalls (new titles block LoginWithCustomID player creation, legacy CloudScript, ticket polling limits). Use for "PlayFab matchmaking with Edgegap servers", "replace PlayFab Multiplayer Servers", "PlayFab CloudScript Edgegap bridge", or debugging one.'
 metadata:
-  version: "0.1.1"
+  version: "0.2.0"
 ---
 
 # Edgegap for PlayFab games: PlayFab matches players, Edgegap runs the match
@@ -49,13 +49,13 @@ Ask, in one message, only what you couldn't infer: the PlayFab title (they creat
 Read `references/game-server.md`.
 1. A headless server mode that listens on a fixed port, starts without a player, and needs no PlayFab secret.
 2. Self-stop through `ARBITRIUM_DELETE_URL` / `ARBITRIUM_DELETE_TOKEN` when nobody joins or everyone leaves. Unity: `assets/unity/EdgegapServer.cs` adds itself in server builds (netcode code is in its NETCODE ADAPTER region; FishNet is filled in). Remove any GSDK calls.
-3. Unity build: `assets/unity/Editor/EdgegapServerBuild.cs` (`-executeMethod EdgegapServerBuild.Build`).
+3. Unity build: add `"com.edgegap.unity-servers-plugin": "https://github.com/edgegap/buildtool-unity-plugin.git"` (the Edgegap Unity plugin, Editor only: build, image, push, deploy from **Tools → Edgegap Server Hosting**; no `#tag`). Its **Build server** makes the Linux server; from the command line, `assets/unity/Editor/EdgegapPluginBuild.cs` (`-executeMethod EdgegapPluginBuild.BuildServer`).
 
 ✅ Check: the server runs headless (Unity: `-batchmode`) and logs it is listening. A client connects to `127.0.0.1:<port>` directly.
 
 ## Phase 2: Image, app version, one direct deployment
 
-1. Dockerfile (Unity: `assets/docker/`; other engines: `edgegap-containerize`), `docker build --platform linux/amd64`, the developer runs `docker login registry.edgegap.com`, push a fresh tag (UTC timestamp `YYYYMMDD-HHMM`, also the app version name).
+1. Unity: copy `assets/docker/.dockerignore` to the project root, then the plugin's **Containerize with Docker** → **Upload image and Create app version** builds, pushes and opens the dashboard version form (the command-line equivalents are in the edgegap-ngo skill, deploy reference §3). Other engines: a Dockerfile from `edgegap-containerize`, `docker build --platform linux/amd64`, the developer runs `docker login registry.edgegap.com`, push a fresh tag (UTC timestamp `YYYYMMDD-HHMM`, also the app version name).
 2. `edgegap_create_app` + `edgegap_create_app_version`: name the game port **`gameport`** (the functions look it up by that name), with its protocol (UDP for most netcodes). 0.5 vCPU / 1 GB, max duration 60. No env vars. The developer adds the registry credentials on the version; check `registry_credentials_set: true` with `edgegap_list_app_versions`. To ship a new image later without retyping them, `edgegap_update_app_version` to the new tag.
 3. `edgegap_deploy` near the developer, `edgegap_wait_for_deployment`, read the logs, connect one client by hand, `edgegap_stop_deployment`.
 
@@ -104,7 +104,7 @@ Hand-off: what runs where (Function App name and resource group, PlayFab queue/f
 - `references/clients.md`: the REST contract for any engine, the Unity template and PlayFab SDK equivalents, local multi-client testing.
 - `references/game-server.md`: server mode, ports, self-stop, optional player validation, what not to put on the server.
 - `references/troubleshooting.md`: symptom → fix.
-- `assets/azure-functions/`: the two functions (Node 22, no SDKs). `assets/scripts/`: `deploy-functions.sh`, `playfab-setup.mjs`. `assets/unity/`: `PlayFabMatchmakingClient.cs`, `EdgegapServer.cs`, `Editor/EdgegapServerBuild.cs`. `assets/docker/`: Dockerfile + .dockerignore for a Unity Linux server.
+- `assets/azure-functions/`: the two functions (Node 22, no SDKs). `assets/scripts/`: `deploy-functions.sh`, `playfab-setup.mjs`. `assets/unity/`: `PlayFabMatchmakingClient.cs`, `EdgegapServer.cs`, `Editor/EdgegapPluginBuild.cs`. `assets/docker/.dockerignore` for the plugin's Unity image.
 
 Related skills in this pack, if installed: the engine's skill for the server build and netcode (`edgegap-fishnet`, `edgegap-ngo`, `edgegap-purrnet`, `edgegap-unity`, `edgegap-unreal`, `edgegap-godot`), `edgegap-deployments-api` for the Deploy API in depth, and `edgegap-launch` before going live.
 
