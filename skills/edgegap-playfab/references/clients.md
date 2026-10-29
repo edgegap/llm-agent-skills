@@ -11,8 +11,8 @@ All calls are `POST https://<TitleId>.playfabapi.com<path>` with `Content-Type: 
 | 1. Login | `/Client/LoginWithCustomID` (or the game's login: Steam, device, OpenID…) | none | `{"TitleId","CustomId","CreateAccount":true}` → `data.SessionTicket`, `data.EntityToken.EntityToken`, `data.EntityToken.Entity` (`{Id, Type:"title_player_account"}`) |
 | 2. Queue | `/Match/CreateMatchmakingTicket` | `X-EntityToken` | `{"Creator":{"Entity":<entity>,"Attributes":…optional},"GiveUpAfterSeconds":120,"QueueName"}` → `data.TicketId` |
 | 3. Wait for a match | `/Match/GetMatchmakingTicket` every **6 s** | `X-EntityToken` | `{"TicketId","QueueName"}` → `data.Status`: `WaitingForPlayers`/`WaitingForMatch` (keep polling), `Matched` (`data.MatchId`), `Canceled` (`data.CancellationReason`) |
-| 4. Wait for the server | `/Client/GetUserReadOnlyData` every 2 to 3 s, up to ~3 min | `X-Authorization: <SessionTicket>` | `{"Keys":["EdgegapServer"]}` → `data.Data.EdgegapServer.Value`, a JSON **string**: `{"matchId","status","host","port"}` |
-| 5. Connect | the netcode | | when `matchId` equals this match's ID: `status:"ready"` → connect to `host:port`; `status:"error"` → show `message`, allow re-queueing. A different `matchId` is left over from an earlier match: keep polling. |
+| 4. Wait for the server | `/Client/GetUserReadOnlyData` every 2 to 3 s, up to ~3 min | `X-Authorization: <SessionTicket>` | `{"Keys":["EdgegapServer"]}` → `data.Data.EdgegapServer.Value`, a JSON **string**: `{"matchId","status","host","port","joinToken"}` |
+| 5. Connect | the netcode | | when `matchId` equals this match's ID: `status:"ready"` → connect to `host:port` and send `joinToken` as soon as the connection is up (FishNet: `JoinTokenAuthenticator`; NGO: the connection payload; Mirror: an authenticator message); `status:"error"` → show `message`, allow re-queueing. A different `matchId` is left over from an earlier match: keep polling. |
 
 To leave the queue: `/Match/CancelAllMatchmakingTicketsForPlayer` `{"Entity","QueueName"}`. One player can hold only one ticket per queue at a time.
 
@@ -51,5 +51,6 @@ Neither has been run against this bridge yet. The contract is the same one the v
 ## 4. Testing several clients on one machine
 
 - Every client must be a **different PlayFab player**. Unity builds share PlayerPrefs, so pass `-playfabCustomId player-a` / `player-b`. In the Editor plus a build, give one of them the argument.
-- Headless Unity test clients: `Game.exe -batchmode -nographics -client -autoMatch -playfabCustomId e2e-a -logFile a.log`. `EdgegapServer` treats `-batchmode` as a server unless `-client` is there.
+- Build Windows test clients with `-executeMethod EdgegapPluginBuild.BuildClient`, not `-buildWindows64Player`: after the plugin's server build, Unity stays on the Dedicated Server subtarget and the player build fails with "Dedicated Server support for Win is not installed".
+- Headless Unity test clients: `Game.exe -batchmode -nographics -client -autoMatch -playfabCustomId e2e-a -logFile a.log`. Against a local server container without PlayFab: `-connect 127.0.0.1:7770 -joinToken <token>`. `EdgegapServer` treats `-batchmode` as a server unless `-client` is there.
 - Read the client logs for: `Logged in to PlayFab` → `Searching for players` → `Match found (<id>)` → `Server ready at <host>:<port>`. Read the server logs (`edgegap_get_deployment_logs`) for `N player(s) connected`.
