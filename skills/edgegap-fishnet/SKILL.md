@@ -9,7 +9,7 @@ metadata:
 
 Goal: a player clicks **Play**, the Edgegap matchmaker groups players, Edgegap starts a FishNet dedicated server near them, every client connects automatically, and the server stops itself when the match is over. Done means that loop works with real builds, not that the code compiles.
 
-This path was run end to end on Edgegap with [netcode-sample-unity-fishnet](https://github.com/edgegap/netcode-sample-unity-fishnet) (`Fishnet_v4.1.6R_WebGL_Matchmaker`: Unity 2021.3.45f2, FishNet 4.1.6R, Bayou, SDK 3.5.5): two WebGL tabs were matched, connected over `wss` with TLS Upgrade, played, and the server stopped itself. The templates in `assets/unity/` are the files from that run. When the developer wants a working reference, point them at that folder.
+This path was run end to end on Edgegap with [netcode-game-sample-unity-fishnet-hashgrid](https://github.com/edgegap/netcode-game-sample-unity-fishnet-hashgrid) (`Fishnet_v4.1.6R_WebGL_Matchmaker`: Unity 2021.3.45f2, FishNet 4.1.6R, Bayou, SDK 3.5.5): two WebGL tabs were matched, connected over `wss` with TLS Upgrade, played, and the server stopped itself. The templates in `assets/unity/` are the files from that run. When the developer wants a working reference, point them at that folder.
 
 Use **dedicated (authoritative) servers**, never relays, unless the developer explicitly wants host/client. A dedicated server owns the game state, so no player hosts, has a latency edge, or ends the match by quitting.
 
@@ -35,7 +35,7 @@ Then ask, in one message, only what you couldn't infer: players per match, brows
 ## Phase 1: Make the FishNet game dedicated-server ready
 
 Read `references/fishnet.md`.
-1. Add `"com.edgegap.unity-servers-plugin": "https://github.com/edgegap/buildtool-unity-plugin.git"` (the Edgegap Unity plugin, Editor only: build, image, push, deploy from **Tools → Edgegap Server Hosting**; no `#tag`) and the SDK, `"com.edgegap.unity-sdk": "https://github.com/edgegap/edgegap-unity-sdk.git"`, to `Packages/manifest.json`, on every Unity version. No `#tag`: that installs the latest SDK (3.5.6+). Never pin an exact version. Nothing to embed or patch.
+1. Add `"com.edgegap.unity-servers-plugin": "https://github.com/edgegap/buildtool-unity-plugin.git"` (the Edgegap Unity plugin, Editor only: build, image, push, deploy from **Tools → Edgegap Server Hosting**; no `#tag`) and the SDK, `"com.edgegap.unity-sdk": "https://github.com/edgegap/sdk-unity-sessions-matchmaker-server-browser.git"`, to `Packages/manifest.json`, on every Unity version. No `#tag`: that installs the latest SDK (3.5.6+). Never pin an exact version. Nothing to embed or patch.
 2. Copy `assets/unity/*.cs` and `link.xml` into `Assets/Edgegap/`, and `assets/unity/Editor/*.cs` into `Assets/Edgegap/Editor/`. The FishNet adapters are already filled in. If the game's scripts live in an asmdef, reference `Edgegap.SDK` and FishNet's runtime asmdef from it.
 3. In the NetworkManager scene, turn **Start On Headless** off on `ServerManager`. `EdgegapServerLifecycle` starts the server in every server build, so the same scene serves client and server builds.
 4. Add the `Edgegap` object with the scene tool (project closed in the Editor):
@@ -104,4 +104,4 @@ Hand-off: what was built and where, app/version/matchmaker names, how to ship a 
 
 Related skills in this pack, if installed: `edgegap-unity` for NGO or Mirror projects, `edgegap-playfab` when the studio keeps PlayFab Matchmaking (its sample is a FishNet game), `edgegap-deployments-api` when it keeps another backend or matchmaker, `edgegap-launch` before going live.
 
-Sources of truth if something here looks outdated: https://docs.edgegap.com/unity, https://github.com/edgegap/edgegap-unity-sdk (releases), https://fish-networking.gitbook.io/docs, and the sample https://github.com/edgegap/netcode-sample-unity-fishnet.
+Sources of truth if something here looks outdated: https://docs.edgegap.com/unity, https://github.com/edgegap/sdk-unity-sessions-matchmaker-server-browser (releases), https://fish-networking.gitbook.io/docs, and the sample https://github.com/edgegap/netcode-game-sample-unity-fishnet-hashgrid.

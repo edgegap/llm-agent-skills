@@ -9,7 +9,7 @@ metadata:
 
 Goal: a player clicks **Find Match** (or joins an address while testing), Edgegap runs a headless NGO server near the players, every client connects, and the server stops its own deployment once the match is empty. Done means that loop works with real builds, not that the code compiles.
 
-Verified end to end on Edgegap with [edgegap/netcode-sample-unity-ngo-bossroom](https://github.com/edgegap/netcode-sample-unity-ngo-bossroom) (Boss Room, Unity 6000.0.54f1, NGO 1.13.0, UnityTransport 2.5.2 UDP, SDK 3.5.6, Edgegap Unity plugin 3.2.1): two Windows clients in the dungeon on one Edgegap server, by direct connection and through the matchmaker, and the server stopped itself each time. Its `EDGEGAP.md` is the developer-facing reference. `assets/unity/` holds generic plain-NGO adapters (server start and direct connect tested locally, matchmaker adapter compile-only); `assets/unity/Examples/BossRoom/` the verified Boss Room adapter.
+Verified end to end on Edgegap with [edgegap/netcode-game-sample-unity-ngo-bossroom](https://github.com/edgegap/netcode-game-sample-unity-ngo-bossroom) (Boss Room, Unity 6000.0.54f1, NGO 1.13.0, UnityTransport 2.5.2 UDP, SDK 3.5.6, Edgegap Unity plugin 3.2.1): two Windows clients in the dungeon on one Edgegap server, by direct connection and through the matchmaker, and the server stopped itself each time. Its `EDGEGAP.md` is the developer-facing reference. `assets/unity/` holds generic plain-NGO adapters (server start and direct connect tested locally, matchmaker adapter compile-only); `assets/unity/Examples/BossRoom/` the verified Boss Room adapter.
 
 Use **dedicated (authoritative) servers**, not a player host, unless the developer explicitly wants host/client.
 
@@ -36,7 +36,7 @@ Then ask, in one message, only what you couldn't infer: players per match, platf
 ## Phase 1: Make the game dedicated-server ready
 
 Read `references/ngo.md`.
-1. In `Packages/manifest.json`, without `#tag` (latest; never pin): `"com.edgegap.unity-servers-plugin": "https://github.com/edgegap/buildtool-unity-plugin.git"` (the Editor plugin: build, image, push, deploy) and `"com.edgegap.unity-sdk": "https://github.com/edgegap/edgegap-unity-sdk.git"` (runtime SDK, 3.5.6+).
+1. In `Packages/manifest.json`, without `#tag` (latest; never pin): `"com.edgegap.unity-servers-plugin": "https://github.com/edgegap/buildtool-unity-plugin.git"` (the Editor plugin: build, image, push, deploy) and `"com.edgegap.unity-sdk": "https://github.com/edgegap/sdk-unity-sessions-matchmaker-server-browser.git"` (runtime SDK, 3.5.6+).
 2. Copy `assets/unity/*.cs`, `EdgegapSettings.cs.meta` and `link.xml` to `Assets/Edgegap/`, and `assets/unity/Resources/EdgegapSettings.asset` to `Assets/Edgegap/Resources/`. Copy the `.meta` too: the asset finds its script by that GUID. Don't copy `Examples/`. If the game's scripts live in an asmdef the templates must call, reference it from an asmdef in `Assets/Edgegap/` (with `Edgegap.SDK`, `Unity.Netcode.Runtime`, `Unity.Networking.Transport`), or keep the templates in `Assembly-CSharp`, which sees auto-referenced asmdefs.
 3. **Plain NGO** (the game calls `NetworkManager` directly): keep `AutoStartServer` on; the lifecycle starts the server on `0.0.0.0` and the Edgegap internal port. Remove any headless `StartHost` the game does. **Own connection flow** (`ConnectionManager`, payloads, approval): `AutoStartServer` off, start the server through the game's flow, and swap in the Boss Room adapter (`references/ngo.md` §4).
 4. Fix host-only assumptions (`references/ngo.md` §2): `StartServer` not `StartHost`, no local player on the server, no host payload, matching build types, no Relay on the dedicated path.
@@ -102,4 +102,4 @@ Hand-off: what was built and where, app/version/matchmaker names, how to ship a 
 
 Related skills in this pack, if installed: `edgegap-unity` (Mirror, WebGL, general Unity), `edgegap-fishnet`, `edgegap-purrnet`, `edgegap-deployments-api` for a studio's own backend or matchmaker, `edgegap-launch` before going live.
 
-Sources of truth: https://docs-multiplayer.unity3d.com/netcode/current/about/, https://docs.edgegap.com/unity, https://github.com/edgegap/edgegap-unity-sdk, and the sample https://github.com/edgegap/netcode-sample-unity-ngo-bossroom.
+Sources of truth: https://docs-multiplayer.unity3d.com/netcode/current/about/, https://docs.edgegap.com/unity, https://github.com/edgegap/sdk-unity-sessions-matchmaker-server-browser, and the sample https://github.com/edgegap/netcode-game-sample-unity-ngo-bossroom.

@@ -2,7 +2,7 @@
 // On the server build only: starts the netcode server headless, reads the variables Edgegap and
 // the matchmaker inject, and stops its own deployment when the match is over (empty servers cost money).
 // Netcode-specific code lives only in the "NETCODE ADAPTER" region at the bottom.
-// Adapted from the end-to-end verified edgegap/netcode-sample-unity-ngo-bossroom sample.
+// Adapted from the end-to-end verified edgegap/netcode-game-sample-unity-ngo-bossroom sample.
 using System;
 using System.Collections;
 using Edgegap;

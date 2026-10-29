@@ -2,7 +2,7 @@
 name: edgegap-unreal
 description: 'Unreal Engine + Edgegap: get an Unreal multiplayer game online with dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on an Unreal project: it has the Unreal workflow, tested C++ drop-ins (matchmaker client with latency beacons, server self-stop), source-engine and Linux cross-compile setup, server packaging, Dockerfile, matchmaker config and fixes for the pitfalls that cost hours. Use when an Unreal dev wants online play: "put my game online", "players can only join on LAN", "nobody should have to host", "click Play and get matched", listen server to dedicated server, a .uproject that needs servers, "open <ip>" connections, packaging a Linux server, or debugging Edgegap deployments, ports or matchmaking for an Unreal game. Covers C++ and Blueprint-only projects. Use even for beginners who never say Edgegap, servers or Docker. Not for Unity (edgegap-unity), Godot or non-game backends.'
 metadata:
-  version: "0.1.2"
+  version: "0.1.3"
 ---
 
 # Edgegap for Unreal Engine: dedicated servers + matchmaking
@@ -108,4 +108,4 @@ Hand-off: what was built and where, the app/version/matchmaker names, how to shi
 
 Related skills in this pack, if installed: `edgegap-eos-voice` (in-game voice chat with EOS Voice once this works end to end), `edgegap-server-design` (deployment lifecycle for any engine), `edgegap-deployments-api` when the studio keeps its own backend or EOS/PlayFab matchmaking, `edgegap-launch` before going live.
 
-Sources of truth if something here looks outdated: https://docs.edgegap.com/unreal-engine, https://docs.edgegap.com/learn/matchmaking, and the reference sample https://github.com/edgegap/unreal-sample.
+Sources of truth if something here looks outdated: https://docs.edgegap.com/unreal-engine, https://docs.edgegap.com/learn/matchmaking, and the reference sample https://github.com/edgegap/game-sample-unreal-engine-topdown.

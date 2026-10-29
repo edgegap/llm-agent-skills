@@ -10,7 +10,7 @@
 //   -edgegapProfile <name>        matchmaker profile           -edgegapFindMatch            find a match on startup
 //   -edgegapConnect -edgegapAddress <ip> -edgegapPort <port>   test: connect directly on startup
 //   -edgegapQuitAfter <seconds>   test: quit after this long
-// Adapted from the end-to-end verified edgegap/netcode-sample-unity-ngo-bossroom sample.
+// Adapted from the end-to-end verified edgegap/netcode-game-sample-unity-ngo-bossroom sample.
 using System;
 using System.Collections;
 using Unity.Netcode;

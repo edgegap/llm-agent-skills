@@ -2,7 +2,7 @@
 
 What a dedicated server must do when Nakama starts it through the Fleet Manager. Engine-agnostic: it is plain HTTP and JSON. `assets/game-server/godot/nakama_edgegap_server.gd` implements it for Godot 4 (verified on Edgegap in Fish Game); `assets/game-server/node/nakamaEdgegap.ts` is the same logic for Node.js (checked against a mock Nakama). Both were run against the same mock and sent identical requests. Port either to C#, C++ or Rust by following this page.
 
-**Unity server builds**: use [edgegap-server-nakama-plugin-unity](https://github.com/edgegap/edgegap-server-nakama-plugin-unity), which does all of this (READY with `game_server`, batched connection events, STOP). Load `edgegap-unity` (or the netcode's skill) for the server build itself. **Unreal**: no plugin; port the contract to C++ with `FHttpModule` and use `edgegap-unreal` for the build.
+**Unity server builds**: use [backend-nakama-unity-template-model](https://github.com/edgegap/backend-nakama-unity-template-model), which does all of this (READY with `game_server`, batched connection events, STOP). Load `edgegap-unity` (or the netcode's skill) for the server build itself. **Unreal**: no plugin; port the contract to C++ with `FHttpModule` and use `edgegap-unreal` for the build.
 
 ## 1. Environment
 

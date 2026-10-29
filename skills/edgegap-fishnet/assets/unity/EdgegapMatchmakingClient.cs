@@ -1,7 +1,7 @@
 // Edgegap matchmaking client (Group Up flow, solo group). Requires com.edgegap.unity-sdk 3.5.6+ (3.5.5 breaks tickets on Unity < 2022.3).
 // Flow: Find Match -> ticket -> SEARCHING -> MATCH_FOUND (server starting) -> HOST_ASSIGNED -> connect.
 // Netcode-specific code lives only in the "NETCODE ADAPTER" region at the bottom.
-// FishNet 4.x version, verified end to end on Edgegap in edgegap/netcode-sample-unity-fishnet
+// FishNet 4.x version, verified end to end on Edgegap in edgegap/netcode-game-sample-unity-fishnet-hashgrid
 // (Fishnet_v4.1.6R_WebGL_Matchmaker: Bayou + TLS Upgrade, two WebGL clients matched, server self-stopped).
 using System.Collections;
 using System.Collections.Generic;

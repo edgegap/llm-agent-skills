@@ -2,14 +2,14 @@
 name: edgegap-eos-voice
 description: 'Add in-game voice chat with EOS Voice (Epic Online Services) to an Unreal Engine game that runs on Edgegap dedicated servers. The game server is the trusted server: it checks each player''s EOS ID token, puts them in a match or team room from the Edgegap matchmaker data, gets room tokens from the EOS Voice Web API (EOS voice doesn''t run on Linux servers) and removes players who leave. Ships tested C++ drop-ins (device ID login so players need no Epic account, a replicated component that needs no game class edits, server token service), Developer Portal client policies, Edgegap env vars, local two-client test with fake audio, and fixes for pitfalls. Use for "add voice chat", "team voice", "proximity or party chat", "EOS voice", "push to talk", "players can''t hear each other", Vivox replacement, or voice on an Unreal game hosted on Edgegap. Needs a working Edgegap dedicated server first (edgegap-unreal). Not for Unity yet, lobby-only voice without a server, or Mumble.'
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
 ---
 
 # EOS Voice on Edgegap dedicated servers (Unreal Engine)
 
 Goal: players in a match talk to each other through EOS Voice, in rooms the **game server** decides (whole match, or per matchmaker team), and a player who leaves the server leaves voice. The job is done when two clients on an Edgegap deployment hear each other, proved by logs, not when it compiles.
 
-Verified on **UE 5.5.4** from source (EOS SDK 1.16 bundled) with the [Edgegap Unreal sample](https://github.com/edgegap/unreal-sample): two Windows clients matched by the Edgegap matchmaker onto one Linux deployment, in the same team room, hearing each other, and the leaving player removed from the room.
+Verified on **UE 5.5.4** from source (EOS SDK 1.16 bundled) with the [Edgegap Unreal sample](https://github.com/edgegap/game-sample-unreal-engine-topdown): two Windows clients matched by the Edgegap matchmaker onto one Linux deployment, in the same team room, hearing each other, and the leaving player removed from the room.
 
 ## How it works (explain this to the developer in two sentences, not more)
 
@@ -87,4 +87,4 @@ What was added and where; how to turn voice off (unset the variables or `bEnable
 
 Related: `edgegap-unreal` (server, packaging, matchmaker), `edgegap-launch` before going live.
 
-Sources of truth: Epic's [Voice Interface overview](https://dev.epicgames.com/docs/epic-online-services/multiplayer/voice-and-rtc-interface/voice-interface/voice-overview), [Voice Web API](https://dev.epicgames.com/docs/web-api-ref/voice-web-api), [Connect Interface reference (ID tokens, device ID)](https://dev.epicgames.com/docs/epic-online-services/eos-fundamentals/connect-interface/connect-reference), Edgegap's [matchmaker injected variables](https://docs.edgegap.com/learn/matchmaking/matchmaker-in-depth), and the sample https://github.com/edgegap/unreal-sample.
+Sources of truth: Epic's [Voice Interface overview](https://dev.epicgames.com/docs/epic-online-services/multiplayer/voice-and-rtc-interface/voice-interface/voice-overview), [Voice Web API](https://dev.epicgames.com/docs/web-api-ref/voice-web-api), [Connect Interface reference (ID tokens, device ID)](https://dev.epicgames.com/docs/epic-online-services/eos-fundamentals/connect-interface/connect-reference), Edgegap's [matchmaker injected variables](https://docs.edgegap.com/learn/matchmaking/matchmaker-in-depth), and the sample https://github.com/edgegap/game-sample-unreal-engine-topdown.

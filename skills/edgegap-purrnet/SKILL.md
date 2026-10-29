@@ -9,7 +9,7 @@ metadata:
 
 Goal: a player clicks **Find Match** (or connects to an address while testing), Edgegap runs a headless PurrNet server near the players, every client connects, and the server stops its own deployment once the match is empty. Done means that loop works with real builds, not that the code compiles.
 
-This path was run end to end on Edgegap with [edgegap/PurrNet-Incremental-Sample](https://github.com/edgegap/PurrNet-Incremental-Sample), a fork of PurrNet's Incremental sample (Unity 6000.3.11f1, PurrNet `dev`, `UDPTransport`, SDK 3.5.5): two desktop clients played on the same server, both by direct connection and through the matchmaker (matched in about 35 s), and the server stopped itself each time. The templates in `assets/unity/` are the files from that run; `EDGEGAP.md` in that repo is a working reference for the developer.
+This path was run end to end on Edgegap with [edgegap/netcode-game-sample-unity-purrnet-incremental](https://github.com/edgegap/netcode-game-sample-unity-purrnet-incremental), a fork of PurrNet's Incremental sample (Unity 6000.3.11f1, PurrNet `dev`, `UDPTransport`, SDK 3.5.5): two desktop clients played on the same server, both by direct connection and through the matchmaker (matched in about 35 s), and the server stopped itself each time. The templates in `assets/unity/` are the files from that run; `EDGEGAP.md` in that repo is a working reference for the developer.
 
 Use **dedicated (authoritative) servers**, not a player host, unless the developer explicitly wants host/client.
 
@@ -37,7 +37,7 @@ Then ask, in one message, only what you couldn't infer: players per match, platf
 ## Phase 1: Make the game dedicated-server ready
 
 Read `references/purrnet.md`.
-1. Add `"com.edgegap.unity-servers-plugin": "https://github.com/edgegap/buildtool-unity-plugin.git"` (the Edgegap Unity plugin, Editor only: build, image, push, deploy from **Tools → Edgegap Server Hosting**; no `#tag`) and the SDK, `"com.edgegap.unity-sdk": "https://github.com/edgegap/edgegap-unity-sdk.git"`, to `Packages/manifest.json`, on every Unity version. No `#tag`: that installs the latest SDK (3.5.6+). Never pin an exact version. Nothing to embed or patch; if the project already has an embedded, hand-patched SDK (`Packages/com.edgegap.unity-sdk`), delete it and use the git package.
+1. Add `"com.edgegap.unity-servers-plugin": "https://github.com/edgegap/buildtool-unity-plugin.git"` (the Edgegap Unity plugin, Editor only: build, image, push, deploy from **Tools → Edgegap Server Hosting**; no `#tag`) and the SDK, `"com.edgegap.unity-sdk": "https://github.com/edgegap/sdk-unity-sessions-matchmaker-server-browser.git"`, to `Packages/manifest.json`, on every Unity version. No `#tag`: that installs the latest SDK (3.5.6+). Never pin an exact version. Nothing to embed or patch; if the project already has an embedded, hand-patched SDK (`Packages/com.edgegap.unity-sdk`), delete it and use the git package.
 2. Copy `assets/unity/*.cs`, `EdgegapSettings.cs.meta` and `link.xml` to `Assets/Edgegap/`, and `assets/unity/Resources/EdgegapSettings.asset` to `Assets/Edgegap/Resources/`. Copy the `.meta` too: the asset finds its script by that GUID. If the game's scripts live in an asmdef, reference `Edgegap.SDK` and PurrNet's runtime asmdef from it.
 3. Keep port 7777: `ListenPort` / `DirectPort` on the settings asset default to it and are applied to `UDPTransport.serverPort` at runtime, so PurrNet's default 5000 in the scene doesn't matter. Use 7777 on the app version too. Change both only if the game needs another port.
 4. Fix server-only logic that assumed a host (`references/purrnet.md` §3): `[ObserversRpc(runLocally: true, ...)]` where the server must run the RPC body too, players spawned for remote clients, client-only code guarded.
@@ -104,4 +104,4 @@ Hand-off: what was built and where, app/version/matchmaker names, how to ship a 
 
 Related skills in this pack, if installed: `edgegap-unity` (NGO, Mirror), `edgegap-fishnet`, `edgegap-deployments-api` for a studio's own backend or matchmaker, `edgegap-launch` before going live.
 
-Sources of truth: https://purrnet.gitbook.io/docs, https://docs.edgegap.com/unity, https://github.com/edgegap/edgegap-unity-sdk, and the sample https://github.com/edgegap/PurrNet-Incremental-Sample.
+Sources of truth: https://purrnet.gitbook.io/docs, https://docs.edgegap.com/unity, https://github.com/edgegap/sdk-unity-sessions-matchmaker-server-browser, and the sample https://github.com/edgegap/netcode-game-sample-unity-purrnet-incremental.

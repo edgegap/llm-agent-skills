@@ -2,7 +2,7 @@
 // On the server build only: starts the netcode server headless, reads the variables Edgegap and
 // the matchmaker inject, and stops its own deployment when the match is over (empty servers cost money).
 // Netcode-specific code lives only in the "NETCODE ADAPTER" region at the bottom.
-// FishNet 4.x version, verified end to end on Edgegap in edgegap/netcode-sample-unity-fishnet
+// FishNet 4.x version, verified end to end on Edgegap in edgegap/netcode-game-sample-unity-fishnet-hashgrid
 // (Fishnet_v4.1.6R_WebGL_Matchmaker: Bayou + TLS Upgrade, two WebGL clients matched, server self-stopped).
 using System;
 using System.Collections;

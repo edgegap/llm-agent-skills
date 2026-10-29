@@ -13,7 +13,7 @@ Get evidence first: the Unity build log, `docker logs`, `edgegap_get_deployment_
 
 SDK 3.5.5 and older send tickets with `UnityWebRequest.Post(url, string)`. Before Unity 2022.3 that overload form-encodes the string, so the JSON ticket arrives URL-encoded and the matchmaker answers 400 to every `POST /groups`, whatever the profile. The monitor call (a GET) still works, which makes it look like a config problem.
 
-Fix: SDK **3.5.6** (released 2026-10-15) sends the body as raw bytes on older Unity versions. Set `"com.edgegap.unity-sdk": "https://github.com/edgegap/edgegap-unity-sdk.git"` (no `#tag`, so the latest SDK) in `Packages/manifest.json`.
+Fix: SDK **3.5.6** (released 2026-10-15) sends the body as raw bytes on older Unity versions. Set `"com.edgegap.unity-sdk": "https://github.com/edgegap/sdk-unity-sessions-matchmaker-server-browser.git"` (no `#tag`, so the latest SDK) in `Packages/manifest.json`.
 - If the project embedded and hand-patched an older SDK (a `Packages/com.edgegap.unity-sdk` folder), delete that folder and use the git package instead, so later SDK updates apply.
 - Hand-written ticket code has the same bug if it calls `UnityWebRequest.Post(url, jsonString)` on Unity before 2022.3: send `new UploadHandlerRaw(Encoding.UTF8.GetBytes(json))` with `Content-Type: application/json` instead.
 

@@ -34,7 +34,7 @@ What makes it hold up (code and details: `edgegap-deployments-api`):
 | Steam lobbies, or a game backend with Steam sign-in | the backend owns matchmaking: it verifies the Steam ticket, queues players (Edgegap's matchmaker from the backend, or its own queue) and returns the address | `edgegap-manus` `references/backend.md` (the design works outside Manus) | verified with the Manus sample |
 | Photon Fusion / Photon Realtime | Photon's cloud matches players into a session; the Edgegap server starts a Photon session as a dedicated server and clients join it by name | `edgegap-fusion` | verified with BR200 and Simple FPS |
 | Pragma, AccelByte, other game backends | their match-found or allocation extension (a plugin, a custom session/DS provider, a webhook) | none specific: the shape in section 1 | not built; check the vendor's docs for a "custom dedicated server provider" hook before writing glue |
-| Open Match | the director allocates matches from the backend | https://github.com/edgegap/open-match-demo (older demo) | not run in this pack |
+| Open Match | the director allocates matches from the backend | no public sample | not run in this pack |
 | GameLift FlexMatch (standalone mode) | match events (`MatchmakingSucceeded`) delivered to the studio's backend | https://docs.edgegap.com/docs/tools-and-integrations/gamelift-to-arbitrium for the hosting side | not built |
 | A custom queue in the studio's backend | the backend itself | `edgegap-deployments-api` | the allocator sketch there |
 

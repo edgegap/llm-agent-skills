@@ -4,5 +4,5 @@ contact_links:
     url: https://discord.gg/MmJf8fWjnt
     about: Questions about the Edgegap platform itself go to Edgegap support or Discord, not this repository.
   - name: Report a security vulnerability
-    url: https://github.com/edgegap/edgegap-agent-skills/security/advisories/new
+    url: https://github.com/edgegap/llm-agent-skills/security/advisories/new
     about: Please report vulnerabilities privately.

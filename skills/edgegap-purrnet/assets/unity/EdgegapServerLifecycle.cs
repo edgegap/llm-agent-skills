@@ -2,7 +2,7 @@
 // On the server build only: starts the netcode server headless, reads the variables Edgegap and
 // the matchmaker inject, and stops its own deployment when the match is over (empty servers cost money).
 // Netcode-specific code lives only in the "NETCODE ADAPTER" region at the bottom.
-// PurrNet version, verified end to end on Edgegap in edgegap/PurrNet-Incremental-Sample
+// PurrNet version, verified end to end on Edgegap in edgegap/netcode-game-sample-unity-purrnet-incremental
 // (UDPTransport, two desktop clients, direct and matchmaker modes, server self-stopped).
 using System;
 using System.Collections;

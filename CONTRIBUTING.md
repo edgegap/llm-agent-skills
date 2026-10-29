@@ -22,7 +22,7 @@ python scripts/check_spec.py
 
 `validate.py` checks skill frontmatter (name, description length, `metadata.version`), relative links and skill names across skills, every JSON file, and the plugin manifests. `scan_private_refs.py` fails on anything that must not be public: personal paths and emails, real matchmaker or deployment hosts, registry robot accounts, token-shaped strings. CI runs both on every pull request. `check_spec.py` diffs the published Edgegap OpenAPI spec against the pinned commit; a weekly workflow runs it and opens an issue on drift (`--update` moves the pin). Don't copy the specs into the repo: their examples contain token-shaped values, and the plugin directory rejects anything that looks like a shipped secret.
 
-If you change the C# templates or adapters, compile them in a real Unity project (Unity 6 LTS, SDK `https://github.com/edgegap/edgegap-unity-sdk.git`, the latest) with the netcode you touched, and build a Linux Dedicated Server once:
+If you change the C# templates or adapters, compile them in a real Unity project (Unity 6 LTS, SDK `https://github.com/edgegap/sdk-unity-sessions-matchmaker-server-browser.git`, the latest) with the netcode you touched, and build a Linux Dedicated Server once:
 
 ```bash
 <Unity> -batchmode -quit -projectPath <project> -executeMethod EdgegapServerBuild.Build -logFile -
@@ -43,7 +43,7 @@ If you change the C# templates or adapters, compile them in a real Unity project
 - `evals/playfab-evals.json`: PlayFab tasks with fixtures `mps-skirmish` (Unity NGO on PlayFab Multiplayer Servers with the GSDK), `driftclash` (Godot 4 with PlayFab REST login) and `broken-playfab-bridge` (an Azure Function bridge with planted bugs and playtest logs). Check delivered Azure Functions with `node --check` on every file, and if you change `skills/edgegap-playfab/assets/`, run them once end to end (`references/azure-functions.md` §5 chain test, then two clients).
 - `evals/playfab-routing-eval.json`: routing between `edgegap-playfab`, other pack skills and no skill (PlayFab questions unrelated to hosting).
 - `evals/threejs-routing-eval.json`: routing between `edgegap-threejs`, its neighbours (Colyseus, Manus, Godot web, Unity WebGL) and no skill (Three.js and browser-game questions unrelated to hosting). If you change `skills/edgegap-threejs/assets/`, copy them into an empty project and play a match with two headless players locally and in Docker (`references/server.md` §8 of `edgegap-threejs`).
-- `evals/fixtures/ngo-arena`: a minimal Netcode for GameObjects host/client project (scripts only) for the NGO eval. The Mirror WebGL eval uses https://github.com/edgegap/mirror-webgl.
+- `evals/fixtures/ngo-arena`: a minimal Netcode for GameObjects host/client project (scripts only) for the NGO eval. The Mirror WebGL eval uses https://github.com/edgegap/netcode-game-sample-webgl-mirror-tanks.
 
 When measuring triggering with skill-creator's `run_eval.py`, use `--num-workers 1`. Parallel workers share one `.claude/commands` folder, so each run sees several copies of the skill and the trigger rate is understated.
 

@@ -2,7 +2,7 @@
 // every match runs on its own dedicated server that Nakama starts on Edgegap
 // through the Edgegap Fleet Manager for Nakama (github.com/edgegap/nakama-edgegap).
 //
-// From edgegap/fishgame-godot (nakama/main.go), verified end to end on Edgegap
+// From edgegap/backend-game-sample-godot-nakama-fishgame (nakama/main.go), verified end to end on Edgegap
 // with Nakama 3.39 and nakama-edgegap 20d849e. Adapt the marked lines.
 package main
 

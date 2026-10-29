@@ -2,7 +2,7 @@
 
 ## Reporting a vulnerability
 
-Please report security problems privately, not in public issues: use **Report a vulnerability** on this repository's [Security tab](https://github.com/edgegap/edgegap-agent-skills/security/advisories/new). For problems with the Edgegap platform itself, contact Edgegap support through the dashboard.
+Please report security problems privately, not in public issues: use **Report a vulnerability** on this repository's [Security tab](https://github.com/edgegap/llm-agent-skills/security/advisories/new). For problems with the Edgegap platform itself, contact Edgegap support through the dashboard.
 
 Useful in a report: which skill, template or script is affected, what an agent or attacker could do with it, and steps to reproduce. Never include real API tokens, registry credentials or matchmaker tokens; revoke any you exposed while testing.
 

@@ -1,7 +1,7 @@
 extends Node
 ## Game server side of the Edgegap Fleet Manager for Nakama, for Godot 4.
 ##
-## Add as an autoload (e.g. "NakamaEdgegap"). From edgegap/fishgame-godot
+## Add as an autoload (e.g. "NakamaEdgegap"). From edgegap/backend-game-sample-godot-nakama-fishgame
 ## (autoload/EdgegapServer.gd), verified on Edgegap with Godot 4.7.2 and
 ## nakama-edgegap 20d849e; the game-specific parts were moved out.
 ##

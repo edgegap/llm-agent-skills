@@ -24,7 +24,7 @@ FILES = ["edgegap-v1-openapi.yaml", "edgegap-v2-openapi.yaml"]
 
 
 def get(url: str) -> str:
-    req = urllib.request.Request(url, headers={"User-Agent": "edgegap-agent-skills-spec-check"})
+    req = urllib.request.Request(url, headers={"User-Agent": "llm-agent-skills-spec-check"})
     with urllib.request.urlopen(req, timeout=30) as resp:
         return resp.read().decode("utf-8").replace("\r\n", "\n")
 
