@@ -2,7 +2,7 @@
 name: edgegap-playfab
 description: 'PlayFab + Edgegap: keep PlayFab for players, login and Matchmaking, and run each match on its own Edgegap dedicated server near the players, started by PlayFab Azure Functions (CloudScript using Azure Functions), end to end. Load this before using any Edgegap MCP tool on a project that uses PlayFab for matchmaking (a PlayFab title ID, playfabapi.com, PlayFabMultiplayerAPI, CreateMatchmakingTicket) or is leaving PlayFab Multiplayer Servers (MPS, GSDK). Verified on Edgegap with a Unity FishNet game: match_found rule, StartEdgegapDeployment (POST /v2/deployments near the players), ready webhook, server address in player read-only data. Ships the Azure Functions, setup scripts, a dependency-free Unity client, server self-stop, and fixes for PlayFab pitfalls (new titles block LoginWithCustomID player creation, legacy CloudScript, ticket polling limits). Use for "PlayFab matchmaking with Edgegap servers", "replace PlayFab Multiplayer Servers", "PlayFab CloudScript Edgegap bridge", or debugging one.'
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
 ---
 
 # Edgegap for PlayFab games: PlayFab matches players, Edgegap runs the match
@@ -18,7 +18,7 @@ Edgegap --webhook_on_ready--> Azure Function EdgegapDeploymentReady
 Client polls GetUserReadOnlyData --> connects to host:port --> game server --> self-stop when empty
 ```
 
-This path was run end to end on Edgegap on 2026-10-21 with [edgegap/sample-playfab-matchmaker-fishnet](https://github.com/edgegap/sample-playfab-matchmaker-fishnet) (Unity 2021.3.45f2, FishNet 3.11.14 Tugboat UDP, Azure Functions Flex Consumption with Node 22 in westus2, PlayFab queue of 2). Two clients logged in and were matched. The rule fired, one server started near them, and the address reached both players about 8 s after the function call. Both connected (`2 player(s) connected`). The server stopped itself 48 s after they quit, and 2 minutes after start when nobody joined. `assets/` holds that run's files. Not run: the Unity client in WebGL, other engines' clients, latency-based PlayFab queue rules, C# Azure Functions, queues larger than 2. Say so when those matter.
+This path was run end to end on Edgegap on 2026-10-21 with [edgegap/backend-game-sample-unity-playfab-matchmaker-fishnet-spaceedge](https://github.com/edgegap/backend-game-sample-unity-playfab-matchmaker-fishnet-spaceedge) (Unity 2021.3.45f2, FishNet 3.11.14 Tugboat UDP, Azure Functions Flex Consumption with Node 22 in westus2, PlayFab queue of 2). Two clients logged in and were matched. The rule fired, one server started near them, and the address reached both players about 8 s after the function call. Both connected (`2 player(s) connected`). The server stopped itself 48 s after they quit, and 2 minutes after start when nobody joined. `assets/` holds that run's files. Not run: the Unity client in WebGL, other engines' clients, latency-based PlayFab queue rules, C# Azure Functions, queues larger than 2. Say so when those matter.
 
 Why this shape, so you can defend it:
 - **PlayFab stays the backend; Edgegap replaces the server host.** Turn **server allocation off** on the queue, so PlayFab only forms matches. This also replaces PlayFab Multiplayer Servers: no GSDK, no PlayFab builds, and Edgegap picks a location near the players for each match.
@@ -108,4 +108,4 @@ Hand-off: what runs where (Function App name and resource group, PlayFab queue/f
 
 Related skills in this pack, if installed: the engine's skill for the server build and netcode (`edgegap-fishnet`, `edgegap-ngo`, `edgegap-purrnet`, `edgegap-unity`, `edgegap-unreal`, `edgegap-godot`), `edgegap-deployments-api` for the Deploy API in depth, and `edgegap-launch` before going live.
 
-Sources of truth if something here looks outdated: https://learn.microsoft.com/gaming/playfab (Matchmaking, CloudScript using Azure Functions, Automation rules), https://docs.edgegap.com, and the sample https://github.com/edgegap/sample-playfab-matchmaker-fishnet.
+Sources of truth if something here looks outdated: https://learn.microsoft.com/gaming/playfab (Matchmaking, CloudScript using Azure Functions, Automation rules), https://docs.edgegap.com, and the sample https://github.com/edgegap/backend-game-sample-unity-playfab-matchmaker-fishnet-spaceedge.

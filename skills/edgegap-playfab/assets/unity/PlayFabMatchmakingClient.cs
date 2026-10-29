@@ -5,7 +5,7 @@
 //   3. Poll GetMatchmakingTicket until "Matched"
 //   4. Poll GetUserReadOnlyData["EdgegapServer"] until the EdgegapDeploymentReady Azure Function writes this match's server
 //   5. Connect the netcode to host:port (the only netcode-specific code, in the NETCODE ADAPTER region)
-// Verified end to end with edgegap/sample-playfab-matchmaker-fishnet (FishNet 3.11, Tugboat UDP).
+// Verified end to end with edgegap/backend-game-sample-unity-playfab-matchmaker-fishnet-spaceedge (FishNet 3.11, Tugboat UDP).
 using System;
 using System.Text;
 using System.Threading.Tasks;
