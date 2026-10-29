@@ -2,6 +2,14 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.22.3 (unreleased)
+
+The Edgegap Godot plugin 1.0.10 (edgegap/buildtool-godot-plugin#3) fixed the two caveats `edgegap-godot` 0.2.0 documented: its default Dockerfile no longer prints the environment (which put `ARBITRIUM_DELETE_TOKEN` in deployment logs) and runs Godot under tini, and the plugin no longer declares global class names.
+
+- `edgegap-godot` 0.2.1 asks for plugin 1.0.10 or newer, describes the fixed Dockerfile, and keeps the old behavior only as troubleshooting rows (update the plugin). The settings template stays `EdgegapGameSettings`, so it loads next to older plugin versions too.
+- Verified on game-sample-godot-arena-shooter with plugin 1.0.10: the image ran on Edgegap with no environment in the logs.
+- Versions: `edgegap` 0.22.3, `edgegap-godot` 0.2.1.
+
 ## 0.22.2 (unreleased)
 
 Every other `edgegap/*` link follows the repository renames too, so none depends on a GitHub redirect (a redirect stops working if someone recreates the old name):

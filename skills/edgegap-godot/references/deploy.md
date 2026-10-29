@@ -36,10 +36,12 @@ The dock's steps, each with a status line and details in Output (Docker build an
 | Deploy to cloud | `POST /v2/deployments` near your public IP, tagged `quickstart`; polls until ready; Stop ends it |
 | Rebuild from source | Export + Containerize in one click |
 
-The default Dockerfile (`ubuntu:22.04` + `ca-certificates`) copies the binary and `.pck` and runs `./server.x86_64 -- ${GODOT_COMMANDLINE_ARGS}`. It needs nothing per game:
+The default Dockerfile (`ubuntu:22.04` + `ca-certificates` + `tini`) copies the binary and `.pck` and runs `./server.x86_64 -- ${GODOT_COMMANDLINE_ARGS}` under tini. It needs nothing per game:
 - a Dedicated Server export starts headless, and `EdgegapServer.is_server_launch()` is true from the `dedicated_server` feature, so no `--server` argument. A game that needs arguments reads them from `GODOT_COMMANDLINE_ARGS`, set as an app version env var;
-- Godot runs as PID 1 and ignores SIGTERM: `docker stop` waits out its timeout. On Edgegap it doesn't matter, because `EdgegapServer` quits by itself after its self-stop call;
-- it prints the environment at start, so deployment logs show `ARBITRIUM_DELETE_TOKEN`. Don't paste those logs anywhere public. A game that can't accept that gets its own Dockerfile (same `SERVER_BUILD_PATH` contract) in the dock's Dockerfile path field, which resets to the default each time the editor starts.
+- tini forwards SIGTERM, so `docker stop` and Edgegap's stop end the server in about a second;
+- it never prints the environment, which holds `ARBITRIUM_DELETE_TOKEN`.
+
+Plugin 1.0.9 and older printed the environment at start (the delete token showed in deployment logs) and ran Godot as PID 1, which ignores SIGTERM: update the plugin. A game that needs a different image gets its own Dockerfile (same `SERVER_BUILD_PATH` contract) in the dock's Dockerfile path field, which resets to the default each time the editor starts.
 
 Command line, same artifacts (CI, or no editor open):
 ```bash
