@@ -20,7 +20,7 @@ Get evidence first: the Unity build log, `docker logs`, `edgegap_get_deployment_
 | `NullReferenceException` in animation/visual code on the server | Client-only code on server objects (`ngo.md` §5). Harmless if play works; guard with `IsClient` when it spams |
 | Never stops after players leave | A client is still connected (one in the background), or the `Edgegap` object was destroyed (it must be `DontDestroyOnLoad`; the bootstrap does this) |
 | Stops after 120 s during manual testing | `FirstPlayerTimeoutSeconds`: connect sooner or raise it on `EdgegapSettings` |
-| Self-stop fails with a certificate error | Base image without CA certificates: use `assets/docker/Dockerfile` |
+| Self-stop fails with a certificate error | Base image without CA certificates: use the plugin's Dockerfile |
 
 ## 2. Connection
 
@@ -56,10 +56,14 @@ In order:
 | `type or namespace 'Edgegap'` / `'Unity.Netcode'` not found | The scripts sit in an asmdef without references to `Edgegap.SDK`, `Unity.Netcode.Runtime` and `Unity.Networking.Transport`; or the SDK isn't in `Packages/manifest.json` |
 | Settings asset shows "missing script" | `EdgegapSettings.cs.meta` wasn't copied with the script; copy it, or recreate the asset with **Assets → Create → Edgegap → Settings** in `Assets/Edgegap/Resources/` |
 | `No Resources/EdgegapSettings asset, using defaults` | The asset isn't in a `Resources` folder or isn't named `EdgegapSettings` |
-| `com.edgegap.unity-servers-plugin` and the SDK both installed | Fine: the plugin is the Editor build/push tool, the SDK holds matchmaking. They coexist (verified on Unity 6000.0.54f1) |
+| `com.edgegap.unity-servers-plugin` and the SDK both installed | Expected: the plugin is the Editor build/push/deploy tool, the SDK holds matchmaking and self-stop. They coexist (verified on Unity 6000.0.54f1) |
+| Plugin's **Containerize** step is very slow or the image is huge | No `.dockerignore` in the project root: Docker sends the whole project. Copy `assets/docker/.dockerignore` |
+| Plugin's local container: clients can't reach `127.0.0.1:7777` | Default run parameters `-p 7777/udp` map a random host port: set `-p 7777:7777/udp` |
+| Plugin's local container exits after 2 minutes | The mock env makes the server act as on Edgegap (120 s no-player self-stop): connect sooner, or **Terminate** and redeploy |
+| `Unable to login with the given credentials` when saving a version | Stale registry login on that version: re-enter it from the Container Registry page |
 | Linux toolchain/sysroot errors on Windows | Add `com.unity.toolchain.win-x86_64-linux-x86_64` |
 | Batch build refuses to start | Project open in the Editor: close it or build from the menu |
 | First batch import seems stuck at `Package Manager log level set to [2]` | Resolving git packages and importing: wait (10+ minutes on large projects), read the log for `error CS` |
-| `COPY failed ... Builds/EdgegapServer` | Build the server first; run `docker build` from the project root |
+| `COPY failed ... Builds/EdgegapServer` | Build the server first (plugin **Build server**); run `docker build` from the project root |
 | `exec format error` on Edgegap | Rebuild with `--platform linux/amd64` |
 | `Unable to pull image from registry` | No registry credentials on the app version |

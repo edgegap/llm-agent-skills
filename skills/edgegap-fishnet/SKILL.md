@@ -2,7 +2,7 @@
 name: edgegap-fishnet
 description: 'FishNet (Fish-Networking) + Edgegap: take a Unity game built on FishNet to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a FishNet project (Assets/FishNet, Tugboat, Bayou, Multipass, ServerManager, NetworkHudCanvas). It has FishNet-ready C# templates verified on Edgegap (matchmaker client, server self-stop, scene-change persistence), the Start On Headless and WebGL/Bayou wss setup, port 7770 app version, Dockerfile, matchmaker config and fixes for known pitfalls, including the SDK JSON bug on Unity before 2022.3. Use when a FishNet dev wants online play: "host my FishNet game", "players should not host", "works on LAN but not online", "Find Match button", "FishNet WebGL on Edgegap", moving off the old FishNet Edgegap samples that call the API from the client, or debugging FishNet deployments, ports or matchmaking. Other Unity netcodes (NGO, Mirror): edgegap-unity.'
 metadata:
-  version: "0.2.9"
+  version: "0.3.0"
 ---
 
 # Edgegap for FishNet: dedicated servers + matchmaking
@@ -35,7 +35,7 @@ Then ask, in one message, only what you couldn't infer: players per match, brows
 ## Phase 1: Make the FishNet game dedicated-server ready
 
 Read `references/fishnet.md`.
-1. Install the SDK: `"com.edgegap.unity-sdk": "https://github.com/edgegap/sdk-unity-sessions-matchmaker-server-browser.git"` in `Packages/manifest.json`, on every Unity version. No `#tag`: that installs the latest SDK (3.5.6+). Never pin an exact version. Nothing to embed or patch.
+1. Add `"com.edgegap.unity-servers-plugin": "https://github.com/edgegap/buildtool-unity-plugin.git"` (the Edgegap Unity plugin, Editor only: build, image, push, deploy from **Tools → Edgegap Server Hosting**; no `#tag`) and the SDK, `"com.edgegap.unity-sdk": "https://github.com/edgegap/sdk-unity-sessions-matchmaker-server-browser.git"`, to `Packages/manifest.json`, on every Unity version. No `#tag`: that installs the latest SDK (3.5.6+). Never pin an exact version. Nothing to embed or patch.
 2. Copy `assets/unity/*.cs` and `link.xml` into `Assets/Edgegap/`, and `assets/unity/Editor/*.cs` into `Assets/Edgegap/Editor/`. The FishNet adapters are already filled in. If the game's scripts live in an asmdef, reference `Edgegap.SDK` and FishNet's runtime asmdef from it.
 3. In the NetworkManager scene, turn **Start On Headless** off on `ServerManager`. `EdgegapServerLifecycle` starts the server in every server build, so the same scene serves client and server builds.
 4. Add the `Edgegap` object with the scene tool (project closed in the Editor):
@@ -52,23 +52,22 @@ Make sure the developer has an Edgegap account, Docker running, and the Unity **
 
 ✅ Check: `edgegap_list_apps` succeeds.
 
-## Phase 3: Build, containerize, push
+## Phase 3: Build, test and upload with the plugin
 
-Read `references/deploy.md` §2-3.
-1. `"<Unity>" -batchmode -quit -projectPath "<project>" -executeMethod EdgegapServerBuild.Build -logFile build-server.log` → `Builds/EdgegapServer/ServerBuild`.
-2. Copy `assets/docker/Dockerfile` and `.dockerignore` to the project root.
-3. The developer runs `docker login registry.edgegap.com`. You build and push `registry.edgegap.com/<project>/<image>:<tag>` with `--platform linux/amd64` and a fresh tag (UTC timestamp `YYYYMMDD-HHMM`, also the app version name).
-4. Local smoke test: `docker run --rm -p 7770:7770 <image>` (Tugboat: `-p 7770:7770/udp`) and connect a client.
+Copy `assets/docker/.dockerignore` to the project root (the plugin's Docker context is the project root; without it Docker sends the whole project). Then the developer opens **Tools → Edgegap Server Hosting** and goes top to bottom:
+1. **Sign in with Edgegap** → **Build server** → **Containerize with Docker** (Image Name; empty tag = UTC timestamp).
+2. **Test Your Server Locally**: Optional Docker Run Parameters `-p 7770:7770 (Tugboat: -p 7770:7770/udp)` → **Deploy local container**; connect a client to `127.0.0.1:7770`; **Terminate**.
+3. **Upload image and Create app version** (Application Name). It pushes and opens the dashboard version form: replace the default port with `gameport` / `7770` / **WS** with TLS Upgrade on for Bayou, **UDP** for Tugboat, add registry credentials if asked, save.
 
-✅ Check: `edgegap_list_registry_tags` shows the tag.
+No Editor (CI, or you run it): the same steps from the command line in `references/deploy.md` §2-4.
 
-## Phase 4: App version and a direct deploy
+✅ Check: `edgegap_list_app_versions` shows the version with `registry_credentials_set: true` and the `gameport` port.
 
-Read `references/deploy.md` §4-5.
-1. App version port: name `gameport`, port `7770`, protocol **WS** with `"tls_upgrade": true` for Bayou, **UDP** for Tugboat. Registry credentials set. Verify with `edgegap_list_app_versions` (`registry_credentials_set: true`).
-2. `edgegap_deploy` near the developer, `edgegap_wait_for_deployment`, read the logs.
-3. Connect a real client directly to `<fqdn>:<external port>` (Bayou: Use WSS on). The example bridge in `assets/unity/Examples/MatchmakingSystem.cs` has a direct mode for exactly this.
-4. `edgegap_stop_deployment`.
+## Phase 4: Direct deploy
+
+1. **Deploy to cloud** in the plugin, or `edgegap_deploy` near the developer → `edgegap_wait_for_deployment` → `edgegap_get_deployment_logs`.
+2. Connect a real client directly to `<fqdn>:<external port>` (Bayou: Use WSS on). The example bridge in `assets/unity/Examples/MatchmakingSystem.cs` has a direct mode for exactly this.
+3. Close the clients: the server stops itself 30 s later (or `edgegap_stop_deployment`).
 
 ✅ Check: a client played on the Edgegap server. Don't build the matchmaker on an unproven server.
 
@@ -88,7 +87,7 @@ Read `references/matchmaker.md`.
 ## Phase 7: End-to-end test and hand-off
 
 1. `edgegap_list_deployments`: nothing of yours left running.
-2. Build the client: `-executeMethod EdgegapServerBuild.BuildClient -edgegapClientTarget webgl|win64|mac|linux`. Serve WebGL from an allowed origin (`python -m http.server 8080 --bind 127.0.0.1` in `Builds/Client/webgl`).
+2. Build the client: `-executeMethod EdgegapClientBuild.Build -edgegapClientTarget webgl|win64|mac|linux` (`assets/unity/Editor/EdgegapClientBuild.cs`). Serve WebGL from an allowed origin (`python -m http.server 8080 --bind 127.0.0.1` in `Builds/Client/webgl`).
 3. **Test with two clients.** Two browser tabs (bring each to the front before clicking; background tabs throttle Unity), or two builds. Watch SEARCHING → MATCH_FOUND → HOST_ASSIGNED → connected. A lone ticket can wait until it nearly expires (30 s with the template) before it gets a server, even with a `min_team_size: 1` expansion (`references/matchmaker.md` §3).
 4. Server logs show `N matched player(s)`. Close both clients → `Stopping deployment: all players left` → the deployment disappears.
 5. Debug with `references/troubleshooting.md` until this passes.
