@@ -2,6 +2,14 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.23.1 (unreleased)
+
+The Edgegap Godot plugin 1.0.10 (edgegap/buildtool-godot-plugin#3) fixed the two caveats `edgegap-godot` 0.2.0 documented: its default Dockerfile no longer prints the environment (which put `ARBITRIUM_DELETE_TOKEN` in deployment logs) and runs Godot under tini, and the plugin no longer declares global class names.
+
+- `edgegap-godot` 0.2.1 asks for plugin 1.0.10 or newer, describes the fixed Dockerfile, and keeps the old behavior only as troubleshooting rows (update the plugin). The settings template stays `EdgegapGameSettings`, so it loads next to older plugin versions too.
+- Verified on game-sample-godot-arena-shooter with plugin 1.0.10: the image ran on Edgegap with no environment in the logs.
+- Versions: `edgegap` 0.23.1, `edgegap-godot` 0.2.1.
+
 ## 0.23.0 (unreleased)
 
 The Unity skills build, containerize, upload and deploy the server with the [Edgegap Unity plugin](https://github.com/edgegap/buildtool-unity-plugin) (`com.edgegap.unity-servers-plugin`, **Tools → Edgegap Server Hosting**) instead of their own build script and Dockerfile, as `edgegap-godot` 0.2.0 does with the Godot plugin. The plugin is maintained by Edgegap across Unity versions and handles what the scripts did not: Addressables, `buildx` on Apple Silicon, Docker's PATH on macOS, the Linux build modules and the registry login. The agent keeps the game code, the matchmaker and the MCP work.

@@ -24,8 +24,9 @@ extends Node
 ##   EMPTY_GRACE. Without the self-stop an empty server bills until it hits the
 ##   app version's max duration.
 ## - Quits by itself if the self-stop call fails or SIGTERM never arrives.
-##   Godot has no SIGTERM handler, and as PID 1 in a container (the Edgegap
-##   plugin's Dockerfile) it ignores SIGTERM, so this quit is what ends it.
+##   Godot has no SIGTERM handler, so SIGTERM ends the process at once; in a
+##   container that needs an init as PID 1 (tini in the Edgegap plugin's
+##   Dockerfile). Without one, this quit is what ends it.
 ## Log lines start with "EDGEGAP". Godot only flushes print() per line when
 ## application/run/flush_stdout_on_print is on (see the skill's godot.md §5);
 ## without it, docker and Edgegap logs show nothing until the buffer fills.

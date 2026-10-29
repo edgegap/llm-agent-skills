@@ -21,7 +21,8 @@ Get evidence first: `docker logs`, `edgegap_get_deployment_logs` (only while the
 | Deployment never stops | `match_ended()` never called and a client still connected, or the game replaced the `MultiplayerAPI` after `begin()` (call `begin()` with the final one) |
 | `self_stop result=0 http=401` | Header altered: the delete token goes raw (`Authorization: <token>`) |
 | Stopped after 120 s while testing by hand | `JOIN_TIMEOUT`: connect sooner or raise `EDGEGAP_JOIN_TIMEOUT` |
-| `docker stop` takes the full timeout, exit 137 | Expected with the plugin's Dockerfile: Godot is PID 1 and ignores SIGTERM. On Edgegap `EdgegapServer` quits by itself after its self-stop, so deployments still end |
+| `docker stop` takes the full timeout, exit 137 | Plugin 1.0.9 or older: its Dockerfile runs Godot as PID 1, which ignores SIGTERM. Update the plugin (1.0.10 runs it under tini). Deployments still end, because `EdgegapServer` quits by itself after its self-stop |
+| Deployment logs list every environment variable, `ARBITRIUM_DELETE_TOKEN` included | Plugin 1.0.9 or older: its Dockerfile ran `env` at start. Update the plugin and rebuild the image |
 | A player spawned for peer 1, or the server shows a HUD | Host code path still runs on the dedicated server (`godot.md` §3) |
 | Ready, then restarts | Crash in server code (read logs before stopping), memory too low, a missing resource that the Dedicated Server export stripped (mark it Keep) |
 
@@ -57,7 +58,7 @@ In order:
 |---|---|
 | `No export template found at the expected path` | Templates for this exact version missing (`godot.md` §6) |
 | `Invalid export preset name` | `--export-release` takes the preset `name=` exactly |
-| `Class "EdgegapSettings" hides a global script class` at editor start, Edgegap dock missing | A game script reuses a `class_name` the plugin declares (`EdgegapSettings`, `EdgegapConstants`, `EdgegapLogger`, `EdgegapDocker`, `EdgegapAuth`, `EdgegapPaths`, `EdgegapProcess`, `EdgegapAppApi`, `EdgegapWizardApi`, `EdgegapDeploymentsApi`, `EdgegapExportPreset`, `EdgegapExportTemplates`, `EdgegapHeadlessExport`). Rename the game's class: the templates use `EdgegapGameSettings` for this reason |
+| `Class "EdgegapSettings" hides a global script class` at editor start, Edgegap dock missing | Plugin 1.0.9 or older declares global class names that games may reuse: update the plugin (1.0.10 declares none), or rename the game's class. The old names: `EdgegapSettings`, `EdgegapConstants`, `EdgegapLogger`, `EdgegapDocker`, `EdgegapAuth`, `EdgegapPaths`, `EdgegapProcess`, `EdgegapAppApi`, `EdgegapWizardApi`, `EdgegapDeploymentsApi`, `EdgegapExportPreset`, `EdgegapExportTemplates`, `EdgegapHeadlessExport`. The templates use `EdgegapGameSettings` so they load next to either version |
 | `Server binary missing before Docker build` / `Server .pck missing` | Export first; the preset must keep `export_path="build/edgegap-linux-server.x86_64"` and `binary_format/embed_pck=false` |
 | Containerize takes minutes at "sending build context" | No `.dockerignore`: the plugin sends the whole project. Copy `assets/docker/.dockerignore` to the project root |
 | `Prepare Template: The given export path doesn't exist` (command-line export) | Create `build/` first; the dock does it itself |

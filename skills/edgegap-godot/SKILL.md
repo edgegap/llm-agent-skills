@@ -1,8 +1,8 @@
 ---
 name: edgegap-godot
-description: 'Godot 4 + Edgegap: take a Godot multiplayer game (MultiplayerAPI, @rpc, ENetMultiplayerPeer, WebSocketMultiplayerPeer, MultiplayerSpawner, netfox) to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a Godot project (project.godot, .gd, .tscn, export_presets.cfg). It has tested GDScript templates (a server lifecycle autoload that waits for the matched players and stops its own deployment, a matchmaker client and Find Match button), the Edgegap Godot plugin build (export, image, push from the editor), app version ports (UDP for ENet, WS + TLS Upgrade for web and wss), matchmaker config, and fixes for Godot pitfalls: empty server logs, export allowlists that drop new scripts, class name clashes with the plugin, join validation that silently blocks matched players. Use when a Godot dev wants online play: "host my Godot game", "nobody should host", "Find Match button", "Godot web multiplayer", or is debugging Godot deployments, ports or matchmaking on Edgegap.'
+description: 'Godot 4 + Edgegap: take a Godot multiplayer game (MultiplayerAPI, @rpc, ENetMultiplayerPeer, WebSocketMultiplayerPeer, MultiplayerSpawner, netfox) to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a Godot project (project.godot, .gd, .tscn, export_presets.cfg). It has tested GDScript templates (a server lifecycle autoload that waits for the matched players and stops its own deployment, a matchmaker client and Find Match button), the Edgegap Godot plugin build (export, image, push from the editor), app version ports (UDP for ENet, WS + TLS Upgrade for web and wss), matchmaker config, and fixes for Godot pitfalls: empty server logs, export allowlists that drop new scripts, join validation that silently blocks matched players. Use when a Godot dev wants online play: "host my Godot game", "nobody should host", "Find Match button", "Godot web multiplayer", or is debugging Godot deployments, ports or matchmaking on Edgegap.'
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # Edgegap for Godot 4: dedicated servers + matchmaking
@@ -51,12 +51,12 @@ Read `references/godot.md` §2-§5.
 
 ## Phase 2: Install the Edgegap plugin and connect
 
-The [Edgegap Godot plugin](https://github.com/edgegap/buildtool-godot-plugin) (Godot 4.3+) exports the Linux server, builds the image, tests it locally, pushes it and deploys it from an **Edgegap** editor dock. Use it instead of writing export presets, Dockerfiles and registry logins.
+The [Edgegap Godot plugin](https://github.com/edgegap/buildtool-godot-plugin) (1.0.10 or newer, Godot 4.3+) exports the Linux server, builds the image, tests it locally, pushes it and deploys it from an **Edgegap** editor dock. Use it instead of writing export presets, Dockerfiles and registry logins.
 1. Install into `res://addons/edgegap/`: the Godot Asset Store ("edgegap"), or `git clone --depth 1 https://github.com/edgegap/buildtool-godot-plugin.git addons/edgegap` then delete `addons/edgegap/.git`. Enable it: Project Settings → Plugins, or add `[editor_plugins] enabled=PackedStringArray("res://addons/edgegap/plugin.cfg")` to `project.godot`.
 2. Copy `assets/docker/.dockerignore` to the project root: the plugin builds with the whole project as context.
 3. Edgegap account and Docker running. The developer pastes an Edgegap API token into the dock (it stays in their editor settings); the dock fetches registry credentials itself, so no `docker login`. Edgegap MCP connected for your part (`references/deploy.md` §1).
 
-✅ Check: the editor's Output shows no `Edgegap` errors (a `class_name ... hides a global script class` error means a name clash with the plugin's own classes, `references/troubleshooting.md` §4), and `edgegap_list_apps` succeeds.
+✅ Check: `addons/edgegap/plugin.cfg` says 1.0.10 or newer (older versions leak a token into logs and clash with game class names, `references/troubleshooting.md` §4), the editor's Output shows no `Edgegap` errors, and `edgegap_list_apps` succeeds.
 
 ## Phase 3: Export, containerize, push
 
