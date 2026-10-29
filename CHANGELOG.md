@@ -2,6 +2,12 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.22.1 (unreleased)
+
+Links follow the repository renames: the install commands, clone URL, security advisory link and issue template point at `edgegap/llm-agent-skills` (was `edgegap/edgegap-agent-skills`), and the PlayFab sample links point at [backend-game-sample-unity-playfab-matchmaker-fishnet-spaceedge](https://github.com/edgegap/backend-game-sample-unity-playfab-matchmaker-fishnet-spaceedge) (was `sample-playfab-matchmaker-fishnet`).
+
+- Versions: `edgegap` 0.22.1, `edgegap-playfab` 0.1.2, `edgegap-deployments-api` 0.2.10.
+
 ## 0.22.0 (unreleased)
 
 `edgegap-godot` (0.2.0) builds the server with the [Edgegap Godot plugin](https://github.com/edgegap/buildtool-godot-plugin) instead of a hand-written preset, Dockerfile and registry login. The plugin's editor dock exports the Linux dedicated server, builds and runs the image, pushes it with the account's own registry credentials and deploys a test server; the agent writes the game code, the app version and the matchmaker. Validated on [game-sample-godot-arena-shooter](https://github.com/edgegap/game-sample-godot-arena-shooter), which now uses the plugin.
