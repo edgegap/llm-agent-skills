@@ -9,7 +9,7 @@ metadata:
 
 Goal: a player clicks **Find Match** (or joins an address while testing), Edgegap runs a headless NGO server near the players, every client connects, and the server stops its own deployment once the match is empty. Done means that loop works with real builds, not that the code compiles.
 
-Verified end to end on Edgegap with [edgegap/netcode-game-sample-unity-ngo-bossroom](https://github.com/edgegap/netcode-game-sample-unity-ngo-bossroom) (Boss Room, Unity 6000.0.54f1, NGO 1.13.0, UnityTransport 2.5.2 UDP, SDK 3.5.6, Edgegap Unity plugin 3.2.1): two Windows clients in the dungeon on one Edgegap server, by direct connection and through the matchmaker, and the server stopped itself each time. Its `EDGEGAP.md` is the developer-facing reference. `assets/unity/` holds generic plain-NGO adapters (server start and direct connect tested locally, matchmaker adapter compile-only); `assets/unity/Examples/BossRoom/` the verified Boss Room adapter.
+Verified end to end on Edgegap (re-run 2026-10-29 with the plugin build) with [edgegap/netcode-game-sample-unity-ngo-bossroom](https://github.com/edgegap/netcode-game-sample-unity-ngo-bossroom) (Boss Room, Unity 6000.0.54f1, NGO 1.13.0, UnityTransport 2.5.2 UDP, SDK 3.5.6, Edgegap Unity plugin 3.2.1): two Windows clients in the dungeon on one Edgegap server, by direct connection and through the matchmaker, and the server stopped itself each time. Its `EDGEGAP.md` is the developer-facing reference. `assets/unity/` holds generic plain-NGO adapters (server start and direct connect tested locally, matchmaker adapter compile-only); `assets/unity/Examples/BossRoom/` the verified Boss Room adapter.
 
 Use **dedicated (authoritative) servers**, not a player host, unless the developer explicitly wants host/client.
 
