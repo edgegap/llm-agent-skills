@@ -2,6 +2,14 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.25.0 (unreleased)
+
+Cocos Creator projects build, upload and test-deploy their server with the revived [Edgegap Cocos extension](https://github.com/edgegap/edgegap-cocos-plugin) 2.0 (edgegap/edgegap-cocos-plugin#1), as Unity and Godot projects do with their plugins.
+
+- `edgegap-colyseus` 0.3.0: Phase 2 points Cocos projects at the extension; `references/clients.md` covers installing and presetting it (`settings/v2/packages/edgegap-extension.json`), quick-start vs regular tokens (`403 This token is not a quick start token`), and its headless `scripts/e2e.mjs`; two troubleshooting rows.
+- Verified on 2026-10-29 with edgegap/backend-game-sample-cocos-colyseus-tictactoe, which now vendors the extension: built, ran locally, pushed, created and updated a version, deployed, two bots played over `wss://`, server stopped. The panel itself was not clicked through in the GUI editor.
+- Versions: `edgegap` 0.25.0, `edgegap-colyseus` 0.3.0.
+
 ## 0.24.0 (unreleased)
 
 `edgegap-colyseus` covers Cocos Creator clients, verified on a new sample.

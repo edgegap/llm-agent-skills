@@ -2,7 +2,7 @@
 name: edgegap-colyseus
 description: 'Colyseus + Edgegap: host a Colyseus (Node.js) multiplayer game on Edgegap with one dedicated server per match, near its players, that stops itself, end to end. Load this before using any Edgegap MCP tool on a Colyseus project (colyseus or @colyseus/* in package.json, Room classes with onJoin/onLeave, defineServer, app.config.ts, colyseus.js, @colyseus/sdk, the Colyseus Unity, Godot, Cocos Creator, Defold, GameMaker or Haxe SDKs). It has templates verified on Edgegap: a lifecycle module (self-stop on no join, empty server or match end), a Dockerfile, the WS + TLS Upgrade app version, a direct deploy script, a matchmaker config, and matchmaker clients for browser JS/TS, Cocos Creator, Unity and Godot, plus the pitfalls: 502 on a fresh server, wss by FQDN, CORS origins, exposed playground. Use for "host my Colyseus server", "Colyseus on Edgegap", "replace Colyseus Cloud", "one server per match", "Find Match with Colyseus", or debugging Colyseus deployments. Manus games: edgegap-manus.'
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # Edgegap for Colyseus games: one server per match
@@ -52,7 +52,7 @@ Read `references/server.md`.
 
 ## Phase 2: Image, app version, one direct deployment
 
-Read `references/deploy.md` §1 to §3.
+Read `references/deploy.md` §1 to §3. **Cocos Creator project:** the developer does steps 1 to 3 in the [Edgegap Cocos extension](https://github.com/edgegap/edgegap-cocos-plugin) panel instead (install, settings and the headless run in `references/clients.md`, Cocos section); you set it up and check the result with the MCP tools.
 1. `docker build --platform linux/amd64`, the developer runs `docker login registry.edgegap.com`, push a new tag (UTC timestamp `YYYYMMDD-HHMM`, also the app version name), never `latest`.
 2. `edgegap_create_app` and `edgegap_create_app_version`: port `2567`, protocol **WS**, name `gameport`, `tls_upgrade: true`; 256 CPU units / 512 MB; max duration 60 for tests. The developer adds the registry credentials; check `registry_credentials_set: true`.
 3. Ask, then `edgegap_deploy` with the players' IPs and a test tag → `edgegap_wait_for_deployment` (or the developer runs `npm run edgegap:deploy -- <app> <version>`). The URL is `wss://<fqdn>:<external gameport>`.
