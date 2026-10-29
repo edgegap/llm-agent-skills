@@ -25,9 +25,12 @@ Logs it writes, useful in `edgegap_get_deployment_logs`: `Edgegap Server | Start
 - Registry credentials on the version (the developer pastes them from the dashboard's Container Registry page). Without them, deployments fail to pull.
 - New build: push a new tag and `edgegap_update_app_version` → `docker_tag`. Running deployments keep the old image.
 
-## 4. Optional: only let matched players in
+## 4. Only let matched players in
 
-The template doesn't check who connects. To lock a server to its match:
-1. In `StartEdgegapDeployment`, add an env var with the members' PlayFab IDs (`PLAYFAB_PLAYER_IDS`, comma-separated; they are not secret).
-2. The client sends its PlayFab `SessionTicket` in its connection payload.
-3. The server must validate the ticket, which needs a secret. Either give the server a narrowly scoped path (an extra Azure Function `ValidatePlayer` that calls `Server/AuthenticateSessionTicket` and checks the ID is in the list, called with a per-deployment key), or accept the trade-off of trusting the client-reported PlayFab ID for casual games. Never put the title secret on the server for this.
+`StartEdgegapDeployment` passes the match's join tokens in the hidden variable `EDGEGAP_JOIN_TOKENS` (comma-separated, one per member), and `EdgegapDeploymentReady` writes each player's own token next to the address. The server needs no secret to check them:
+
+1. Read `EDGEGAP_JOIN_TOKENS` at startup. If it is missing (Editor, local container), admit everyone and log a warning.
+2. The client sends its token as its first message (FishNet: an `Authenticator` with a broadcast, `assets/unity/JoinTokenAuthenticator.cs`; NGO: `ConnectionApproval` with the token as the connection payload; Mirror: an `Authenticator`; Unreal: the token in the travel URL options, checked in `PreLogin`; Godot: the first RPC, kick after a short timeout).
+3. Reject tokens not in the list. A second connection with a known token replaces the first: a crashed client's connection lives on until the transport times it out, and the player must be able to rejoin.
+
+Tested on 2026-10-29 with a local container (FishNet): matched tokens admitted, wrong or missing tokens rejected, a killed client rejoining at once.

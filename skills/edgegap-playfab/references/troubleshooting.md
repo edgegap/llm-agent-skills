@@ -10,6 +10,8 @@ Work along the chain and stop at the first broken link: login → ticket → mat
 | Ticket calls get throttled (`TooManyRequests`) | Polling faster than 10 per minute per ticket. Poll every 6 s. |
 | Matched, but `StartEdgegapDeployment` never runs (no invocations in Monitor) | The rule is missing, on another event (it must be exactly `playfab.matchmaking.match_found`), or points at an unregistered or wrong URL. Check `CloudScript/ListFunctions`. The queue must have server allocation **off**. |
 | Function log: `App setting X is not set` | Run `deploy-functions.sh` again or set it by hand. |
+| Server log `Client N rejected: not a player of this match` | The client sent no `joinToken`, or one from another match. Check that the client reads `joinToken` from `EdgegapServer` and sends it on connect, and that both functions run the same code with the same `PLAYFAB_SECRET_KEY`. |
+| Deployment logs list the environment, including `EDGEGAP_JOIN_TOKENS` and `ARBITRIUM_DELETE_TOKEN` | The Edgegap Unity plugin's Dockerfile (3.2.1 and older) runs `env` before the server. Remove `env;` from its `CMD`, or use a plugin release with edgegap/buildtool-unity-plugin#62. |
 | `PlayFab /Authentication/GetEntityToken failed` or `/Server/… failed` | `PLAYFAB_SECRET_KEY` or `PLAYFAB_TITLE_ID` is wrong. The webhook function always uses them, and the start function uses them for locations. |
 | `Edgegap POST /v2/deployments failed (401)` | Wrong `EDGEGAP_API_TOKEN`. Check it once with `GET https://api.edgegap.com/v1/apps`. |
 | `… failed (400/422)` | Wrong app or version name, the version is inactive, or no location (players without a location and no fallback). The message says which. |
