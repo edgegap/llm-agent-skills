@@ -48,6 +48,45 @@ Not run on Edgegap in the verified test (the tanks room has no reconnection).
 
 PlayCanvas, Phaser, PixiJS, Construct 3 scripts and other web engines can use the same two files; only the "read a page parameter" part differs.
 
+## Cocos Creator 3.x
+
+Same two files as the browser: copy `assets/client/js/Matchmaker.ts` and `joinWithRetry.ts` into the project's scripts folder (Cocos compiles them like any component script; they only use `fetch`, `setTimeout` and `window`). Verified with Cocos Creator 3.8.8, web-desktop build in Chrome, on [backend-game-sample-cocos-colyseus-tictactoe](https://github.com/edgegap/backend-game-sample-cocos-colyseus-tictactoe).
+
+**SDK version must match the server.** The Cocos Store extension and Colyseus's old Cocos demos ship colyseus.js 0.14, which can't talk to a 0.17 server. For 0.17 take `colyseus-sdk.zip` from the `@colyseus/sdk@0.17.x` release on github.com/colyseus/colyseus (one UMD file, `colyseus.js`, no typings). Put it where the project's extension mounts it (`extensions/colyseus-sdk/runtime/colyseus.js`, imported as `import Colyseus from 'db://colyseus-sdk/colyseus.js'` with `esModuleInterop`), or in `assets/` with **Import As Plugin** and use the `Colyseus` global. Write a small `.d.ts` for what the game uses; the full typings are in the npm package `@colyseus/sdk`.
+
+```ts
+import { _decorator, Component, sys } from 'cc';
+import Colyseus from 'db://colyseus-sdk/colyseus.js';
+import { Matchmaker } from './edgegap/Matchmaker';
+import { joinWithRetry } from './edgegap/joinWithRetry';
+
+// in the component; matchmakerURL / matchmakerToken are @property fields (the Auth Token is client-safe)
+const params = new URLSearchParams(sys.isBrowser ? window.location.search : "");
+let url = params.get("server") ?? "";          // direct: ?server=wss://<fqdn>:<port>
+const mmUrl = params.get("mm") || this.matchmakerURL;
+const mmToken = params.get("mmToken") || this.matchmakerToken;
+let attempts = 10;                             // a fresh deployment answers 502 for a few seconds
+if (!url && mmUrl && mmToken) {
+    const mm = new Matchmaker({ url: mmUrl, token: mmToken, profile: "casual",
+                                onStatus: (s) => this.statusLabel.string = s });
+    url = await mm.findMatch();                // call mm.cancel() in onDestroy while searching
+} else if (!url) {
+    url = "ws://localhost:2567"; attempts = 1;
+}
+this.room = await joinWithRetry(new Colyseus.Client(url), "my_room", {}, attempts);
+const $ = Colyseus.Callbacks.get(this.room);   // 0.17: no more state.x.onAdd = ... / state.listen
+```
+
+Porting a 0.14/0.15 Cocos client to 0.17:
+- `room.state.players.onAdd = cb` → `$.onAdd("players", (item, key) => ...)`; `room.state.listen("x", cb)` → `$.listen("x", (value, previous) => ...)`; `room.onError.once(cb)` → `room.onError(cb)`.
+- **`$.onChange("board", ...)` on an array passes `(index, value)`**, the reverse of 0.14's `(value, index)`. Measured; swapping them puts every mark in the wrong cell.
+- `listen` fires right away when the value is already set, and arrays start with their default items: ignore empty strings and default values instead of treating them as moves or results.
+- `systemEvent` is deprecated in 3.8: use `input.on(Input.EventType.MOUSE_DOWN / TOUCH_START, ...)`.
+
+Opening a 3.1 project in 3.8 migrates every `.meta` and the scenes; commit that churn on its own or with the upgrade. Headless build: `CocosCreator --project <path> --build "platform=web-desktop;debug=true"`; exit code **36 means success**. A Cocos web build in a background browser tab renders no frames, so it never loads its scene: test with the tab in front. Add the build's origin (Cocos preview is `http://localhost:7456`) to `allowed_cors_origins`.
+
+Cocos mini-game targets (WeChat, Douyin...) need the platform's domain allowlist for every `wss://` and `https://` host, which per-match Edgegap hostnames (`<id>.pr.edgegap.net`) and the matchmaker host would have to satisfy. Not run; check the platform's rules before promising it.
+
 ## Unity (Colyseus Unity SDK)
 
 File: `assets/client/unity/EdgegapMatchmaker.cs`. Uses `UnityWebRequest` and `Awaitable`, so Unity 2023.1+ / Unity 6 (verified on 6000.3 with `io.colyseus.sdk` from `https://github.com/colyseus/colyseus-unity-sdk.git#upm`, Windows build). For older Unity, swap `Awaitable` for a coroutine or `Task`. `JsonUtility` needs fixed field names, so the port name `gameport` is a field in the `Ports` class: rename it if the app version uses another name.
