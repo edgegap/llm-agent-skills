@@ -25,6 +25,9 @@ Find the layer first: image → deployment → client ↔ server → matchmaker.
 | Connection refused on `wss://<fqdn>:2567` | using the internal port: clients use the **external** port from the deployment or the assignment |
 | Matchmake HTTP works but the WebSocket fails (or the reverse) | port protocol is not WS (e.g. UDP), or a proxy in the client's network. One WS port with TLS Upgrade carries both, verified |
 | `/` or `/monitor` reachable on a deployment | playground/monitor still mounted on Edgegap: guard them with `onEdgegap` |
+| Cocos (or any 0.17 client ported from 0.14): marks or items appear in the wrong place | `$.onChange("<array>", ...)` passes `(index, value)`, not `(value, index)` — `clients.md` Cocos section |
+| Cocos client can't join a 0.17 server, protocol or decode errors | the Cocos Store extension / old demos ship colyseus.js 0.14: use the `@colyseus/sdk@0.17.x` release bundle |
+| Cocos web build stuck on its splash screen during a test | its tab is in the background (no frames): bring it to the front |
 | Players land in different rooms on one server | each client called `create` instead of `joinOrCreate`, or the room's `maxClients` is below the match size |
 
 ## Matchmaker

@@ -2,6 +2,16 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.24.0 (unreleased)
+
+`edgegap-colyseus` covers Cocos Creator clients, verified on a new sample.
+
+- New sample [edgegap/backend-game-sample-cocos-colyseus-tictactoe](https://github.com/edgegap/backend-game-sample-cocos-colyseus-tictactoe), a fork of Colyseus's Cocos tic-tac-toe demo upgraded to Cocos Creator 3.8.8 and Colyseus 0.17, built from this skill's templates. Verified on Edgegap on 2026-10-29: two bots, then the Cocos web-desktop build against a bot, matched by matchmaker 3.3.2 and played to the end; the server stopped itself. Not run: Cocos mini-game, native and mobile builds.
+- `edgegap-colyseus` 0.2.0: Cocos Creator in the description and Phase 4; `references/clients.md` gets a Cocos Creator 3.x section (which SDK bundle matches a 0.17 server, wiring `Matchmaker.ts` and `joinWithRetry.ts` into a component, porting 0.14 state callbacks, `onChange` on arrays passing `(index, value)`, headless build exit code 36, background tabs, mini-game domain allowlists); three troubleshooting rows.
+- `edgegap` routes Cocos Creator games with a Colyseus server to `edgegap-colyseus`.
+- `evals/colyseus-routing-eval.json`: three Cocos queries.
+- Versions: `edgegap` 0.24.0, `edgegap-colyseus` 0.2.0.
+
 ## 0.23.1 (unreleased)
 
 The Edgegap Godot plugin 1.0.10 (edgegap/buildtool-godot-plugin#3) fixed the two caveats `edgegap-godot` 0.2.0 documented: its default Dockerfile no longer prints the environment (which put `ARBITRIUM_DELETE_TOKEN` in deployment logs) and runs Godot under tini, and the plugin no longer declares global class names.
