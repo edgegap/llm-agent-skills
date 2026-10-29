@@ -2,7 +2,7 @@
 name: edgegap-colyseus
 description: 'Colyseus + Edgegap: host a Colyseus (Node.js) multiplayer game on Edgegap with one dedicated server per match, near its players, that stops itself, end to end. Load this before using any Edgegap MCP tool on a Colyseus project (colyseus or @colyseus/* in package.json, Room classes with onJoin/onLeave, defineServer, app.config.ts, colyseus.js, @colyseus/sdk, the Colyseus Unity, Godot, Defold, GameMaker or Haxe SDKs). It has templates verified on Edgegap with the Colyseus tanks demo: a lifecycle module (self-stop on no join, empty server or match end), a Dockerfile, the WS + TLS Upgrade app version, a direct deploy script, a matchmaker config, and matchmaker clients for browser JS/TS, Unity and Godot, plus the pitfalls: 502 right after a server starts, wss by FQDN, CORS origins, playground and monitor exposed. Use for "host my Colyseus server", "Colyseus on Edgegap", "replace Colyseus Cloud", "one server per match", "Find Match with Colyseus", or debugging Colyseus deployments. Manus games: edgegap-manus.'
 metadata:
-  version: "0.1.6"
+  version: "0.1.7"
 ---
 
 # Edgegap for Colyseus games: one server per match
@@ -14,7 +14,7 @@ Direct:      developer / backend --deploy--> Edgegap --wss://<id>.pr.edgegap.net
 Matchmaker:  clients --tickets--> Edgegap Matchmaker --deploy--> Edgegap --assignment--> clients --wss--> server
 ```
 
-This path was run end to end on Edgegap on 2026-10-20 with [edgegap/realtime-tanks-demo](https://github.com/edgegap/realtime-tanks-demo), a fork of Colyseus's official tanks demo (Colyseus 0.17, one server, 9 clients; guide in its `edgegap/README.md`). Verified: the Colyseus matchmake HTTP request and the room WebSocket both go through one WS port with TLS Upgrade; direct mode with Node and Godot desktop clients; matchmaker 3.3.2 matched a Three.js browser client with a Godot desktop client, then with a Unity Windows build; the server stopped itself each time. The templates in `assets/` are the files from that run, with the tanks-specific match rule moved out of the lifecycle module. Not run: Construct 3, Defold, GameMaker, Haxe and PlayCanvas clients, Godot web export, Unity WebGL, Colyseus 0.15/0.16, rooms with `allowReconnection`. Say so when those matter.
+This path was run end to end on Edgegap on 2026-10-20 with [edgegap/backend-game-sample-threejs-colyseus-tanks](https://github.com/edgegap/backend-game-sample-threejs-colyseus-tanks), a fork of Colyseus's official tanks demo (Colyseus 0.17, one server, 9 clients; guide in its `edgegap/README.md`). Verified: the Colyseus matchmake HTTP request and the room WebSocket both go through one WS port with TLS Upgrade; direct mode with Node and Godot desktop clients; matchmaker 3.3.2 matched a Three.js browser client with a Godot desktop client, then with a Unity Windows build; the server stopped itself each time. The templates in `assets/` are the files from that run, with the tanks-specific match rule moved out of the lifecycle module. Not run: Construct 3, Defold, GameMaker, Haxe and PlayCanvas clients, Godot web export, Unity WebGL, Colyseus 0.15/0.16, rooms with `allowReconnection`. Say so when those matter.
 
 Why this shape, so you can defend it:
 - **One deployment = one match = one Colyseus process.** Edgegap places each match near its players and bills it only while it runs. No PM2, no Redis presence, no room-count capacity planning: those solve "many matches on a few VMs", which Edgegap replaces.
@@ -94,4 +94,4 @@ Hand-off: what changed where, app/version/matchmaker names, how to ship a new se
 
 Related skills in this pack, if installed: `edgegap` (platform and safety rules), `edgegap-server-design`, `edgegap-containerize`, `edgegap-deployments-api` (a backend or lobby that deploys servers instead of the matchmaker), `edgegap-troubleshoot`, `edgegap-launch` before going live. A browser game made with Manus: `edgegap-manus`.
 
-Sources of truth: https://docs.colyseus.io, https://docs.edgegap.com/learn/orchestration/deployments, https://docs.edgegap.com/learn/matchmaking, https://github.com/edgegap/realtime-tanks-demo.
+Sources of truth: https://docs.colyseus.io, https://docs.edgegap.com/learn/orchestration/deployments, https://docs.edgegap.com/learn/matchmaking, https://github.com/edgegap/backend-game-sample-threejs-colyseus-tanks.

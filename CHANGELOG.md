@@ -2,6 +2,15 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.22.2 (unreleased)
+
+Every other `edgegap/*` link follows the repository renames too, so none depends on a GitHub redirect (a redirect stops working if someone recreates the old name):
+
+- Samples and plugins: `netcode-game-sample-unity-fishnet-hashgrid`, `netcode-game-sample-unity-ngo-bossroom`, `netcode-game-sample-unity-purrnet-incremental`, `netcode-game-sample-photon-fusion2-simple-fps`, `netcode-game-sample-webgl-mirror-tanks`, `backend-game-sample-threejs-colyseus-tanks`, `backend-game-sample-godot-nakama-fishgame`, `game-sample-godot-arena-shooter`, `game-sample-unreal-engine-topdown`, `backend-nakama-edgegap-plugin`, `backend-nakama-unity-template-model`, `buildtool-unity-plugin`, the MCP server at `llm-mcp-server`, and the Unity SDK at `sdk-unity-sessions-matchmaker-server-browser` (same package, `com.edgegap.unity-sdk`). Link texts use the new names.
+- Unchanged on purpose: the Go module path `github.com/edgegap/nakama-edgegap` in `go.mod`, `go.sum`, imports and `go get` commands, because the plugin's own `go.mod` still declares it. `edgegap-nakama` `references/infra.md` now says so. Eval fixtures and older changelog entries are unchanged.
+- `edgegap-matchmaking`: the Open Match row no longer links `edgegap/open-match-demo`, which is private.
+- Versions: `edgegap` 0.22.2, `edgegap-deployments-api` 0.2.11, `edgegap-colyseus` 0.1.7, `edgegap-eos-voice` 0.1.2, `edgegap-fishnet` 0.2.9, `edgegap-fusion-simplefps` 0.1.2, `edgegap-matchmaking` 0.1.3, `edgegap-nakama` 0.1.3, `edgegap-ngo` 0.1.7, `edgegap-purrnet` 0.2.2, `edgegap-unity` 0.1.19, `edgegap-unreal` 0.1.3.
+
 ## 0.22.1 (unreleased)
 
 Links follow the repository renames: the install commands, clone URL, security advisory link and issue template point at `edgegap/llm-agent-skills` (was `edgegap/edgegap-agent-skills`), and the PlayFab sample links point at [backend-game-sample-unity-playfab-matchmaker-fishnet-spaceedge](https://github.com/edgegap/backend-game-sample-unity-playfab-matchmaker-fishnet-spaceedge) (was `sample-playfab-matchmaker-fishnet`).

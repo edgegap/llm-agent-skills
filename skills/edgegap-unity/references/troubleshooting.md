@@ -5,7 +5,7 @@ Work from the layer that failed. Always get evidence first (Unity build log, `do
 ## Unity / build
 | Symptom | Cause / fix |
 |---|---|
-| `CS0234 ... Ping does not exist` in WebGL build | Edgegap SDK < 3.5.5. Use `https://github.com/edgegap/edgegap-unity-sdk.git` with no `#tag` (the latest SDK) |
+| `CS0234 ... Ping does not exist` in WebGL build | Edgegap SDK < 3.5.5. Use `https://github.com/edgegap/sdk-unity-sessions-matchmaker-server-browser.git` with no `#tag` (the latest SDK) |
 | Unity before 2022.3: every matchmaker ticket (`POST /groups`) gets HTTP 400, the monitor GET works | SDK 3.5.5 or older sends the JSON through `UnityWebRequest.Post(url, string)`, which form-encodes it on old Unity. Drop the `#tag` from the SDK URL to get the latest (3.5.6+ sends it raw). If the project embedded and hand-patched an older SDK (`Packages/com.edgegap.unity-sdk`), delete that folder and use the git package so later updates apply. Hand-written ticket code with `UnityWebRequest.Post(url, json)` has the same bug: use `UploadHandlerRaw` with `Content-Type: application/json` |
 | `The type or namespace 'UnityEditor' could not be found` in player build | an imported SDK sample (DeploymentAgent, MatchmakingServerHandler, RegionPicker, ServerBrowser) has unguarded `using UnityEditor;`. Wrap it in `#if UNITY_EDITOR`, or delete samples you don't use |
 | `type or namespace 'Edgegap' could not be found` | SDK not installed, or your scripts are in an asmdef that doesn't reference `Edgegap.SDK`. IDE-only: Preferences → External Tools → enable Git packages → Regenerate project files |

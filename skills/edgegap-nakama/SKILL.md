@@ -2,7 +2,7 @@
 name: edgegap-nakama
 description: 'Nakama + Edgegap: keep Nakama for accounts, matchmaking and leaderboards, and run every match on its own Edgegap dedicated server near the players through the Edgegap Fleet Manager for Nakama (nakama-edgegap), end to end. Load this before using any Edgegap MCP tool on a project with a Nakama backend (a Go, TypeScript or Lua Nakama module, heroiclabs/nakama images, a Nakama client SDK: nakama-godot, nakama-unity, nakama-js). Engine-agnostic templates verified on Edgegap with Fish Game (Godot 4.7, Nakama 3.39): the Go module (Fleet Manager, AfterAuthenticate hook for the real sign-in method, MatchmakerMatched hook, notifications 111/112/113, a leaderboard only the server writes), game server code for READY, connection events, STOP and player checks, Dockerfile, compose. Use for "host my Nakama game on Edgegap", "Nakama matchmaker should start a dedicated server", "replace Nakama relayed matches", "Heroic Cloud plus Edgegap", or debugging nakama-edgegap. Unity servers: edgegap-server-nakama-plugin-unity.'
 metadata:
-  version: "0.1.2"
+  version: "0.1.3"
 ---
 
 # Edgegap for Nakama games: Nakama matches players, Edgegap runs the match
@@ -18,7 +18,7 @@ Game server --connection events (batched)--> Nakama
 Match over --report_match_result (S2S RPC)--> Nakama leaderboard;  --STOP--> Nakama --> Edgegap stops the deployment
 ```
 
-This path was run end to end on Edgegap on 2026-10-20 with [edgegap/fishgame-godot](https://github.com/edgegap/fishgame-godot) (branch edgegap-integration, guide EDGEGAP.md): Heroic Labs' Fish Game ported to Godot 4.7.2, Nakama 3.39.0, [nakama-edgegap](https://github.com/edgegap/nakama-edgegap) at commit `20d849e`, Nakama reached through a Cloudflare quick tunnel. Verified: email sign-up, matchmaking, a deployment near the players, 5 server-decided rounds, a leaderboard win written by the server, a player's attempt to post a win refused, and the server stopping itself. The templates in `assets/` are that run's files with the game-specific parts taken out. Not run: other Nakama auth methods than email, TypeScript or Lua Nakama modules, Heroic Cloud, the Node game server template on Edgegap (mock Nakama only), WebSocket game servers, Nakama clusters. Say so when those matter.
+This path was run end to end on Edgegap on 2026-10-20 with [edgegap/backend-game-sample-godot-nakama-fishgame](https://github.com/edgegap/backend-game-sample-godot-nakama-fishgame) (branch edgegap-integration, guide EDGEGAP.md): Heroic Labs' Fish Game ported to Godot 4.7.2, Nakama 3.39.0, [backend-nakama-edgegap-plugin](https://github.com/edgegap/backend-nakama-edgegap-plugin) at commit `20d849e`, Nakama reached through a Cloudflare quick tunnel. Verified: email sign-up, matchmaking, a deployment near the players, 5 server-decided rounds, a leaderboard win written by the server, a player's attempt to post a win refused, and the server stopping itself. The templates in `assets/` are that run's files with the game-specific parts taken out. Not run: other Nakama auth methods than email, TypeScript or Lua Nakama modules, Heroic Cloud, the Node game server template on Edgegap (mock Nakama only), WebSocket game servers, Nakama clusters. Say so when those matter.
 
 Why this shape, so you can defend it:
 - **Nakama stays the backend; Edgegap replaces the match host.** Relayed matches (`NakamaMultiplayerBridge`, Nakama relayed multiplayer) make one player the host: they can cheat, everyone else gets two hops, and the match dies when they quit. Nakama authoritative matches run the game loop inside Nakama, in Go/TS/Lua, one region for everyone. An Edgegap server runs the real game build near the players.
@@ -47,7 +47,7 @@ Ask, in one message, only what you couldn't infer: players per match, whether th
 ## Phase 1: The game server, locally
 
 Read `references/game-server.md`. The server needs a dedicated mode (headless, no player), its own listen port, and:
-1. The Nakama/Edgegap contract: copy `assets/game-server/godot/nakama_edgegap_server.gd` (Godot 4, verified), `assets/game-server/node/nakamaEdgegap.ts` (Node), or port it. Unity: use [edgegap-server-nakama-plugin-unity](https://github.com/edgegap/edgegap-server-nakama-plugin-unity) on the server instead (and `edgegap-unity` for the server build).
+1. The Nakama/Edgegap contract: copy `assets/game-server/godot/nakama_edgegap_server.gd` (Godot 4, verified), `assets/game-server/node/nakamaEdgegap.ts` (Node), or port it. Unity: use [backend-nakama-unity-template-model](https://github.com/edgegap/backend-nakama-unity-template-model) on the server instead (and `edgegap-unity` for the server build).
 2. Wire it: `send_ready` once listening; check each connecting player's Nakama token with `verify_player` and reject anyone not in `user_ids`; `set_connected_users` on every join/leave; at match end `report_result` then `stop`.
 3. Move the decisions that matter (hits, deaths, rounds, winner) to the server.
 
@@ -96,4 +96,4 @@ Hand-off: what changed where, app/version names, how to ship a new server build 
 
 Related skills in this pack, if installed: `edgegap` (platform and safety rules), `edgegap-server-design` (what a match-scoped server must do), `edgegap-containerize` (the game server image), `edgegap-unity` (Unity server builds; pair with the Unity Nakama plugin), `edgegap-unreal`, `edgegap-deployments-api` (a backend other than Nakama that deploys servers), `edgegap-troubleshoot`, `edgegap-launch`.
 
-Sources of truth: https://github.com/edgegap/nakama-edgegap (read the code at the pinned commit when the README and behaviour differ), https://heroiclabs.com/docs/nakama/, https://docs.edgegap.com/learn/orchestration/deployments, https://github.com/edgegap/fishgame-godot.
+Sources of truth: https://github.com/edgegap/backend-nakama-edgegap-plugin (read the code at the pinned commit when the README and behaviour differ), https://heroiclabs.com/docs/nakama/, https://docs.edgegap.com/learn/orchestration/deployments, https://github.com/edgegap/backend-game-sample-godot-nakama-fishgame.

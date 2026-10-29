@@ -52,7 +52,7 @@ In order:
 
 | Symptom | Cause / fix |
 |---|---|
-| Unity before 2022.3: every matchmaker POST gets HTTP 400 | SDK 3.5.5 and older send JSON through `UnityWebRequest.Post(url, string)`, which form-encodes it on old Unity. Use `https://github.com/edgegap/edgegap-unity-sdk.git` with no `#tag` (the latest SDK; 3.5.6+ sends it raw). If the project embedded and hand-patched an older SDK (`Packages/com.edgegap.unity-sdk`), delete that folder and use the git package so later updates apply |
+| Unity before 2022.3: every matchmaker POST gets HTTP 400 | SDK 3.5.5 and older send JSON through `UnityWebRequest.Post(url, string)`, which form-encodes it on old Unity. Use `https://github.com/edgegap/sdk-unity-sessions-matchmaker-server-browser.git` with no `#tag` (the latest SDK; 3.5.6+ sends it raw). If the project embedded and hand-patched an older SDK (`Packages/com.edgegap.unity-sdk`), delete that folder and use the git package so later updates apply |
 | `type or namespace 'Edgegap'` / `'PurrNet'` not found | asmdef missing references to `Edgegap.SDK` or PurrNet's runtime asmdef |
 | Settings asset shows "missing script" | `EdgegapSettings.cs.meta` wasn't copied with the script; copy it, or recreate the asset with **Assets → Create → Edgegap → Settings** in `Assets/Edgegap/Resources/` |
 | `No Resources/EdgegapSettings asset, using defaults` | The asset isn't in a `Resources` folder or isn't named `EdgegapSettings` |

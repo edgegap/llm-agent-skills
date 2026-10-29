@@ -27,5 +27,5 @@
       ]
     }
   ],
-  "notes": "Run on copies of https://github.com/edgegap/unreal-sample at main (before the matchmaker PR): fixture topdown-cpp is the repo without Content, topdown-bp removes Source/ and the uproject Modules, broken-setup plants the known pitfalls (unquoted URL, placeholder token, missing module deps, V2 targets, Dockerfile running the .sh as root via sh -c with env, reused latest tag, no server self-stop). Grade by inspecting files and compiling each output's editor target against a UE 5.5 source build."
+  "notes": "Run on copies of https://github.com/edgegap/game-sample-unreal-engine-topdown at main (before the matchmaker PR): fixture topdown-cpp is the repo without Content, topdown-bp removes Source/ and the uproject Modules, broken-setup plants the known pitfalls (unquoted URL, placeholder token, missing module deps, V2 targets, Dockerfile running the .sh as root via sh -c with env, reused latest tag, no server self-stop). Grade by inspecting files and compiling each output's editor target against a UE 5.5 source build."
 }
