@@ -6,7 +6,7 @@
       "id": 1,
       "name": "old-sample-webgl-migration",
       "prompt": "Our FishNet space shooter (WebGL, Bayou) is based on the old Edgegap FishNet sample, the project is in the folder. Right now MatchmakingSystem deploys a server straight from the browser with our Edgegap API token, which our lead says is a security problem. We want proper matchmaking instead: 2-4 players open the game in the browser, click Start Game and land in the same match on a dedicated server. Please set it up.",
-      "expected_output": "Removes client-side API calls and token (rotate), matchmaker client over the SDK with the pre-2022.3 JSON fix, server lifecycle that starts the server (Start On Headless was off) and self-stops across the MainMenu->BattleScene load, Bayou wss to fqdn, WS + tls_upgrade app version on 7770, matchmaker config with CORS origins and matching profile, Dockerfile for amd64 with a unique tag, dashboard steps.",
+      "expected_output": "Removes client-side API calls and token (rotate), matchmaker client over the SDK with the pre-2022.3 JSON fix, server lifecycle that starts the server (Start On Headless was off) and self-stops across the MainMenu->BattleScene load, Bayou wss to fqdn, WS + tls_upgrade app version on 7770, matchmaker config with CORS origins and matching profile, plugin build and image for amd64 with a unique tag, dashboard steps.",
       "files": [
         "fixtures/spaceedge-webgl"
       ],
@@ -33,7 +33,7 @@
       "id": 2,
       "name": "kartclash-host-to-dedicated",
       "prompt": "my fishnet kart racer is in the project folder (unity 6, tugboat). right now one guy presses Host and his friends join by IP. I want a Find Match button instead, up to 6 racers, nobody hosting, servers near the players (we have people in NA and EU). desktop only. can you set it up on edgegap?",
-      "expected_output": "Edgegap SDK, server-only start path reconciled with Start On Headless, IsHost logic moved to the server, headless guards, persistence across Track01 load, self-stop, Tugboat UDP 7770 app version, client connects to public IP + external port, matchmaker config max 6 with a latency rule and beacons on, Dockerfile amd64 unique tag, no relay, dashboard steps.",
+      "expected_output": "Edgegap SDK, server-only start path reconciled with Start On Headless, IsHost logic moved to the server, headless guards, persistence across Track01 load, self-stop, Tugboat UDP 7770 app version, client connects to public IP + external port, matchmaker config max 6 with a latency rule and beacons on, plugin build/image amd64 unique tag, no relay, dashboard steps.",
       "files": [
         "fixtures/kartclash"
       ],

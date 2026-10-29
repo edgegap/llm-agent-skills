@@ -18,7 +18,7 @@ Get evidence first: the Unity build log, `docker logs`, `edgegap_get_deployment_
 | `Transport is X, not UDPTransport: port not set` | Another transport: adapt the `NETCODE ADAPTER` regions (`purrnet.md` §2) |
 | Never stops after players leave | A connection is still open (a client in the background), or the `Edgegap` object was destroyed; it must be `DontDestroyOnLoad` (the bootstrap does this) |
 | Stops after 120 s during manual testing | `FirstPlayerTimeoutSeconds`: connect sooner or raise it on `EdgegapSettings` |
-| Self-stop fails with a certificate error | Base image without CA certificates: use `assets/docker/Dockerfile` |
+| Self-stop fails with a certificate error | Base image without CA certificates: use the plugin's Dockerfile, which installs them |
 | High CPU on an idle server | Something raises `Application.targetFrameRate` after the lifecycle sets 60 |
 | Ready, then restarts or OOM | Crash in server code (read logs before stopping), scene missing from Build Settings, memory too low |
 

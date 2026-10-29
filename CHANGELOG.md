@@ -2,13 +2,25 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
-## 0.22.3 (unreleased)
+## 0.23.1 (unreleased)
 
 The Edgegap Godot plugin 1.0.10 (edgegap/buildtool-godot-plugin#3) fixed the two caveats `edgegap-godot` 0.2.0 documented: its default Dockerfile no longer prints the environment (which put `ARBITRIUM_DELETE_TOKEN` in deployment logs) and runs Godot under tini, and the plugin no longer declares global class names.
 
 - `edgegap-godot` 0.2.1 asks for plugin 1.0.10 or newer, describes the fixed Dockerfile, and keeps the old behavior only as troubleshooting rows (update the plugin). The settings template stays `EdgegapGameSettings`, so it loads next to older plugin versions too.
 - Verified on game-sample-godot-arena-shooter with plugin 1.0.10: the image ran on Edgegap with no environment in the logs.
-- Versions: `edgegap` 0.22.3, `edgegap-godot` 0.2.1.
+- Versions: `edgegap` 0.23.1, `edgegap-godot` 0.2.1.
+
+## 0.23.0 (unreleased)
+
+The Unity skills build, containerize, upload and deploy the server with the [Edgegap Unity plugin](https://github.com/edgegap/buildtool-unity-plugin) (`com.edgegap.unity-servers-plugin`, **Tools → Edgegap Server Hosting**) instead of their own build script and Dockerfile, as `edgegap-godot` 0.2.0 does with the Godot plugin. The plugin is maintained by Edgegap across Unity versions and handles what the scripts did not: Addressables, `buildx` on Apple Silicon, Docker's PATH on macOS, the Linux build modules and the registry login. The agent keeps the game code, the matchmaker and the MCP work.
+
+- `edgegap-ngo` 0.2.0, `edgegap-purrnet` 0.3.0, `edgegap-fishnet` 0.3.0, `edgegap-unity` 0.2.0, `edgegap-playfab` 0.2.0: Phase 1 adds the plugin next to the SDK; Phases 3 and 4 hand the developer the plugin's buttons in order (Build server, Containerize, Deploy local container with explicit `-p`, Upload image and Create app version, Deploy to cloud), with the dashboard version form for the port and registry login. The command-line route moves to `references/deploy.md`: `assets/unity/Editor/EdgegapPluginBuild.cs` calls the plugin's own build (its `EdgegapBuildUtils` is internal, so by reflection), then `docker build -f <plugin>/Editor/Dockerfile` and `docker run --env-file <plugin>/Editor/EdgegapMock.env`.
+- Removed `assets/docker/Dockerfile` and `assets/unity/Editor/EdgegapServerBuild.cs` from those skills; `assets/docker/.dockerignore` stays, since the plugin sends the project root as Docker context. Test clients: `assets/unity/Editor/EdgegapClientBuild.cs` (WebGL or desktop), or Unity's `-buildWindows64Player`.
+- Documented the plugin's caveats: its Dockerfile runs `env` (the self-stop token shows in that deployment's logs), its default local run maps a random host port, its mock env runs the self-stop timers, its default tag is `yy.MM.dd-HH.mm.ss-UTC` (keep `YYYYMMDD-HHMM`), and a stale registry login on an old version fails with `Unable to login with the given credentials`.
+- Found while testing: Unity's `-standaloneBuildSubtarget Server -buildLinux64Player` made a regular player build twice the size of the Dedicated Server build on 6000.0.54f1, so the skills don't offer it.
+- `edgegap-ngo` `SKILL.md` is shorter than 0.1.6 (1,522 words vs 1,536) despite the plugin steps.
+- `evals/evals.json`, `fishnet-evals.json`, `purrnet-evals.json`: the build assertions expect the plugin build instead of a hand-written Dockerfile.
+- Verified with plugin 3.2.1 on five samples, each now on the plugin (open PRs): Boss Room (Unity 6000.0.54f1), PurrNet Incremental (6000.3.11f1), FishNet WebGL matchmaker and PlayFab SpaceEdge (2021.3.45f2), Megacity Metro (6000.1.0f1). For each: the plugin's build through `EdgegapPluginBuild`, its Dockerfile, and a container with its mock env where the server started on its port (Megacity needs `UNITY_COMMANDLINE_ARGS=-port 7979` to bind 0.0.0.0). Boss Room's image was also pushed to the Edgegap registry. Not run on Edgegap with clients after the switch, and the task evals were not re-run.
 
 ## 0.22.2 (unreleased)
 

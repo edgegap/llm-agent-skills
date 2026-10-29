@@ -2,8 +2,8 @@
 
 Contents
 1. Edgegap access and the MCP connection
-2. Build the Linux dedicated server and clients
-3. Docker image and registry push
+2. Build the Linux dedicated server and clients (plugin or command line)
+3. Docker image, local test and registry push
 4. App and app version
 5. Direct test deployment
 6. Command-line test flags
@@ -22,42 +22,44 @@ Contents
 
 ## 2. Build the Linux dedicated server and clients
 
-Prerequisites: Unity Hub modules **Linux Build Support (Mono)** and **Linux Dedicated Server Build Support**, plus the client platform's module; Docker (`docker version`); git (the SDK is a git package).
+Prerequisites: Unity Hub modules **Linux Build Support (Mono)** and **Linux Dedicated Server Build Support** (the plugin's **Linux Server Build Requirements → Install** adds them), plus the client platform's module; Docker Desktop running; git (the plugin and SDK are git packages). Every scene the game loads (including the one with the `NetworkManager`) must be enabled in Build Settings.
 
-The project must be **closed** in the Editor for batch mode, and every scene the game loads (including the one with the `NetworkManager`) enabled in Build Settings.
+**Plugin (Editor open):** **Tools → Edgegap Server Hosting → Build server** → `Builds/EdgegapServer/ServerBuild` (Linux, Dedicated Server subtarget, enabled scenes). It switches the active build target to Linux.
 
+**Command line (Editor closed):** `assets/unity/Editor/EdgegapPluginBuild.cs` in `Assets/Edgegap/Editor/` calls the plugin's build (its `EdgegapBuildUtils` is internal, so the wrapper uses reflection). Clients use Unity's built-in flags:
 ```bash
-"<Unity>" -batchmode -quit -projectPath "<project>" -executeMethod EdgegapServerBuild.Build -logFile build-server.log
-"<Unity>" -batchmode -quit -projectPath "<project>" -executeMethod EdgegapServerBuild.BuildClient -edgegapClientTarget win64 -logFile build-client.log
+"<Unity>" -batchmode -projectPath "<project>" -executeMethod EdgegapPluginBuild.BuildServer -logFile build-server.log
+"<Unity>" -batchmode -quit -projectPath "<project>" -buildTarget Win64 -buildWindows64Player Builds/Client/win64/Game.exe -logFile build-client.log
 ```
-Outputs: `Builds/EdgegapServer/ServerBuild`, `Builds/Client/<target>`. Menu equivalents: **Tools → Edgegap → Build Linux Dedicated Server**. The first import takes minutes: run in the background and read the log for `error CS`.
+The wrapper exits Unity itself (no `-quit`) with code 1 on failure. Unity's `-standaloneBuildSubtarget Server -buildLinux64Player` is not a substitute: on Unity 6000.0.54f1 it produced a regular player (196 MB vs 103 MB for the Dedicated Server build).
+Success: `Build Finished, Result: Success.` in the log; read it for `error CS` otherwise. The first import takes minutes: run in the background. Unity can't open one project twice, so run builds one after the other.
 
-Unity editor paths: Windows `C:\Program Files\Unity\Hub\Editor\<ver>\Editor\Unity.exe`, macOS `/Applications/Unity/Hub/Editor/<ver>/Unity.app/Contents/MacOS/Unity`, Linux `~/Unity/Hub/Editor/<ver>/Editor/Unity`. On Windows, Unity 6 Linux builds may need the `com.unity.toolchain.win-x86_64-linux` package.
+Unity editor paths: Windows `C:\Program Files\Unity\Hub\Editor\<ver>\Editor\Unity.exe`, macOS `/Applications/Unity/Hub/Editor/<ver>/Unity.app/Contents/MacOS/Unity`, Linux `~/Unity/Hub/Editor/<ver>/Editor/Unity`. On Windows, Unity 6 Linux builds may need the `com.unity.toolchain.win-x86_64-linux-x86_64` package.
 
-Opening the project in a newer Unity re-serializes assets and bumps packages. Don't commit that churn with the Edgegap changes unless the developer wants the upgrade.
+Builds switch the active build target and can re-serialize URP and package settings assets. Don't commit that churn with the Edgegap changes; opening the project in a newer Unity does the same.
 
 ## 3. Docker image and registry push
 
-Copy `assets/docker/Dockerfile` and `.dockerignore` to the project root. The build context is only `Builds/EdgegapServer` (minus `*_DoNotShip`). The Dockerfile installs CA certificates (for the HTTPS self-stop call), passes `$UNITY_COMMANDLINE_ARGS` to the server, and doesn't print the environment, which would leak the self-stop token.
+The plugin's Dockerfile lives at `Library/PackageCache/com.edgegap.unity-servers-plugin@<hash>/Editor/Dockerfile`: Ubuntu 22.04 with CA certificates (for the HTTPS self-stop call), copies `Builds/EdgegapServer` and runs `ServerBuild -batchmode -nographics $UNITY_COMMANDLINE_ARGS`. It runs `env` first, so deployment logs show the injected variables, including the self-stop token for that deployment; only the account sees those logs. The build context is the project root: copy `assets/docker/.dockerignore` there so only `Builds/EdgegapServer` (minus `*_DoNotShip`) is sent.
 
-Tags: never `latest`, never reuse a tag (Edgegap caches by tag). Use a UTC timestamp `YYYYMMDD-HHMM` (e.g. `20261022-1430`, from `date -u +%Y%m%d-%H%M`), the same string for the image tag and the app version name, so anyone can see when the server was last updated.
+**Plugin:** **Containerize with Docker** (Image Name; empty Image Tag = UTC timestamp `yy.MM.dd-HH.mm.ss-UTC`), then **Test Your Server Locally** with Optional Docker Run Parameters `-p 7777:7777/udp` → **Deploy local container**. The plugin's default `-p 7777/udp` maps a random host port; set it explicitly. It passes `EdgegapMock.env` (`gameport` 7777/UDP and fake self-stop values), so the server behaves as on Edgegap: it quits 120 s after start with no player, or 30 s after the last one leaves (the self-stop call to the mock URL fails). **Terminate** removes the test container before the next run.
 
-The developer logs in (Container Registry page in the dashboard):
+**Command line:**
 ```bash
-docker login registry.edgegap.com -u '<username>'
+docker build --platform linux/amd64 -f "<plugin>/Editor/Dockerfile" -t registry.edgegap.com/<project>/<image>:<tag> .
+docker run --rm -p 7777:7777/udp --env-file "<plugin>/Editor/EdgegapMock.env" registry.edgegap.com/<project>/<image>:<tag>
 ```
-Then:
-```bash
-docker build --platform linux/amd64 -t registry.edgegap.com/<project>/<image>:<tag> .
-docker push registry.edgegap.com/<project>/<image>:<tag>
-```
-Confirm with `edgegap_list_registry_tags` (image name only). `edgegap_get_registry_credentials` hands credentials only to plugin quick-start tokens: with a normal API token it returns `status: "manual_steps_required"` and no credentials, which is expected, not a failure. Do not call it again; use the dashboard page, or push to Docker Hub, GHCR or another registry and pass that registry and its pull login to `edgegap_create_app_version`.
+Tags: never `latest`, never reuse a tag (Edgegap caches by tag). Use a UTC timestamp `YYYYMMDD-HHMM` (`date -u +%Y%m%d-%H%M`), the same string for the image tag and the app version name.
 
-Local test: `docker run --rm -p 7777:7777/udp <image>`, two clients on `127.0.0.1:7777` (the server logs `Not running on Edgegap, self-stop disabled.` and `Starting server on 0.0.0.0:7777.`).
+**Push:** the plugin's **Upload image and Create app version** logs in to the registry with the plugin's own credentials and pushes. From the command line the developer runs `docker login registry.edgegap.com -u '<username>'` (Container Registry page), then you `docker push`. Confirm with `edgegap_list_registry_tags` (image name only). `edgegap_get_registry_credentials` hands credentials only to plugin quick-start tokens: with a normal API token it returns `status: "manual_steps_required"`, which is expected. Don't call it again.
+
+To push without the plugin, the developer runs `docker login` once (above). Building and pushing yourself, add `assets/unity/Editor/EdgegapPluginBuild.cs` to `Assets/Edgegap/Editor/` for §2.
 
 ## 4. App and app version
 
-`edgegap_list_apps` first (free tier: 2 apps, 2 versions). `edgegap_create_app` if needed, then `edgegap_create_app_version`:
+**Plugin (preferred):** after the push, **Upload image and Create app version** creates the application if needed and opens the dashboard's version form with the version name, image and tag filled in. The developer replaces the default port with `gameport` / `7777` / **UDP**, adds the registry credentials if the form asks, and saves. Later builds: **Rebuild from Source** does build, image, push and opens the form again.
+
+**MCP:** `edgegap_list_apps` first (free tier: 2 apps, 2 versions). `edgegap_create_app` if needed, then `edgegap_create_app_version`. It needs the registry username and token in the call, which only the developer has; if they won't paste them, use the plugin's form:
 
 | Field | Value |
 |---|---|
@@ -67,11 +69,11 @@ Local test: `docker run --rm -p 7777:7777/udp <image>`, two clients on `127.0.0.
 | ports | `[{"port": 7777, "protocol": "UDP", "name": "gameport"}]` (the server reads `ARBITRIUM_PORT_GAMEPORT_INTERNAL`, so the name must be `gameport` or match `PortName`) |
 | registry_username / registry_token | **required**, even for registry.edgegap.com. The developer pastes them for this call or sets them in the dashboard (version → Edit → Private registry) |
 
-Verify with `edgegap_list_app_versions`: `registry_credentials_set: true`. A version without credentials fails every deploy with `Unable to pull image from registry`. A duplicated version keeps its own registry fields; check them on the copy too.
+Verify with `edgegap_list_app_versions`: `registry_credentials_set: true`. A version without credentials fails every deploy with `Unable to pull image from registry`. A duplicated version keeps its own registry fields; check them on the copy too. Registry tokens get rotated: pointing an old version at a new tag with `verify_image` can fail with `Unable to login with the given credentials`, meaning its stored login is stale; the developer re-enters it (version → Edit → Private registry).
 
 ## 5. Direct test deployment
 
-1. `edgegap_deploy` with the app, version, the developer's public IP (`curl -s https://api.ipify.org`) and `tags: ["mcp-test"]`.
+1. The plugin's **Deploy to cloud** (deploys near the developer's IP, tag `quickstart`; **Stop last deployment** stops it), or `edgegap_deploy` with the app, version, the developer's public IP (`curl -s https://api.ipify.org`) and `tags: ["mcp-test"]`.
 2. `edgegap_wait_for_deployment` → `fqdn`, `public_ip`, external port of `gameport`. `edgegap_get_deployment_logs`: `Edgegap Server | Starting server on 0.0.0.0:7777.` and `Deployment '<id>' started ... 0 matched player(s)`.
 3. Two clients connect to `<public_ip>:<external>` (the game's own connect UI, or the flags in §6). UnityTransport over UDP needs the IP, not the fqdn. Logs: `Edgegap Server | 2 player(s) connected.`
 4. `edgegap_stop_deployment`, or close both clients and watch the server stop itself 30 s later. Nobody joining within 120 s also stops it.

@@ -4,7 +4,7 @@
     {
       "id": 1,
       "prompt": "I have a Unity 6 game using Netcode for GameObjects that works with host/client locally. How do I get it running on real dedicated servers with Edgegap so players can join from anywhere? The project is at fixtures/ngo-arena.",
-      "expected_output": "Converts host-based code to a headless dedicated server path, integrates Edgegap SDK matchmaking client with an NGO adapter, server lifecycle with self-stop, Dockerfile + Linux server build, app version (UDP gameport, registry creds), matchmaker config, MCP/token and dashboard guidance, no relay.",
+      "expected_output": "Converts host-based code to a headless dedicated server path, integrates Edgegap SDK matchmaking client with an NGO adapter, server lifecycle with self-stop, Linux server build and image with the Edgegap Unity plugin, app version (UDP gameport, registry creds), matchmaker config, MCP/token and dashboard guidance, no relay.",
       "files": [
         "fixtures/ngo-arena"
       ],
@@ -16,7 +16,7 @@
         "Edgegap Unity SDK added to Packages/manifest.json pinned to 3.5.5 or newer",
         "Client matchmaking uses the SDK GroupClient and connects to the assignment's external port",
         "Server stops its own deployment via ARBITRIUM_DELETE_URL / self-stop when the match ends or is empty",
-        "Dockerfile provided and image built with --platform linux/amd64 and a unique (non-latest) tag",
+        "Server build and image go through the Edgegap Unity plugin (or its Dockerfile from the command line) for linux/amd64 with a unique (non-latest) tag",
         "App version port is UDP with the internal port equal to the transport port, and the port name matches the client lookup",
         "Registry credentials on the app version are called out as required",
         "Matchmaker config is valid JSON and its profile name equals the client's profile",
