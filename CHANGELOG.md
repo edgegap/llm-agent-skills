@@ -2,6 +2,18 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.26.0 (unreleased)
+
+`edgegap-playfab` 0.3.0: only the matched players can join the Edgegap server, still with no secret on it, and the Windows test clients build again after a server build. Synced from edgegap/backend-game-sample-unity-playfab-matchmaker-fishnet-spaceedge#3.
+
+- Join tokens: `StartEdgegapDeployment` derives one token per member (`src/lib/join.js`, HMAC keyed with the title secret) and passes them in the hidden `EDGEGAP_JOIN_TOKENS`; `EdgegapDeploymentReady` writes each player's token into `EdgegapServer`; the client sends it on connect; `assets/unity/JoinTokenAuthenticator.cs` (FishNet) admits only those tokens, and a rejoin replaces a stale connection. `references/game-server.md` §4 replaces the old "optional" session-ticket design and covers NGO, Mirror, Unreal and Godot.
+- `EdgegapPluginBuild.BuildClient`: after the plugin's server build, Unity stays on the Dedicated Server subtarget, so `-buildWindows64Player` fails with "Dedicated Server support for Win is not installed". The other Unity skills that suggest `-buildWindows64Player` for test clients have the same problem.
+- `-connect host:port -joinToken t` on the client tests a local container without PlayFab.
+- `assets/azure-functions/test/`: `npm test` for the tokens and the deployment request.
+- Wording: Microsoft calls JavaScript CloudScript "classic" (devdocs), not "Legacy".
+- Verified on 2026-10-29: `npm test`, the plugin's server build and its Dockerfile without `env` (edgegap/buildtool-unity-plugin#62, released in plugin 3.2.2) in Docker, headless Windows clients: matched tokens admitted, wrong and missing tokens rejected, a killed client rejoined at once, no environment in the logs. Not run: a full PlayFab match on Edgegap with the new functions.
+- Versions: `edgegap` 0.26.0, `edgegap-playfab` 0.3.0.
+
 ## 0.25.0 (unreleased)
 
 Cocos Creator projects build, upload and test-deploy their server with the revived [Edgegap Cocos extension](https://github.com/edgegap/edgegap-cocos-plugin) 2.0 (edgegap/edgegap-cocos-plugin#1), as Unity and Godot projects do with their plugins.
