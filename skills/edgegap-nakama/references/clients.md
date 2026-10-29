@@ -17,7 +17,7 @@ Notification content is the JSON object the module sent. Some SDKs hand it over 
 
 ## 2. Godot example (Fish Game, verified)
 
-From `autoload/OnlineMatch.gd` in edgegap/fishgame-godot:
+From `autoload/OnlineMatch.gd` in edgegap/backend-game-sample-godot-nakama-fishgame:
 
 ```gdscript
 const NOTIFICATION_CONNECTION_INFO := 111

@@ -1,5 +1,5 @@
 // Boss Room adapter for EdgegapMatchmakingClient.cs, verified end to end on Edgegap in
-// edgegap/netcode-sample-unity-ngo-bossroom. Replace the NETCODE ADAPTER region with this one and add:
+// edgegap/netcode-game-sample-unity-ngo-bossroom. Replace the NETCODE ADAPTER region with this one and add:
 //   using Unity.BossRoom.ConnectionManagement;
 //   using Unity.BossRoom.Gameplay.Configuration;
 // (your game's ConnectionManager and name generator namespaces). Set MenuSceneName = "MainMenu".

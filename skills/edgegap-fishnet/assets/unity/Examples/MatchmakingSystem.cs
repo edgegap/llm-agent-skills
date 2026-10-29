@@ -4,7 +4,7 @@ using FishNet.Transporting;
 using FishNet.Transporting.Bayou;
 using UnityEngine;
 
-// Example from edgegap/netcode-sample-unity-fishnet (SpaceEdge): a main-menu bridge that sends "Start Game"
+// Example from edgegap/netcode-game-sample-unity-fishnet-hashgrid (SpaceEdge): a main-menu bridge that sends "Start Game"
 // either to a direct connection (local server or a dashboard deployment) or to the Edgegap matchmaker.
 // Adapt it to the game's own menu: rename it, and replace OnStatusUpdate/OnStartGameFailed with the menu's UI calls.
 namespace SpaceEdge

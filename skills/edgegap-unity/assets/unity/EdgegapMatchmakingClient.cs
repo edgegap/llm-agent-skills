@@ -1,7 +1,7 @@
 // Edgegap matchmaking client (Group Up flow, solo group). Requires com.edgegap.unity-sdk 3.5.6+ (3.5.5 breaks tickets on Unity < 2022.3).
 // Flow: Find Match -> ticket -> SEARCHING -> MATCH_FOUND (server starting) -> HOST_ASSIGNED -> connect.
 // Netcode-specific code lives only in the "NETCODE ADAPTER" region at the bottom.
-// Adapted from the end-to-end verified edgegap/mirror-webgl sample.
+// Adapted from the end-to-end verified edgegap/netcode-game-sample-webgl-mirror-tanks sample.
 using System.Collections;
 using System.Collections.Generic;
 using Edgegap;

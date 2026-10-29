@@ -1,7 +1,7 @@
 // Edgegap matchmaking client (Group Up flow, solo group). Requires com.edgegap.unity-sdk 3.5.5+.
 // Flow: Find Match -> ticket -> SEARCHING -> MATCH_FOUND (server starting) -> HOST_ASSIGNED -> connect.
 // Netcode-specific code lives only in the "NETCODE ADAPTER" region at the bottom.
-// Adapted from the end-to-end verified edgegap/netcode-sample-unity-ngo-bossroom sample.
+// Adapted from the end-to-end verified edgegap/netcode-game-sample-unity-ngo-bossroom sample.
 // Boss Room-style projects with a ConnectionManager: use the adapter in Examples/BossRoom instead.
 using System.Collections;
 using System.Collections.Generic;

@@ -16,7 +16,7 @@ Only relevant when the project has no networking yet. Check `Packages/manifest.j
 
 Without one, recommend:
 - **Netcode for GameObjects (NGO)** for desktop/mobile targets on Unity 6. Official Unity package, UDP via Unity Transport, and many tutorials. Install `com.unity.netcode.gameobjects`.
-- **Mirror** if the game must run in a **browser (WebGL)**. Its SimpleWebTransport + Edgegap TLS Upgrade path was verified end to end with the Edgegap matchmaker (sample: github.com/edgegap/mirror-webgl).
+- **Mirror** if the game must run in a **browser (WebGL)**. Its SimpleWebTransport + Edgegap TLS Upgrade path was verified end to end with the Edgegap matchmaker (sample: github.com/edgegap/netcode-game-sample-webgl-mirror-tanks).
 - FishNet is also well supported by Edgegap. Pick it if the developer already knows it.
 
 Get basic multiplayer working **locally** first: two players can move and see each other with one Editor running as server and one as client (Unity 6 Multiplayer Play Mode, or a second build). Don't containerize a game whose netcode doesn't work on localhost. Every later failure becomes ambiguous.

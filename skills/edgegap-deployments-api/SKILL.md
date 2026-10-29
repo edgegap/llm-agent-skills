@@ -2,7 +2,7 @@
 name: edgegap-deployments-api
 description: 'Write backend code that starts, tracks and stops Edgegap game servers through the HTTP API: POST /v2/deployments with player IPs or coordinates, env vars and tags, ready/error/terminate webhooks, status polling within rate limits, stopping and cleaning up orphaned deployments, and handing players the address and external port. Use whenever building a custom matchmaker, allocator, lobby service or CI job for Edgegap (a CI job that only ships a new build: edgegap-launch, which uses edgegap/deploy-action), writing the allocator for EOS or Steam lobbies (choosing a matchmaker, or keeping Unity Matchmaker: edgegap-matchmaking; Nakama: edgegap-nakama), or when someone mentions api.edgegap.com, the Deploy API, deployment webhooks, request_id, or Edgegap error codes 422/429/410. Not for game clients, which must never hold the API token.'
 metadata:
-  version: "0.2.10"
+  version: "0.2.11"
 ---
 
 # Edgegap Deployments API for your backend
@@ -123,7 +123,7 @@ app.post("/edgegap/ready/:token", async (req, res) => {
 | Backend | How it meets Edgegap | Guide |
 |---|---|---|
 | Edgegap Matchmaker | Hosted; deploys and hands out addresses itself, no backend code | https://docs.edgegap.com/learn/matchmaking |
-| Nakama (Heroic Labs) | The Edgegap Fleet Manager for Nakama (Go plugin) deploys from Nakama's matchmaker: use `edgegap-nakama` | https://github.com/edgegap/nakama-edgegap |
+| Nakama (Heroic Labs) | The Edgegap Fleet Manager for Nakama (Go plugin) deploys from Nakama's matchmaker: use `edgegap-nakama` | https://github.com/edgegap/backend-nakama-edgegap-plugin |
 | Unity Matchmaker (UGS) | Keep Unity's matchmaker; a Cloud Code module calls the Deploy API | https://docs.edgegap.com/docs/tools-and-integrations/deploy-from-ugs |
 | PlayFab | Keep PlayFab matchmaking; two Azure Functions (rule on `match_found`, ready webhook) deploy near the players and hand out the address: use `edgegap-playfab` | https://github.com/edgegap/backend-game-sample-unity-playfab-matchmaker-fishnet-spaceedge |
 | EOS lobbies (Unreal) | Lobby members store their IP; a backend service deploys for the lobby | https://docs.edgegap.com/docs/tools-and-integrations/unreal-eos-lobby-integration |
