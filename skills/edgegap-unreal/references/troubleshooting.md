@@ -43,3 +43,15 @@ Every row below happened in a real run. Engine and compiler problems are in `eng
 | `assigned to …` then back to the menu | Connection failed (port, protocol, server crashed). | Direct deploy + `open ip:port`; check the version port is UDP 7777 named like `PortName`. |
 | Overlay doesn't show | `bEnabled=False`, `bShowDefaultUI=False`, or the map isn't standalone. | Check the ini section name uses the module name. |
 | Closing clients: server stops only ~75 s later | Killed clients don't say goodbye; the server waits for the connection timeout (~60 s), then the 15 s grace. | Expected. A clean disconnect stops it in ~15 s. |
+
+## EOS sessions with a dedicated server (verified with Lyra, UE 5.8.4)
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| Clients can't reach the server through EOS | The game uses `NetDriverEOS` (P2P). | The dedicated server and its clients use `IpNetDriver`; EOS only lists the session. |
+| Server never registers its session | Lyra-style hosting asks for lobbies (`bUseLobbies=true`). | Dedicated servers create sessions: `bUseLobbies=false`. |
+| Session found, join goes to port 7777 and times out | OSS EOS advertises the internal port in `SESSION_ATTR_SERVERPORT`. | On the server, set it to `ARBITRIUM_PORT_GAMEPORT_EXTERNAL` (the address is fine: EOS uses the public IP). |
+| Server hangs at start waiting for a browser or device-code login | The server inherits the client's EAS login settings. | Server-only config: `bUseEAS=false`, `bUseEOSConnect=false`, a server client ID/secret (inject the secret from a hidden env var). |
+| Server EOS settings from a project module are ignored | The online subsystem loads at PostConfigInit, before normal modules. | Load the config module `EarliestPossible`/PostConfigInit. |
+| Matched players are kicked right after joining (`HostClosedConnection`) | The server boots on an entry map, then ServerTravels to the match map. | The client keeps the assigned address and rejoins (Lyra: up to 5 tries within 60 s), or the server starts on the match map. |
+

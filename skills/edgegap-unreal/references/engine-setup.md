@@ -6,8 +6,9 @@ Contents
 3. Building the engine
 4. Known engine and compiler fixes
 5. Timings and how not to lose them
+6. No source build: Epic's container image (UE 5.8)
 
-Dedicated servers need an engine **built from source**: Epic Launcher builds can't build `Server` targets. Everything below is Windows-first (the common dev machine); on Linux the server builds natively and the cross-compile toolchain isn't needed.
+Dedicated servers need an engine **built from source**: Epic Launcher builds can't build `Server` targets. The alternative is to build only the Linux server inside Epic's container image, which holds a source-built engine, and keep the Launcher engine for the editor and clients (§6). Everything below is Windows-first (the common dev machine); on Linux the server builds natively and the cross-compile toolchain isn't needed.
 
 ## 1. What the developer installs
 
@@ -81,3 +82,24 @@ Engine\Build\BatchFiles\Build.bat ShaderCompileWorker Win64 Development -WaitMut
 - Run long builds in the background and check progress in the log (`[1768/6583] Compile …` gives the fraction done).
 - UBT holds a global mutex: a second build, or launching the editor, waits until the first finishes. Don't start an editor launch while packaging if you need it soon.
 - Moving the project to a new path recompiles engine modules for it. Pick the final path early.
+
+## 6. No source build: Epic's container image (UE 5.8)
+
+Verified on 2026-11-02 with Lyra on UE 5.8.4 (Launcher editor and clients, Linux server built in Docker, Edgegap matchmaker and EOS sessions, end to end on Edgegap), and with a minimal C++ project through the build scripts below.
+
+- Image: `ghcr.io/epicgames/unreal-engine:dev-slim-<version>` (dev-slim-5.8.4 is about 82 GB unpacked; give Docker Desktop the disk). Pulling needs the Epic ↔ GitHub link (§1) and a GitHub token with `read:packages`: `gh auth token | docker login ghcr.io -u <user> --password-stdin` from bash.
+- Easiest path: [edgegap/buildtool-unreal-scripts](https://github.com/edgegap/buildtool-unreal-scripts) 1.1.0 or newer. Its `BuildUploadServer.ps1`/`.sh` build, cook and package the server in the image, keep compiled code, cooked content and DDC in Docker cache mounts (a rebuild of an unchanged project compiled in 12 s instead of 66 s), and push to the Edgegap registry. Older releases fail at the runtime stage (`apt-get jq curl` without `install`) and print the self-stop token in the logs.
+- Running RunUAT yourself in the container: `BuildCookRun -server -noclient -platform=Linux -build -cook -stage -pak -archive`, the project in a Docker volume, not a Windows bind mount (much faster).
+
+UE 5.8 pitfalls met on that path:
+
+| Symptom | Fix |
+|---|---|
+| Cook fails: `Content is missing from cook … marked NeverCook` (Landmass packages referencing `/Engine/EditorMaterials`) | Drop `-SkipCookingEditorContent` from BuildCookRun. |
+| `-skipcook` later fails: `Failed reading oplog` | 5.8 keeps cook output in Zen under `~/.config/Epic`: keep that folder in a volume between runs. |
+| clang crashes on a rebuild (`CHAINED-SIGNAL 11`) | `-UbtArgs="-NoUBA"`. |
+| `More than one server target` | `DefaultEngine.ini` `[BuildSettings] DefaultServerTarget=<Name>Server`. |
+| Installed engine rejects a target that sets `bUseChecksInShipping` (or other engine-wide settings) | Set them only when `BuildEnvironment == TargetBuildEnvironment.Unique`. |
+| Launcher copies of engine plugin sources fail clang `-Werror` (unreachable code) | Take those files from the matching engine source tag. |
+| CustomConfig targets (`-CustomConfig=EOS`) are disabled in an installed engine | Pass `-CustomConfig=EOS` at run time, or put the settings in `DefaultEngine.ini`: `Config/Custom/*` isn't staged in packaged builds. |
+

@@ -2,7 +2,7 @@
 name: edgegap-unreal
 description: 'Unreal Engine + Edgegap: get an Unreal multiplayer game online with dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on an Unreal project: it has the Unreal workflow, tested C++ drop-ins (matchmaker client with latency beacons, server self-stop), source-engine and Linux cross-compile setup, server packaging, Dockerfile, matchmaker config and fixes for the pitfalls that cost hours. Use when an Unreal dev wants online play: "put my game online", "players can only join on LAN", "nobody should have to host", "click Play and get matched", listen server to dedicated server, a .uproject that needs servers, "open <ip>" connections, packaging a Linux server, or debugging Edgegap deployments, ports or matchmaking for an Unreal game. Covers C++ and Blueprint-only projects. Use even for beginners who never say Edgegap, servers or Docker. Not for Unity (edgegap-unity), Godot or non-game backends.'
 metadata:
-  version: "0.1.3"
+  version: "0.2.0"
 ---
 
 # Edgegap for Unreal Engine: dedicated servers + matchmaking
@@ -11,7 +11,7 @@ Goal: a player clicks **Find Match**, the Edgegap matchmaker groups players by l
 
 Use **dedicated (authoritative) servers only**; never relays. Unreal's replication is already server-authoritative, so a dedicated server is the natural fit: no player hosts, has a latency advantage, or ends the match by quitting.
 
-Verified on **UE 5.5.4** built from source (Windows editor, Linux server on Edgegap) with the top-down template, two clients, latency rules and self-stop. UE 5.3+ should work the same; the version-specific bits (build settings, toolchain version) are called out where they appear. UE 4.27 is out of scope.
+Verified on **UE 5.5.4** built from source (Windows editor, Linux server on Edgegap) with the top-down template, two clients, latency rules and self-stop. Also run end to end on **UE 5.8.4** with Lyra (Launcher editor, server built in Epic's container image, EOS sessions; `references/engine-setup.md` §6). UE 5.3+ should work the same; the version-specific bits (build settings, toolchain version) are called out where they appear. UE 4.27 is out of scope.
 
 ## How to work
 
@@ -37,7 +37,7 @@ Then ask, in one message, only what you couldn't infer: players per match and te
 
 ## Phase 1: Engine and toolchain
 
-Read `references/engine-setup.md`. The developer installs (links in §1): a source build of their engine version, Visual Studio 2022 with the C++ game workloads, the Linux cross-compile toolchain matching the engine version, Docker Desktop. You do the build steps and the known fixes (§3-4): pinning the compiler when a newer Visual Studio is also installed, the missing `<chrono>` include in 5.5, building ShaderCompileWorker, short project paths on Windows.
+Read `references/engine-setup.md`. The developer installs (links in §1): a source build of their engine version, Visual Studio 2022 with the C++ game workloads, the Linux cross-compile toolchain matching the engine version, Docker Desktop. You do the build steps and the known fixes (§3-4): pinning the compiler when a newer Visual Studio is also installed, the missing `<chrono>` include in 5.5, building ShaderCompileWorker, short project paths on Windows. No source build wanted: build only the Linux server in Epic's container image with edgegap/buildtool-unreal-scripts (§6).
 
 ✅ Check: the editor builds, and the project's editor target compiles against that engine.
 

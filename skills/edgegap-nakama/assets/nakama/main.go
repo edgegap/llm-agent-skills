@@ -3,7 +3,7 @@
 // through the Edgegap Fleet Manager for Nakama (github.com/edgegap/nakama-edgegap).
 //
 // From edgegap/backend-game-sample-godot-nakama-fishgame (nakama/main.go), verified end to end on Edgegap
-// with Nakama 3.39 and nakama-edgegap 20d849e. Adapt the marked lines.
+// with Nakama 3.39 and nakama-edgegap 20d849e, and builds and loads with Nakama 3.41 and cd9022a. Adapt the marked lines.
 package main
 
 import (

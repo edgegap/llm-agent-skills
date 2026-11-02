@@ -36,7 +36,7 @@ No Simple FPS or Fusion file is edited. **Tools > Edgegap Simple FPS > Set Up Pr
 | Build profile: Startup (0), Deathmatch (1) | Trap 1. |
 | `EdgegapServerSceneLoader` (server builds only) | Trap 1: the server boots into Startup and moves straight to Deathmatch. |
 
-The kit's `edgegap/Dockerfile` and `start-server.sh` run the server as a non-root user. They never print the environment, which holds `ARBITRIUM_DELETE_TOKEN`; the Edgegap Unity plugin's default Dockerfile runs `env`. When the server process exits on its own, the start script calls `ARBITRIUM_DELETE_URL` to stop the deployment.
+The kit's `edgegap/Dockerfile` and `start-server.sh` run the server as a non-root user. They never print the environment, which holds `ARBITRIUM_DELETE_TOKEN`; the Edgegap Unity plugin's default Dockerfile ran `env` up to 3.2.1. When the server process exits on its own, the start script calls `ARBITRIUM_DELETE_URL` to stop the deployment.
 
 ## 4. A project that followed manual steps
 

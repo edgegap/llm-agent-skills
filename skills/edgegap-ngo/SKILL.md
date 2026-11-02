@@ -2,7 +2,7 @@
 name: edgegap-ngo
 description: 'Netcode for GameObjects (NGO) + Edgegap: take a Unity game built on NGO to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on an NGO project (com.unity.netcode.gameobjects, NetworkManager, UnityTransport, StartHost, ConnectionManager, Boss Room). It has NGO C# templates verified on Edgegap, no scene edits (server start and self-stop, Find Match panel, settings asset), a Boss Room adapter, the Edgegap Unity plugin for build, image, push and deploy, port 7777 UDP app version, matchmaker config, and fixes for NGO pitfalls: host-only logic, connection payloads and approval, UnityTransport needing an IP, client-only code on the server, Relay leftovers. Use when an NGO dev wants online play: "host my NGO game", "nobody should host", "replace Unity Relay or Multiplay", "Boss Room on Edgegap", "Find Match button", or debugs NGO deployments, ports or matchmaking. Mirror or WebGL-first games: edgegap-unity. FishNet: edgegap-fishnet. PurrNet: edgegap-purrnet.'
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # Edgegap for Netcode for GameObjects: dedicated servers + matchmaking
@@ -11,7 +11,7 @@ Goal: a player clicks **Find Match** (or joins an address while testing), Edgega
 
 Verified end to end on Edgegap with [edgegap/netcode-game-sample-unity-ngo-bossroom](https://github.com/edgegap/netcode-game-sample-unity-ngo-bossroom) (Boss Room, Unity 6000.0.54f1, NGO 1.13.0, UnityTransport 2.5.2 UDP, SDK 3.5.6, Edgegap Unity plugin 3.2.1): two Windows clients in the dungeon on one Edgegap server, by direct connection and through the matchmaker, and the server stopped itself each time. Its `EDGEGAP.md` is the developer-facing reference. `assets/unity/` holds generic plain-NGO adapters (server start and direct connect tested locally, matchmaker adapter compile-only); `assets/unity/Examples/BossRoom/` the verified Boss Room adapter.
 
-Use **dedicated (authoritative) servers**, not a player host, unless the developer explicitly wants host/client.
+Use **dedicated (authoritative) servers**, not a player host, unless the developer explicitly wants host/client. If they do, keep the game host/client and route it through a relay deployed on Edgegap: [edgegap/server-sample-lightnet-relay](https://github.com/edgegap/server-sample-lightnet-relay) has the relay server and a transport for Mirror, FishNet, PurrNet and NGO.
 
 ## How to work
 

@@ -48,7 +48,7 @@ The same rules apply without the BR200 kit. Untested beyond BR200:
 - Bind the port from `ARBITRIUM_PORT_GAMEPORT_INTERNAL` (7777), declared UDP in the app version.
 - IL2CPP on the server (§3). Headless: build the Server subtarget so `UNITY_SERVER` is defined.
 - End the match by shutting the runner down and exiting the process (restart policy `never`), or by calling `ARBITRIUM_DELETE_URL`.
-- Never print the environment at boot: it holds `ARBITRIUM_DELETE_TOKEN`. The Edgegap Unity plugin's default Dockerfile runs `env`, so use the kit's Dockerfile or your own.
+- Never print the environment at boot: it holds `ARBITRIUM_DELETE_TOKEN`. The Edgegap Unity plugin's default Dockerfile ran `env` up to 3.2.1 (fixed in 3.2.2); the kit's Dockerfile never did.
 
 ## 6. Checking the connection type
 
