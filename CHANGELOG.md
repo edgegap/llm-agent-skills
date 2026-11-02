@@ -2,6 +2,18 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.28.0 (unreleased)
+
+New samples and integrations from the Edgegap repos, and the relays skill.
+
+- `edgegap-unreal` 0.3.0: `references/lyra.md` for Lyra projects with [edgegap/game-sample-unreal-engine-lyra](https://github.com/edgegap/game-sample-unreal-engine-lyra) (UE 5.8, `EdgegapIntegration` plugin, EOS sessions, a matchmaker profile per playlist; verified on Edgegap 2026-11-02, Browse from a second Epic account not run). Phase 0 spots Lyra projects and Betide's third-party Edgegap Integration Kit.
+- New `edgegap-relays` 0.1.0: Edgegap managed relays for host/client games (relay profile token, lobby service, LightNet relay transport, offline emulator). **Not run on a live Edgegap relay** (the test organization has no relay access); it says so and points to the LightNet relay deployment, which is verified on Edgegap. Routed from `edgegap` and the Unity netcode skills.
+- `edgegap-playfab` 0.3.2: leaving PlayFab Multiplayer Servers without PlayFab Matchmaking points to [edgegap/backend-game-sample-unity-mirror-playfab-mps](https://github.com/edgegap/backend-game-sample-unity-mirror-playfab-mps).
+- `edgegap-unity` 0.2.2 and `edgegap-ngo` 0.2.2: projects on Unity Matchmaker / Multiplay are pointed at Unity's official `EdgegapAllocator` module (`edgegap-matchmaking` third-party reference).
+- `edgegap-fusion` 0.1.4: links the published BR200 kit repo [edgegap/netcode-game-sample-photon-fusion2-battleroyale-200](https://github.com/edgegap/netcode-game-sample-photon-fusion2-battleroyale-200).
+- `edgegap-fishnet` 0.3.2, `edgegap-purrnet` 0.3.2: route managed relays to `edgegap-relays`.
+- Versions: `edgegap` 0.28.0, `edgegap-unreal` 0.3.0, `edgegap-relays` 0.1.0, `edgegap-playfab` 0.3.2, `edgegap-unity` 0.2.2, `edgegap-ngo` 0.2.2, `edgegap-fusion` 0.1.4, `edgegap-fishnet` 0.3.2, `edgegap-purrnet` 0.3.2.
+
 ## 0.27.0 (unreleased)
 
 Synced with the Edgegap repos as of 2026-11-02.

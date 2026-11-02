@@ -2,7 +2,7 @@
 name: edgegap-purrnet
 description: 'PurrNet + Edgegap: take a Unity game built on PurrNet to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a PurrNet project (dev.purrnet.purrnet, NetworkManager start flags, UDPTransport, WebTransport, ParrelSync clones). It has PurrNet-ready C# templates verified on Edgegap that add themselves at runtime without editing scenes (server start and self-stop, connect panel with direct and matchmaker modes, settings asset), port 7777 UDP app version, Dockerfile, matchmaker config, and fixes for PurrNet pitfalls: auto start flags, the async StartClient, ObserversRpc that never runs on a dedicated server. Use when a PurrNet dev wants online play: "host my PurrNet game", "nobody should host", "works with a host but not online", "Find Match button", or is debugging PurrNet deployments, ports or matchmaking on Edgegap. Other Unity netcodes: edgegap-unity (NGO, Mirror) or edgegap-fishnet.'
 metadata:
-  version: "0.3.1"
+  version: "0.3.2"
 ---
 
 # Edgegap for PurrNet: dedicated servers + matchmaking
@@ -11,7 +11,7 @@ Goal: a player clicks **Find Match** (or connects to an address while testing), 
 
 This path was run end to end on Edgegap with [edgegap/netcode-game-sample-unity-purrnet-incremental](https://github.com/edgegap/netcode-game-sample-unity-purrnet-incremental), a fork of PurrNet's Incremental sample (Unity 6000.3.11f1, PurrNet `dev`, `UDPTransport`, SDK 3.5.5): two desktop clients played on the same server, both by direct connection and through the matchmaker (matched in about 35 s), and the server stopped itself each time. The templates in `assets/unity/` are the files from that run; `EDGEGAP.md` in that repo is a working reference for the developer.
 
-Use **dedicated (authoritative) servers**, not a player host, unless the developer explicitly wants host/client. If they do, keep the game host/client and route it through a relay deployed on Edgegap: [edgegap/server-sample-lightnet-relay](https://github.com/edgegap/server-sample-lightnet-relay) has the relay server and a transport for Mirror, FishNet, PurrNet and NGO.
+Use **dedicated (authoritative) servers**, not a player host, unless the developer explicitly wants host/client. If they do, keep the game host/client and route it through a relay deployed on Edgegap: [edgegap/server-sample-lightnet-relay](https://github.com/edgegap/server-sample-lightnet-relay) has the relay server and a transport for Mirror, FishNet, PurrNet and NGO; Edgegap's managed relays: `edgegap-relays`.
 
 ## How to work
 
