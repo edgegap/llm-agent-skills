@@ -1,8 +1,8 @@
 # The Nakama Go module
 
-`assets/nakama/main.go` is the verified module from edgegap/backend-game-sample-godot-nakama-fishgame with the game-specific parts removed. It compiles with `heroiclabs/nakama-pluginbuilder:3.39.0`. This file explains each piece and what to adapt.
+`assets/nakama/main.go` is the verified module from edgegap/backend-game-sample-godot-nakama-fishgame with the game-specific parts removed. It compiles with `heroiclabs/nakama-pluginbuilder:3.41.0` (and did with 3.39.0 before). This file explains each piece and what to adapt.
 
-Facts below about the plugin were read in nakama-edgegap's code at commit `20d849e` (the tagged `0.4.0` content). If the pinned commit changes, re-read `pkg/fleetmanager/` before trusting them.
+Facts below about the plugin were read in nakama-edgegap's code at commit `20d849e` (the tagged `0.4.0` content) and rechecked at `cd9022a`, whose only behavior change is that reservation cleanup no longer drops the reserved seats of an instance that is still Requested or Running. If the pinned commit changes, re-read `pkg/fleetmanager/` before trusting them.
 
 ## 1. Register the Fleet Manager
 
@@ -92,6 +92,6 @@ The Docker image then needs both: the Go plugin from the builder stage and the `
 
 ## 7. The plugin's client RPCs
 
-`instance_create`, `instance_join`, `instance_list` and `instance_get` are registered with every Fleet Manager and callable by any signed-in player. `instance_create` starts an Edgegap deployment for the caller: anyone with an account can start servers that the developer pays for. The event RPCs (`edgegap_instance`, `edgegap_connection`) don't check for the http_key in the code at `20d849e`, so a player who knows an instance ID (it is in notification 111) may be able to send `STOP` for it. Not exploited in testing; tell the developer, don't hide it. Mitigations in the developer's control: keep matches on the matchmaker, rate-limit or monitor deployments (`edgegap-launch`), and raise it upstream (https://github.com/edgegap/backend-nakama-edgegap-plugin) before launch.
+`instance_create`, `instance_join`, `instance_list` and `instance_get` are registered with every Fleet Manager and callable by any signed-in player. `instance_create` starts an Edgegap deployment for the caller: anyone with an account can start servers that the developer pays for. The event RPCs (`edgegap_instance`, `edgegap_connection`) don't check for the http_key in the code at `20d849e` or `cd9022a`, so a player who knows an instance ID (it is in notification 111) may be able to send `STOP` for it. Not exploited in testing; tell the developer, don't hide it. Mitigations in the developer's control: keep matches on the matchmaker, rate-limit or monitor deployments (`edgegap-launch`), and raise it upstream (https://github.com/edgegap/backend-nakama-edgegap-plugin) before launch.
 
 Private matches: Fish Game dropped its "match by ID" mode. `instance_create`/`instance_join`, or a custom RPC that calls `Create` for a party, could bring it back.

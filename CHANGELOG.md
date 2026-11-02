@@ -2,6 +2,16 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.27.0 (unreleased)
+
+Synced with the Edgegap repos as of 2026-11-02.
+
+- Unity plugin 3.2.2 (edgegap/buildtool-unity-plugin#62) no longer runs `env` in its Dockerfile, so the self-stop token stays out of deployment logs. `edgegap-unity`, `edgegap-ngo`, `edgegap-fishnet` and `edgegap-purrnet` `references/deploy.md` describe the fixed Dockerfile and how to drop an old commit locked in `Packages/packages-lock.json`; `edgegap-playfab`, `edgegap-fusion` and `edgegap-fusion-simplefps` say the dump was 3.2.1 and older.
+- `edgegap-nakama` 0.2.0: Nakama 3.41.0, `nakama-pluginbuilder:3.41.0`, nakama-common v1.48.0, Go 1.27.1 and nakama-edgegap `cd9022a` (edgegap/backend-nakama-edgegap-plugin#12). Verified on 2026-11-02: the module built, Nakama 3.41.0 loaded it and registered every RPC and hook, email sign-in worked and a player's `report_match_result` was refused, against a mock Edgegap API. Matchmaking into a real deployment was not re-run on 3.41.
+- LightNet relay: `edgegap` (relay guidance and glossary), `edgegap-unity`, `edgegap-fishnet`, `edgegap-purrnet` and `edgegap-ngo` point developers who keep host/client at [edgegap/server-sample-lightnet-relay](https://github.com/edgegap/server-sample-lightnet-relay), a relay deployed on Edgegap with transports for Mirror, FishNet, PurrNet and NGO and an optional matchmaker (verified on Edgegap, 2026-11-02).
+- `edgegap-unreal` 0.2.0: `references/engine-setup.md` §6 builds the Linux server in Epic's `dev-slim` container image without a source engine (edgegap/buildtool-unreal-scripts 1.1.0, or RunUAT in the container) with the UE 5.8 pitfalls met on Lyra and on a minimal project (`-SkipCookingEditorContent` cook failure, Zen oplog, UBA crash, `DefaultServerTarget`, installed-engine target settings, CustomConfig); `references/troubleshooting.md` gets EOS sessions with a dedicated server (IpNetDriver, sessions not lobbies, external port in `SESSION_ATTR_SERVERPORT`, server login settings, PostConfigInit config, ServerTravel kicks).
+- Versions: `edgegap` 0.27.0, `edgegap-unity` 0.2.1, `edgegap-ngo` 0.2.1, `edgegap-fishnet` 0.3.1, `edgegap-purrnet` 0.3.1, `edgegap-fusion` 0.1.3, `edgegap-fusion-simplefps` 0.1.3, `edgegap-playfab` 0.3.1, `edgegap-nakama` 0.2.0, `edgegap-unreal` 0.2.0.
+
 ## 0.26.0 (unreleased)
 
 `edgegap-playfab` 0.3.0: only the matched players can join the Edgegap server, still with no secret on it, and the Windows test clients build again after a server build. Synced from edgegap/backend-game-sample-unity-playfab-matchmaker-fishnet-spaceedge#3.

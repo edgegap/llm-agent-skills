@@ -2,14 +2,14 @@
 name: edgegap-unity
 description: 'Unity + Edgegap: get a Unity multiplayer game online with dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a Unity project: it has the Unity workflow, tested C# templates (matchmaker client, server self-stop), Linux server build, Dockerfile, matchmaker config and fixes for known pitfalls. Use when a Unity dev wants online play: "put my game online", "play with people over the internet", "works on LAN/same wifi but not online", "nobody should have to host", "click Play and get matched", how Fall Guys/Among Us match players, servers for a playtest, "where do I start with servers". Also for Mirror host/client games moving to dedicated servers, WebGL multiplayer, or debugging Edgegap deployments, ports or matchmaking for a Unity game. Use even for beginners who never say Edgegap, servers or Docker. Not for NGO (edgegap-ngo), FishNet (edgegap-fishnet), PurrNet (edgegap-purrnet) or Fusion (edgegap-fusion) projects, Unreal (edgegap-unreal), Godot or non-game backends.'
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # Edgegap for Unity: dedicated servers + matchmaking
 
 Goal: a player clicks **Find Match**, the Edgegap matchmaker groups players, Edgegap starts a dedicated server near them, every client connects automatically, and the server shuts itself down when the match ends. The job is done when that loop works end to end with real builds, not when the code compiles.
 
-Use **dedicated (authoritative) servers only**; never relays. A dedicated server owns the game state, so no player hosts, has a latency advantage, or can end the match by quitting. That is exactly what "nobody should have to host" and "works on LAN but not online" are asking for.
+Use **dedicated (authoritative) servers only**; never relays. A dedicated server owns the game state, so no player hosts, has a latency advantage, or can end the match by quitting. That is exactly what "nobody should have to host" and "works on LAN but not online" are asking for. Only if the developer explicitly keeps Mirror host/client: [edgegap/server-sample-lightnet-relay](https://github.com/edgegap/server-sample-lightnet-relay) runs a relay as an Edgegap deployment, with a Mirror transport.
 
 ## How to work
 

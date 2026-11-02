@@ -6,7 +6,7 @@ Find the layer first: Nakama module → Edgegap deployment → game server event
 
 | Symptom | Cause / fix |
 |---|---|
-| `go get github.com/edgegap/nakama-edgegap@0.4.0` fails, or `invalid version` | tags have no `v` prefix: pin the commit, `go get github.com/edgegap/nakama-edgegap@20d849e` (`infra.md` §3) |
+| `go get github.com/edgegap/nakama-edgegap@0.4.0` fails, or `invalid version` | tags have no `v` prefix: pin the commit, `go get github.com/edgegap/nakama-edgegap@cd9022a` (`infra.md` §3) |
 | `plugin was built with a different version of package ...` at Nakama start | pluginbuilder tag ≠ Nakama tag, or `nakama-common` not the version of that Nakama release. Change all three together |
 | `not enough arguments in call to ...Create` / `assignment mismatch` | README sample: `Create` takes 6 arguments and returns 2 values (`nakama-module.md` §3) |
 | Module fails to load: `NAKAMA_ACCESS_URL not found` | the value is in the container env but not passed with `--runtime.env` |

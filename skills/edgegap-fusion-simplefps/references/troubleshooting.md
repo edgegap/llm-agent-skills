@@ -14,5 +14,5 @@ General Fusion symptoms (CT Relayed on Edgegap, `Failed to bind socket`, `Method
 | The server container starts but never logs `server started` | It sits in the Startup menu: the server-only scene loader isn't in the build, or the build isn't the Server subtarget | `edgegap-build.txt` must say `subtarget=Server`, and `Assets/EdgegapSimpleFPS/EdgegapServerSceneLoader.cs` must be in the project. |
 | A client logs `[join] the Region field is not assigned` | Setup wasn't run, or ran before the kit compiled | Run `scripts/build.sh setup` again. |
 | `No Linux sysroot found for x64` | `com.unity.sdk.linux-x86_64` is missing, or another editor was starting at the same time | `deploy-and-test.md` §1. |
-| Deployment logs show `ARBITRIUM_DELETE_TOKEN` | The image was built with the Edgegap plugin's default Dockerfile, which runs `env` | Use the kit's `edgegap/Dockerfile` (the plugin's **Path To Dockerfile**). |
+| Deployment logs show `ARBITRIUM_DELETE_TOKEN` | The image was built with the Edgegap plugin's default Dockerfile from 3.2.1 or older, which runs `env` | Use the kit's `edgegap/Dockerfile` (the plugin's **Path To Dockerfile**). |
 | Local test: CT Relayed | Docker Desktop NAT | Expected locally. Check CT on Edgegap. |
