@@ -4,8 +4,8 @@
 
 | Function | Called by | Does |
 | --- | --- | --- |
-| `StartEdgegapDeployment` | The PlayFab rule on `match_found` (or `ExecuteFunction` with `FunctionArgument: {MatchId, QueueName}`) | `Match/GetMatch` + `Profile/GetProfiles` with the title entity token from the context, then `Server/GetPlayerProfile` locations. Then `POST /v2/deployments` with `geo_coordinates` users, tags `[matchId[0..20], "playfab"]`, env `PLAYFAB_MATCH_ID` / `PLAYFAB_QUEUE_NAME`, and `webhook_on_ready` / `webhook_on_error` pointing at the next function. Returns in about 1 to 2 s. |
-| `EdgegapDeploymentReady` | Edgegap's webhooks (`?matchId=&queue=`, plus `&failed=true` for errors) | `GET /v1/status/{request_id}` from the Edgegap API, a check of the match tag, re-reading the members from PlayFab, then `Server/UpdateUserReadOnlyData` key `EdgegapServer` = `{"matchId","status":"ready","host","port","requestId"}` (or `status:"error"` with a message). |
+| `StartEdgegapDeployment` | The PlayFab rule on `match_found` (or `ExecuteFunction` with `FunctionArgument: {MatchId, QueueName}`) | `Match/GetMatch` + `Profile/GetProfiles` with the title entity token from the context, then `Server/GetPlayerProfile` locations. Then `POST /v2/deployments` with `geo_coordinates` users, tags `[matchId[0..20], "playfab"]`, env `PLAYFAB_MATCH_ID` / `PLAYFAB_QUEUE_NAME` and the hidden `EDGEGAP_JOIN_TOKENS` (one token per member, from `src/lib/join.js`), and `webhook_on_ready` / `webhook_on_error` pointing at the next function. Returns in about 1 to 2 s. |
+| `EdgegapDeploymentReady` | Edgegap's webhooks (`?matchId=&queue=`, plus `&failed=true` for errors) | `GET /v1/status/{request_id}` from the Edgegap API, a check of the match tag, re-reading the members from PlayFab, then `Server/UpdateUserReadOnlyData` key `EdgegapServer` = `{"matchId","status":"ready","host","port","requestId","joinToken"}`, each player getting their own token (or `status:"error"` with a message). |
 
 Both use `authLevel: 'function'`: the key is in the URL PlayFab and Edgegap call. A C# (isolated worker) port is fine if the studio prefers it. Keep the same two steps and the same verification.
 
@@ -51,6 +51,7 @@ Then register the start function in PlayFab: `START_FUNCTION_URL=$(cat /tmp/star
 ## 3. Keys and security
 
 - Function keys: `az functionapp function keys list -g … -n … --function-name <name> --query default -o tsv`. Treat them like passwords. Anyone with the start URL can start servers on the Edgegap account; anyone with the ready URL can make the function re-read a deployment. It still verifies everything, so a forged call can't redirect players.
+- Join tokens are an HMAC of `edgegap-join:<matchId>:<playFabId>` keyed with `PLAYFAB_SECRET_KEY`, cut to 24 characters. Both functions compute the same tokens, so nothing is stored. Rotating the secret key changes the tokens of matches whose server is already running: rotate between matches.
 - The PlayFab secret key can do anything on the title. Keep it in app settings only, never in a client or server image. Rotate it in Game Manager if it leaks.
 - The Edgegap token can deploy and stop anything in the organization. Same rule.
 
