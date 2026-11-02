@@ -2,7 +2,7 @@
 name: edgegap-unreal
 description: 'Unreal Engine + Edgegap: get an Unreal multiplayer game online with dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on an Unreal project: it has the Unreal workflow, tested C++ drop-ins (matchmaker client with latency beacons, server self-stop), source-engine and Linux cross-compile setup, server packaging, Dockerfile, matchmaker config and fixes for the pitfalls that cost hours. Use when an Unreal dev wants online play: "put my game online", "players can only join on LAN", "nobody should have to host", "click Play and get matched", listen server to dedicated server, a .uproject that needs servers, "open <ip>" connections, packaging a Linux server, or debugging Edgegap deployments, ports or matchmaking for an Unreal game. Covers C++ and Blueprint-only projects. Use even for beginners who never say Edgegap, servers or Docker. Not for Unity (edgegap-unity), Godot or non-game backends.'
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # Edgegap for Unreal Engine: dedicated servers + matchmaking
@@ -25,6 +25,8 @@ Verified on **UE 5.5.4** built from source (Windows editor, Linux server on Edge
 ## Phase 0: Understand the project (read before asking)
 
 Inspect, don't interrogate:
+- **A Lyra project** (`LyraGame`, `LyraStarterGame`, `CommonUser`, `ALyraGameMode`): follow `references/lyra.md` and the [Lyra sample](https://github.com/edgegap/game-sample-unreal-engine-lyra) (plugin, EOS sessions, a matchmaker profile per playlist) instead of the drop-ins below.
+- **Betide's Edgegap Integration Kit** already in `Plugins/` (`EdgegapIntegrationKit.uplugin`, Blueprint nodes for deploys and matchmaking): a third-party Fab plugin ([betidestudio/EdgegapIntegrationKit](https://github.com/betidestudio/EdgegapIntegrationKit), support from Betide), not run by this skill. Keep it if the developer relies on it; don't add both it and the drop-ins.
 - `*.uproject`: `EngineAssociation` (a version like `5.5`, or a GUID meaning a source build), `Modules` (none means **Blueprint-only**), plugins (OnlineSubsystem*, EOS, Steam).
 - `Source/*.Target.cs`: is there a `Type = TargetType.Server` target? `DefaultBuildSettings`/`IncludeOrderVersion`.
 - `Config/DefaultEngine.ini`: `GameDefaultMap`, `ServerDefaultMap`, `GlobalDefaultGameMode`; `Config/DefaultGame.ini` maps to cook.
@@ -104,6 +106,7 @@ Hand-off: what was built and where, the app/version/matchmaker names, how to shi
 - `references/deploy.md`: MCP connection, packaging, Dockerfile, registry, app version, direct deploy, free tier.
 - `references/matchmaker.md`: profile design, latency beacons, expiration timing, dashboard steps, client settings, ticket contract, injected variables.
 - `references/troubleshooting.md`: symptom → cause → fix, from real runs.
+- `references/lyra.md`: Lyra (UE 5.8) with the Edgegap plugin, EOS sessions, a matchmaker profile per playlist.
 - `assets/unreal/Source/`: the two drop-in subsystems. `assets/unreal/Config/`: ini section. `assets/docker/`: Dockerfile + .dockerignore. `assets/matchmaker/`: config templates.
 
 Related skills in this pack, if installed: `edgegap-eos-voice` (in-game voice chat with EOS Voice once this works end to end), `edgegap-server-design` (deployment lifecycle for any engine), `edgegap-deployments-api` when the studio keeps its own backend or EOS/PlayFab matchmaking, `edgegap-launch` before going live.

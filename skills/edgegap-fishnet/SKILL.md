@@ -2,7 +2,7 @@
 name: edgegap-fishnet
 description: 'FishNet (Fish-Networking) + Edgegap: take a Unity game built on FishNet to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a FishNet project (Assets/FishNet, Tugboat, Bayou, Multipass, ServerManager, NetworkHudCanvas). It has FishNet-ready C# templates verified on Edgegap (matchmaker client, server self-stop, scene-change persistence), the Start On Headless and WebGL/Bayou wss setup, port 7770 app version, Dockerfile, matchmaker config and fixes for known pitfalls, including the SDK JSON bug on Unity before 2022.3. Use when a FishNet dev wants online play: "host my FishNet game", "players should not host", "works on LAN but not online", "Find Match button", "FishNet WebGL on Edgegap", moving off the old FishNet Edgegap samples that call the API from the client, or debugging FishNet deployments, ports or matchmaking. Other Unity netcodes (NGO, Mirror): edgegap-unity.'
 metadata:
-  version: "0.3.1"
+  version: "0.3.2"
 ---
 
 # Edgegap for FishNet: dedicated servers + matchmaking
@@ -11,7 +11,7 @@ Goal: a player clicks **Play**, the Edgegap matchmaker groups players, Edgegap s
 
 This path was run end to end on Edgegap with [netcode-game-sample-unity-fishnet-hashgrid](https://github.com/edgegap/netcode-game-sample-unity-fishnet-hashgrid) (`Fishnet_v4.1.6R_WebGL_Matchmaker`: Unity 2021.3.45f2, FishNet 4.1.6R, Bayou, SDK 3.5.5): two WebGL tabs were matched, connected over `wss` with TLS Upgrade, played, and the server stopped itself. The templates in `assets/unity/` are the files from that run. When the developer wants a working reference, point them at that folder.
 
-Use **dedicated (authoritative) servers**, never relays, unless the developer explicitly wants host/client. If they do, keep the game host/client and route it through a relay deployed on Edgegap: [edgegap/server-sample-lightnet-relay](https://github.com/edgegap/server-sample-lightnet-relay) has the relay server and a transport for Mirror, FishNet, PurrNet and NGO. A dedicated server owns the game state, so no player hosts, has a latency edge, or ends the match by quitting.
+Use **dedicated (authoritative) servers**, never relays, unless the developer explicitly wants host/client. If they do, keep the game host/client and route it through a relay deployed on Edgegap: [edgegap/server-sample-lightnet-relay](https://github.com/edgegap/server-sample-lightnet-relay) has the relay server and a transport for Mirror, FishNet, PurrNet and NGO; Edgegap's managed relays: `edgegap-relays`. A dedicated server owns the game state, so no player hosts, has a latency edge, or ends the match by quitting.
 
 ## How to work
 

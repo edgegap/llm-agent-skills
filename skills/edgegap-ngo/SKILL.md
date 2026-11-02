@@ -2,7 +2,7 @@
 name: edgegap-ngo
 description: 'Netcode for GameObjects (NGO) + Edgegap: take a Unity game built on NGO to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on an NGO project (com.unity.netcode.gameobjects, NetworkManager, UnityTransport, StartHost, ConnectionManager, Boss Room). It has NGO C# templates verified on Edgegap, no scene edits (server start and self-stop, Find Match panel, settings asset), a Boss Room adapter, the Edgegap Unity plugin for build, image, push and deploy, port 7777 UDP app version, matchmaker config, and fixes for NGO pitfalls: host-only logic, connection payloads and approval, UnityTransport needing an IP, client-only code on the server, Relay leftovers. Use when an NGO dev wants online play: "host my NGO game", "nobody should host", "replace Unity Relay or Multiplay", "Boss Room on Edgegap", "Find Match button", or debugs NGO deployments, ports or matchmaking. Mirror or WebGL-first games: edgegap-unity. FishNet: edgegap-fishnet. PurrNet: edgegap-purrnet.'
 metadata:
-  version: "0.2.1"
+  version: "0.2.2"
 ---
 
 # Edgegap for Netcode for GameObjects: dedicated servers + matchmaking
@@ -11,7 +11,7 @@ Goal: a player clicks **Find Match** (or joins an address while testing), Edgega
 
 Verified end to end on Edgegap with [edgegap/netcode-game-sample-unity-ngo-bossroom](https://github.com/edgegap/netcode-game-sample-unity-ngo-bossroom) (Boss Room, Unity 6000.0.54f1, NGO 1.13.0, UnityTransport 2.5.2 UDP, SDK 3.5.6, Edgegap Unity plugin 3.2.1): two Windows clients in the dungeon on one Edgegap server, by direct connection and through the matchmaker, and the server stopped itself each time. Its `EDGEGAP.md` is the developer-facing reference. `assets/unity/` holds generic plain-NGO adapters (server start and direct connect tested locally, matchmaker adapter compile-only); `assets/unity/Examples/BossRoom/` the verified Boss Room adapter.
 
-Use **dedicated (authoritative) servers**, not a player host, unless the developer explicitly wants host/client. If they do, keep the game host/client and route it through a relay deployed on Edgegap: [edgegap/server-sample-lightnet-relay](https://github.com/edgegap/server-sample-lightnet-relay) has the relay server and a transport for Mirror, FishNet, PurrNet and NGO.
+Use **dedicated (authoritative) servers**, not a player host, unless the developer explicitly wants host/client. If they do, keep the game host/client and route it through a relay deployed on Edgegap: [edgegap/server-sample-lightnet-relay](https://github.com/edgegap/server-sample-lightnet-relay) has the relay server and a transport for Mirror, FishNet, PurrNet and NGO; Edgegap's managed relays: `edgegap-relays`.
 
 ## How to work
 
@@ -25,7 +25,7 @@ Use **dedicated (authoritative) servers**, not a player host, unless the develop
 
 Read, don't ask:
 - `ProjectSettings/ProjectVersion.txt` (the SDK needs 2021.3+; use SDK 3.5.6+ before Unity 2022.3).
-- `Packages/manifest.json`: `com.unity.netcode.gameobjects` version, `com.unity.transport`, `com.unity.services.*` (Relay, Lobby, Matchmaker, Multiplay), any `com.edgegap.*`.
+- `Packages/manifest.json`: `com.unity.netcode.gameobjects` version, `com.unity.transport`, `com.unity.services.*` (Relay, Lobby, Matchmaker, Multiplay), any `com.edgegap.*`. Keeping **Unity Matchmaker** and moving off Multiplay: Unity's official `EdgegapAllocator` Cloud Code module ([matchmaker-hosting-providers](https://github.com/Unity-Technologies/matchmaker-hosting-providers/tree/main/modules/EdgegapAllocator)) starts the Edgegap server for each match (see `edgegap-matchmaking`, third-party matchmakers; not run by this pack); this skill still does the server build, image and app version.
 - The scene with the `NetworkManager`: transport (`UnityTransport`, its port and `ConnectTimeoutMS`/`MaxConnectAttempts`), Player Prefab, `ConnectionApproval`.
 - How the game connects: grep `StartHost`, `StartServer`, `StartClient`, `SetConnectionData`, `SetRelayServerData`, `ConnectionData`, `IsHost`. A `ConnectionManager` state machine (Boss Room and projects derived from it) changes the integration (`references/ngo.md` §4).
 - Code that won't compile or run without UGS: a UGS Matchmaker client without `com.unity.services.matchmaker`, Relay-only connect paths.
