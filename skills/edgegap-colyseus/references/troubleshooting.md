@@ -36,7 +36,7 @@ Find the layer first: image → deployment → client ↔ server → matchmaker.
 
 | Symptom | Cause / fix |
 |---|---|
-| Browser: CORS error on `POST /tickets` | the page origin (scheme + host + port) isn't in `allowed_cors_origins`. Edit the config: Stop → Edit → Start |
+| Browser: CORS error on `POST /groups` (SDK) or `POST /tickets` | the page origin (scheme + host + port) isn't in `allowed_cors_origins`. Edit the config: Stop → Edit → Start |
 | 401 | wrong Auth Token, or `Bearer `/`token ` was added: send it raw |
 | 400 on create | profile name doesn't exist in the config, or attributes the rules don't expect (a `latencies` rule needs beacon pings) |
 | 404 polling the ticket | polling `/memberships/{id}` (old MCP hint): use `GET /tickets/{id}` |

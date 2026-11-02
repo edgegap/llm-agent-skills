@@ -10,7 +10,7 @@ The matchmaker templates have no dependencies (no Edgegap SDK) and work in web b
 
 ## JavaScript / TypeScript (browser)
 
-Files: `assets/client/js/Matchmaker.ts`, `assets/client/js/joinWithRetry.ts`. Verified in a Three.js + Vite client with `@colyseus/sdk` 0.17.
+Files: `assets/client/js/Matchmaker.ts`, `assets/client/js/joinWithRetry.ts`, plus `npm i @edgegap/sdk`. `Matchmaker.ts` is a thin wrapper around `GroupAgent` from Edgegap's official JS SDK ([`@edgegap/sdk`](https://github.com/edgegap/sdk-js-sessions-matchmaker-server-browser), MIT, no dependencies): it queues the player as a group of one, polls, retries `429`/`5xx` with backoff, and returns `getConnectionUrl(assignment, "gameport")`. Install it only as `@edgegap/sdk` (look-alike names outside the `@edgegap` scope aren't Edgegap's). The ticket-API version of this file was verified in a Three.js + Vite client with `@colyseus/sdk` 0.17; the SDK version was run in Chrome against a live Edgegap matchmaker on 2026-11-02 (status updates, `wss://` URL, `ticketId` accepted by a server checking `MM_TICKET_IDS`; the server was the Three.js skeleton, not Colyseus) and bundles in Cocos Creator 3.8.8.
 
 ```ts
 import { Client } from "@colyseus/sdk";          // or "colyseus.js" on 0.15/0.16
@@ -33,7 +33,7 @@ const room = await joinWithRetry(new Client(url), "battle", {}, attempts);
 room.onLeave(() => (status.textContent = "Disconnected. Reload to play again."));
 ```
 
-`Matchmaker` cancels its ticket on `pagehide`. The page's origin must be in the matchmaker's `allowed_cors_origins`, or the browser blocks the `POST` (a CORS error in the console, no HTTP status). Vite env vars must start with `VITE_`. A game embedded on itch.io runs in an iframe whose origin is the itch CDN host (usually `https://html-classic.itch.zone`), not `https://<you>.itch.io`: confirm it with `location.origin` in the embedded game's console and list that.
+`Matchmaker` leaves the queue on `pagehide` and exposes `mm.ticketId` (send it in the join options if the room checks `MM_TICKET_IDS`, see `server.md`). Parties, page-reload resume and backfill are in the SDK too (`joinGroup`/`setReady`, `resumeMatchmaking`, `ServerAgent`); see its README, not run in this skill. The page's origin must be in the matchmaker's `allowed_cors_origins`, or the browser blocks the `POST` (a CORS error in the console, no HTTP status). Vite env vars must start with `VITE_`. A game embedded on itch.io runs in an iframe whose origin is the itch CDN host (usually `https://html-classic.itch.zone`), not `https://<you>.itch.io`: confirm it with `location.origin` in the embedded game's console and list that.
 
 **Reconnection after a drop or reload.** With one deployment per match there is no fixed server URL any more, so a client that saves `room.reconnectionToken` must save the endpoint with it and call `reconnect` on a `Client` for that endpoint:
 
@@ -50,7 +50,7 @@ PlayCanvas, Phaser, PixiJS, Construct 3 scripts and other web engines can use th
 
 ## Cocos Creator 3.x
 
-Same two files as the browser: copy `assets/client/js/Matchmaker.ts` and `joinWithRetry.ts` into the project's scripts folder (Cocos compiles them like any component script; they only use `fetch`, `setTimeout` and `window`). Verified with Cocos Creator 3.8.8, web-desktop build in Chrome, on [backend-game-sample-cocos-colyseus-tictactoe](https://github.com/edgegap/backend-game-sample-cocos-colyseus-tictactoe).
+Same two files as the browser: copy `assets/client/js/Matchmaker.ts` and `joinWithRetry.ts` into the project's scripts folder and run `npm i @edgegap/sdk` in the project root (Cocos Creator 3.8 bundles npm packages from `node_modules`; checked on 3.8.8 with a web-desktop build of the sample, 2026-11-02). The ticket-API version of the file was verified end to end with Cocos Creator 3.8.8, web-desktop build in Chrome, on [backend-game-sample-cocos-colyseus-tictactoe](https://github.com/edgegap/backend-game-sample-cocos-colyseus-tictactoe).
 
 **Server build, upload and test deploy: the Edgegap Cocos extension.** [edgegap/edgegap-cocos-plugin](https://github.com/edgegap/edgegap-cocos-plugin) 2.0 (Cocos Creator 3.8+, Docker Desktop) does Phase 2 from a panel, like the Unity and Godot plugins: sign in, build the server folder's Dockerfile for linux/amd64, run it locally, push to registry.edgegap.com, create the application and version, deploy one test server near the developer and show its `wss://` URL, stop it. Verified on the tic-tac-toe sample: built, ran locally, pushed, created and updated a version, deployed, two bots played over `wss://`.
 - Install: copy the repo into the project as `extensions/edgegap-extension/` (`dist/` is prebuilt), enable it in Extension Manager → Project, open **Extension → Edgegap → Open Panel**.
@@ -155,6 +155,6 @@ The tanks fork added a `server` override to every client; the same patterns work
 | Haxe | JS: `?server=`; HashLink: `--server=wss://...` |
 | MonoGame | `--server=wss://...` or an environment variable |
 
-To give them matchmaking, port `Matchmaker.ts`: it's three HTTP calls and a poll loop.
+To give them matchmaking, port `assets/client/godot/edgegap_matchmaker.gd`: it's three plain HTTP calls (`POST /tickets`, poll `GET /tickets/{id}`, `DELETE /tickets/{id}`) and a poll loop. A JavaScript runtime (Construct 3, Defold HTML5 via JS, Haxe JS) can use `Matchmaker.ts` and the SDK instead.
 
 **GameMaker on Windows:** its sprite paths exceed 260 characters inside a cloned repo. Before cloning (or checking out) a project with a GameMaker client, run `git config --global core.longpaths true` (or `git -c core.longpaths=true clone ...`), or checkout fails partway with `Filename too long`.

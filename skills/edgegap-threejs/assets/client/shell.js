@@ -3,7 +3,7 @@
 // A game only provides create(ctx) -> { state(msg), frame(dt) }.
 
 import * as THREE from "three";
-import { Matchmaker } from "./matchmaker.js";
+import { getConnectionUrl, matchmaking } from "@edgegap/sdk";
 import { connect } from "./net.js";
 import baseConfig from "./config.js";
 
@@ -15,6 +15,13 @@ export const colorOf = (id) => COLORS[(id - 1) % COLORS.length];
 export const TEAM_COLORS = [0xff5a5f, 0x3fa7ff];
 
 const params = new URLSearchParams(location.search);
+
+const MATCHMAKING_STATUS = {
+  SEARCHING: "Searching for players...",
+  TEAM_FOUND: "Match found! Starting a server near you...",
+  MATCH_FOUND: "Match found! Starting a server near you...",
+  HOST_ASSIGNED: "Server ready!",
+};
 
 async function loadConfig() {
   const cfg = { ...baseConfig };
@@ -285,22 +292,31 @@ export async function runGame(def) {
     }
   };
 
+  // Matchmaker group-up API through @edgegap/sdk: a group of one player, ready at once. The Auth
+  // Token is the matchmaker's client token, sent raw. The page's origin must be listed in the
+  // matchmaker config's allowed_cors_origins.
   ui.findBtn.onclick = () =>
-    play(() => {
-      mm = new Matchmaker({
-        url: config.matchmakerUrl,
-        token: config.matchmakerToken,
-        profile: def.game,
-        onStatus: (s) => (ui.status.textContent = s),
+    play(async () => {
+      ui.status.textContent = "Joining queue...";
+      mm?.dispose();
+      mm = new matchmaking.GroupAgent({ baseUrl: config.matchmakerUrl, authToken: config.matchmakerToken, logGroupUpdates: false });
+      mm.initialize(undefined, ({ current }) => {
+        if (MATCHMAKING_STATUS[current?.status]) ui.status.textContent = MATCHMAKING_STATUS[current.status];
       });
-      return mm.findMatch();
+      mm.createGroup({ profile: def.game, attributes: {}, is_ready: true }, true);
+      const assignment = await mm.nextAssignment();
+      const ticketId = mm.group.current.ticket_id;
+      mm.dispose(); // matched: leaving the group now would only get a 409
+      // TLS Upgrade is on for the port, so connect by fqdn: the certificate matches it.
+      return { url: getConnectionUrl(assignment, "gameport"), ticketId };
     });
   ui.localBtn.onclick = () => play(async () => ({ url: `ws://${location.hostname || "localhost"}:${LOCAL_PORTS[def.game]}` }));
   ui.cancelBtn.onclick = () => {
-    mm?.cancel();
+    mm?.stopMatchmaking();
     conn?.close();
     showMenu("Cancelled.");
   };
+  addEventListener("pagehide", () => mm?.stopMatchmaking());
 
   showMenu();
   // ?server=wss://host:port connects straight to a deployment (e.g. one started by edgegap/deploy.mjs).

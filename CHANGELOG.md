@@ -2,6 +2,15 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.29.0 (unreleased)
+
+The browser and Node.js templates use Edgegap's official JavaScript SDK, [`@edgegap/sdk`](https://github.com/edgegap/sdk-js-sessions-matchmaker-server-browser) 1.1.0, instead of hand-written matchmaker calls. The Three.js templates follow the same change in [edgegap/netcode-sample-threejs-minigames](https://github.com/edgegap/netcode-sample-threejs-minigames) (PR #2).
+
+- `edgegap-threejs` 0.2.0: Find Match in `shell.js` uses the SDK's `GroupAgent` (group of one, retries on 429/5xx, `getConnectionUrl`), and the SDK loads through the import map with an SRI `integrity` hash. `assets/client/matchmaker.js` is gone; `client.md` §5 has the snippet for games with their own UI. `server/edgegap.js` reads `ARBITRIUM_*`/`MM_*` with `DeploymentEnvironment` and `MatchEnvironment`, and self-stops through `SafeHttpRequest`. `tools/e2e.mjs` queues through `GroupAgent`. The server needs Node 22 or later. Docs now describe the group endpoints the SDK calls. Verified on Edgegap on 2026-11-02 with the skeleton game: headless e2e (2 players, one deployment, full match, self-stop) and a browser Find Match with `REQUIRE_TICKET=1`.
+- `edgegap-colyseus` 0.4.0: `assets/client/js/Matchmaker.ts` keeps its API (`findMatch()`, `cancel()`, plus `ticketId`) but wraps the SDK's `GroupAgent`; `npm i @edgegap/sdk`. Run in Chrome against a live Edgegap matchmaker (match, `wss://` URL, ticket accepted; the server was the Three.js skeleton, not a Colyseus room), and Cocos Creator 3.8.8 bundles it in a web-desktop build of the tic-tac-toe sample. Other client SDKs are pointed at the plain-HTTP Godot template for porting.
+- `edgegap-matchmaking` 0.2.0: names Edgegap's Unity and JS SDKs, and `references/backfill.md` points Node, Bun and Deno servers at the SDK's `ServerAgent` (not run by this pack).
+- Versions: `edgegap` 0.29.0, `edgegap-threejs` 0.2.0, `edgegap-colyseus` 0.4.0, `edgegap-matchmaking` 0.2.0.
+
 ## 0.28.0 (unreleased)
 
 New samples and integrations from the Edgegap repos, and the relays skill.

@@ -15,12 +15,20 @@ Three.js loads from a CDN through an import map, so the page is plain ES modules
 
 ```html
 <script type="importmap">
-  { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "@edgegap/sdk": "https://cdn.jsdelivr.net/npm/@edgegap/sdk@1.1.0/dist/browser/edgegap.js"
+    },
+    "integrity": {
+      "https://cdn.jsdelivr.net/npm/@edgegap/sdk@1.1.0/dist/browser/edgegap.js": "sha384-U8KQMl3e8xF4aAIJJMXV8IdkCKWiHSQhHISsedbG4z/L99dNOq5FoRlMgPDYgNUF"
+    }
+  }
 </script>
 <script type="module" src="./game-client.js"></script>
 ```
 
-Pin the version. A project that already uses Vite or webpack keeps its bundler: copy `matchmaker.js` and `net.js` (or `shell.js`) into its sources and `import * as THREE from "three"` as usual.
+Pin both versions. `@edgegap/sdk` is Edgegap's official JS SDK ([source](https://github.com/edgegap/sdk-js-sessions-matchmaker-server-browser), MIT, no dependencies); its browser build exports `matchmaking` and `getConnectionUrl`, which `shell.js` imports. Load it only from npm (`@edgegap/sdk`) or its jsDelivr/unpkg mirrors, never a look-alike package. The `integrity` entry (import maps support it in current Chrome, Edge, Firefox and Safari) makes the browser refuse a modified SDK file; when you change the SDK version, regenerate the hash: `curl -s <url> | openssl dgst -sha384 -binary | openssl base64 -A`. A project that already uses Vite or webpack keeps its bundler: `npm i @edgegap/sdk`, copy `net.js` (or `shell.js`) into its sources, change the SDK import to `import { getConnectionUrl } from "@edgegap/sdk"; import { GroupAgent } from "@edgegap/sdk/matchmaking";` (the npm entry points have no `matchmaking` namespace), and `import * as THREE from "three"` as usual.
 
 Use relative paths (`./shell.js`, `../../client/lib/...`) so the pages also work under a sub-path such as GitHub Pages `https://<org>.github.io/<repo>/`.
 
@@ -61,9 +69,28 @@ Don't predict game rules on the client. If the game needs client-side prediction
 
 ## 5. Find Match, direct mode, local mode
 
-- **Find match**: `new Matchmaker({url, token, profile}).findMatch()` → `{url: "wss://<fqdn>:<port>", ticketId}`; then `connect(url, {name, ticket: ticketId})`. The ticket goes in `hello` so the server can put the player on their matchmaker team and, with `REQUIRE_TICKET=1`, refuse strangers.
-- Poll every 1.5–2 s. `SEARCHING` → `MATCH_FOUND` (a server is starting) → `HOST_ASSIGNED`. `CANCELLED` = the ticket expired. Cancel with `DELETE /tickets/{id}` when the player clicks Cancel or closes the tab (`pagehide`, `keepalive: true`); after `HOST_ASSIGNED` a delete only returns 409, so the client forgets the ticket ID.
-- The matchmaker answers **429** to bursts of calls (seen when 14 players queued in the same second). `matchmaker.js` backs off 1, 2, 4, 8 s and retries.
+- **Find match** in `shell.js`, with the Edgegap JS SDK's `GroupAgent` (copy this block into a game that has its own UI):
+
+```js
+import { getConnectionUrl, matchmaking } from "@edgegap/sdk"; // bundlers: GroupAgent from "@edgegap/sdk/matchmaking"
+
+mm?.dispose();
+mm = new matchmaking.GroupAgent({ baseUrl: config.matchmakerUrl, authToken: config.matchmakerToken, logGroupUpdates: false });
+mm.initialize(undefined, ({ current }) => showStatus(current?.status)); // SEARCHING, MATCH_FOUND, HOST_ASSIGNED...
+mm.createGroup({ profile: def.game, attributes: {}, is_ready: true }, true); // a group of one, ready at once
+const assignment = await mm.nextAssignment();  // rejects with MatchmakingError on CANCELLED (ticket expired) or errors
+const ticketId = mm.group.current.ticket_id;    // goes in hello: the server checks it against MM_TICKET_IDS
+mm.dispose();                                   // matched: leaving the group now would only get a 409
+connect(getConnectionUrl(assignment, "gameport"), { name, ticket: ticketId }); // wss://<fqdn>:<port>
+// Cancel button and pagehide: mm?.stopMatchmaking() deletes the group while searching.
+```
+
+- The ticket goes in `hello` so the server can put the player on their matchmaker team and, with `REQUIRE_TICKET=1`, refuse strangers.
+- The agent polls about once a second (±20 % jitter). Statuses: `SEARCHING` → `MATCH_FOUND` (a server is starting) → `HOST_ASSIGNED`; `CANCELLED` = the ticket expired.
+- `getConnectionUrl` throws for TCP/UDP ports, which browsers can't open; the port must be WS with TLS Upgrade on.
+- A `stopMatchmaking()` on `pagehide` that doesn't get out before the tab closes leaves the ticket to expire after `ticket_expiration_period` (30 s in the templates).
+- The matchmaker answers **429** to bursts of calls (seen when 14 players queued in the same second). The SDK retries `429` and `5xx` with jittered backoff and honours `Retry-After`; after 10 polling errors in a row it gives up and `nextAssignment()` rejects.
+- Parties (friends in one match): `createGroup` with `is_ready: false`, share `group.current.group_id`, friends call `joinGroup(request, groupId, true)`, everyone calls `setReady(true)`. Not wired into `shell.js` and not run here; see the SDK README.
 - **First connection**: a deployment can refuse connections for a few seconds after `HOST_ASSIGNED`. `net.js` retries 10 times, 1 s apart, until the server's `welcome`. An `error` message from the server (full, finished) is final and not retried.
 - **Direct**: `?server=wss://<fqdn>:<port>` connects straight to a deployment started by `edgegap_deploy` or `edgegap-deploy.mjs`.
 - **Local**: a "Local server" button connects to `ws://<page host>:<LOCAL_PORTS[game]>`. Plain `ws://` only works from an `http://` page (localhost); from `https` pages browsers block it.
@@ -77,4 +104,4 @@ The pages can live anywhere static: GitHub Pages, itch.io, a CDN. They never nee
 
 ## 7. Other renderers and bundlers
 
-Nothing above depends on Three.js except `shell.js`'s stage helpers. For Babylon.js, PlayCanvas engine, Phaser or a 2D canvas, keep `matchmaker.js` and `net.js`, keep the protocol and the easing, and draw with that engine. Not run on Edgegap with those engines.
+Nothing above depends on Three.js except `shell.js`'s stage helpers. For Babylon.js, PlayCanvas engine, Phaser or a 2D canvas, keep the Find Match block (and the SDK import map entry) and `net.js`, keep the protocol and the easing, and draw with that engine. Not run on Edgegap with those engines.
