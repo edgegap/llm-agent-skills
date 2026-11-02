@@ -59,15 +59,17 @@ Templates: `assets/matchmaker/casual.json` (one game) and `several-games.json` (
 - **Teams**: `team_count: 2`, `min_team_size: 1`, `max_team_size: 2` (1v1 or 2v2). Observed on 2026-10-22: 4 tickets → 2v2 in 4–6 s, each ticket carrying its `team_id` to the server (`MM_TICKET_<id>`). But with `min_team_size: 2` plus a `"20"` expansion to 1, two or three tickets did **not** match at 20 s: a 1v1 formed only when the tickets reached their expiry (then 5 minutes; the templates now use `30s`). Start team profiles at the smallest size you accept instead of relying on the expansion. A team profile never matches a lone player: give solo players another mode.
 - `allowed_cors_origins`: every page origin. `inspect: true` while testing (`GET /inspect/tickets` shows queued tickets), `false` before launch.
 
-Ticket API (header `Authorization: <auth token>`, raw):
+Matchmaker API: the client and `tools/e2e.mjs` call it through the Edgegap JS SDK's `GroupAgent`, which sends the auth token raw in `Authorization` and uses the group endpoints (a solo player is a group of one):
 
-| Call | Result |
-|---|---|
-| `POST /tickets {profile, attributes: {}}` | `{id, status: "SEARCHING"}`. Every rule except `player_count` needs a matching attribute; none here. |
-| `GET /tickets/{id}` | `SEARCHING` / `MATCH_FOUND` / `HOST_ASSIGNED` with `assignment: {fqdn, public_ip, ports: {gameport: {external}}}` / `CANCELLED` |
-| `DELETE /tickets/{id}` | leave the queue (409 once matched) |
+| SDK call | API | Result |
+|---|---|---|
+| `createGroup({profile, attributes: {}, is_ready: true})` | `POST /groups` | `{group_id, member_id, ticket_id, status: "SEARCHING"}`. Every rule except `player_count` needs a matching attribute; none here. |
+| polling (automatic) | `GET /groups/{group_id}/members/{member_id}` | `SEARCHING` / `MATCH_FOUND` / `HOST_ASSIGNED` with `assignment: {fqdn, public_ip, ports: {gameport: {external, link, protocol}}}` / `CANCELLED` |
+| `stopMatchmaking()` | `DELETE /groups/{group_id}` | leave the queue (refused once matched) |
 
-**Rate limits**: 14 tickets created in the same second got `429 Too many requests` on most of them. Clients back off and retry (`matchmaker.js`); test scripts space players by ~300 ms and games by a few seconds.
+The ticket ID in `MM_TICKET_IDS` on the server is the membership's `ticket_id`.
+
+**Rate limits**: 14 tickets created in the same second got `429 Too many requests` on most of them. The SDK backs off and retries; test scripts space players by ~300 ms and games by a few seconds.
 
 **Stale tickets**: tickets left by a crashed test (created, never polled again) stay `SEARCHING` until they expire and get matched with the next run's players, splitting them across deployments. Those deployments stop themselves (nobody joins → 120 s), but the test fails. Before a test run, `GET /inspect/tickets` should be empty; otherwise wait for expiry (5 min) or restart the matchmaker.
 

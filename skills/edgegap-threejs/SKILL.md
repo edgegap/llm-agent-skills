@@ -1,21 +1,23 @@
 ---
 name: edgegap-threejs
-description: 'Three.js / browser game + Edgegap: make a JavaScript web game multiplayer with an authoritative Node.js WebSocket server per match and the Edgegap matchmaker called from the page, end to end. Load this before using any Edgegap MCP tool on a Three.js, Babylon.js, PlayCanvas engine, Phaser or plain canvas/WebGL game that has (or needs) its own ws server rather than Colyseus or Nakama. Templates verified on Edgegap with five Three.js games (shooter, racer, 2v2 soccer, light cycles, sumo): a room with phases, bots, fixed tick and snapshots, self-stop, matchmaker teams, a no-build Three.js client with Find Match, wss retry and 429 backoff, Dockerfile, WS + TLS Upgrade versions, one image for several games, a multi-profile matchmaker config, headless e2e scripts. Use for "make my three.js game multiplayer", "host my browser game server", "Find Match for a web game", "wss from an https page", "several mini-games on one matchmaker", or debugging them. Colyseus: edgegap-colyseus; Manus: edgegap-manus.'
+description: 'Three.js / browser game + Edgegap: make a JavaScript web game multiplayer with an authoritative Node.js WebSocket server per match and the Edgegap matchmaker called from the page, end to end. Load this before using any Edgegap MCP tool on a Three.js, Babylon.js, PlayCanvas engine, Phaser or plain canvas/WebGL game that has (or needs) its own ws server rather than Colyseus or Nakama. Templates verified on Edgegap with five Three.js games (shooter, racer, 2v2 soccer, light cycles, sumo): a room with phases, bots, fixed tick and snapshots, self-stop, matchmaker teams, a no-build Three.js client with Find Match on the Edgegap JS SDK, wss retry, Dockerfile, WS + TLS Upgrade versions, one image for several games, a multi-profile matchmaker config, headless e2e scripts. Use for "make my three.js game multiplayer", "host my browser game server", "Find Match for a web game", "wss from an https page", "several mini-games on one matchmaker", or debugging them. Colyseus: edgegap-colyseus; Manus: edgegap-manus.'
 metadata:
-  version: "0.1.3"
+  version: "0.2.0"
 ---
 
 # Edgegap for Three.js and other browser games: one Node.js server per match
 
-Goal: a browser game where each match runs on its own authoritative Node.js server on Edgegap, near its players. Players click **Find match**, the page asks Edgegap's matchmaker for a ticket, the matchmaker starts a server and returns `wss://<id>.pr.edgegap.net:<port>`, everyone plays, and the server stops its own deployment when the match is over. Done means real clients played a whole match on one Edgegap deployment that then stopped itself, not that the image builds.
+Goal: a browser game where each match runs on its own authoritative Node.js server on Edgegap, near its players. Players click **Find match**, the page asks Edgegap's matchmaker for a ticket through the official Edgegap JS SDK ([`@edgegap/sdk`](https://github.com/edgegap/sdk-js-sessions-matchmaker-server-browser)), the matchmaker starts a server and returns `wss://<id>.pr.edgegap.net:<port>`, everyone plays, and the server stops its own deployment when the match is over. Done means real clients played a whole match on one Edgegap deployment that then stopped itself, not that the image builds.
 
 ```
-browser --POST /tickets {profile}--> Edgegap Matchmaker --deploys the profile's app version near the players--> Edgegap
-browser <--HOST_ASSIGNED {fqdn, ports.gameport.external}--
+browser --@edgegap/sdk GroupAgent: POST /groups {profile}--> Edgegap Matchmaker --deploys the profile's app version near the players--> Edgegap
+browser <--HOST_ASSIGNED {fqdn, ports.gameport.link}, ticket_id--
 browser --wss://<fqdn>:<port>, hello{name, ticket}--> Node.js server (one per match) --DELETE $ARBITRIUM_DELETE_URL--> stopped
 ```
 
-Verified on Edgegap on 2026-10-22 with [netcode-sample-threejs-minigames](https://github.com/edgegap/netcode-sample-threejs-minigames): five Three.js games (top-down shooter, kart racer, 2v2 soccer with matchmaker teams, light cycles, sumo brawler) from one image, one app version per game and one matchmaker with a profile per game. Headless players queued through the matchmaker landed on one deployment per game, played full matches over `wss` with TLS Upgrade, and every deployment stopped itself about 17 s after its match; deployments whose matched players never connected stopped after 120 s; a direct deployment (no matchmaker) did the same. The templates in `assets/` are that repo's shared files plus a skeleton game. Not run on Edgegap: the skeleton game itself, Babylon.js/PlayCanvas/Phaser clients (the server and matchmaker parts don't depend on the renderer), mobile browsers, `REQUIRE_TICKET=1`, latency rules. Say so when those matter.
+Verified on Edgegap on 2026-10-22 with [netcode-sample-threejs-minigames](https://github.com/edgegap/netcode-sample-threejs-minigames): five Three.js games (top-down shooter, kart racer, 2v2 soccer with matchmaker teams, light cycles, sumo brawler) from one image, one app version per game and one matchmaker with a profile per game. Headless players queued through the matchmaker landed on one deployment per game, played full matches over `wss` with TLS Upgrade, and every deployment stopped itself about 17 s after its match; deployments whose matched players never connected stopped after 120 s; a direct deployment (no matchmaker) did the same. The templates in `assets/` are that repo's shared files plus a skeleton game. Not run on Edgegap: Babylon.js/PlayCanvas/Phaser clients (the server and matchmaker parts don't depend on the renderer), mobile browsers, latency rules. Say so when those matter.
+
+The matchmaker client, the e2e tool and the server's `ARBITRIUM_*`/`MM_*` parsing use the Edgegap JS SDK (`@edgegap/sdk` 1.1.0) since skill 0.2.0, checked locally with the skeleton game on 2026-11-02 (`MM_*` parsing, `REQUIRE_TICKET=1` refusing an unknown ticket, matchmaker teams, a full match and the self-stop request) and end to end on Edgegap the same day with the skeleton game and `REQUIRE_TICKET=1`: two headless players through `tools/e2e.mjs` landed on one deployment, played a full match over `wss` and the deployment stopped itself 17 s after it; a browser Find Match from `http://localhost:8080` (import map with the SRI hash) was matched alone after the 20 s expansion, joined with its ticket, played against a bot and the deployment stopped itself.
 
 Why this shape, so you can defend it:
 - **Authoritative server, thin client.** The browser sends inputs and draws snapshots; the server owns movement, hits, scores and the match end. Anything decided in browser JavaScript can be read and changed by any player in devtools.
@@ -43,7 +45,7 @@ Ask, in one message, only what you couldn't infer: players per match, teams, whe
 ## Phase 1: Authoritative server, local
 
 Read `references/server.md`.
-1. Copy `assets/server/` (`main.js`, `room.js`, `edgegap.js`, `util.js`) into the project's `server/`, add `"type": "module"` and the `ws` dependency to `package.json`.
+1. Copy `assets/server/` (`main.js`, `room.js`, `edgegap.js`, `util.js`) into the project's `server/`, add `"type": "module"` and the `ws` and `@edgegap/sdk` dependencies to `package.json` (`npm i ws @edgegap/sdk`). The SDK needs Node 22 or later (the Dockerfile uses `node:22-slim`).
 2. Write the game as `server/game.js` with the contract in `assets/server/game.js` (a working skeleton): move the rules out of the client into `update(dt)`, take only inputs from clients and validate them, send the state in `snapshot()`. Keep snapshots small (rounded numbers, only what is drawn).
 3. Decide bots (`botFill` or `botsNeeded`) so a lone or short-handed match is still a game.
 
@@ -51,11 +53,11 @@ Read `references/server.md`.
 
 ## Phase 2: Browser client
 
-Read `references/client.md`. Either copy `assets/client/` (`shell.js` gives the menu, Find Match, Local server, `?server=` direct mode, HUD, interpolation helpers; `game-client.js` is the skeleton's renderer) or wire `assets/client/matchmaker.js` + `net.js` into the game's own UI. The client must:
+Read `references/client.md`. Either copy `assets/client/` (`shell.js` gives the menu, Find Match, Local server, `?server=` direct mode, HUD, interpolation helpers; `game-client.js` is the skeleton's renderer) or wire `net.js` and the Find Match block of `shell.js` (the Edgegap JS SDK's `GroupAgent`, about 15 lines, quoted in `client.md` §5) into the game's own UI. The client must:
 - send `{t:"hello", name, ticket}` first, then inputs at most ~30/s;
 - render by easing toward the latest server state (no client-side rules);
 - retry the first WebSocket connection (a fresh deployment refuses for a few seconds after `HOST_ASSIGNED`);
-- back off on matchmaker `429`;
+- leave the queue on Cancel and `pagehide` (the SDK retries `429`/`5xx` with backoff);
 - take the matchmaker URL/token from `config.js`, `config.local.js` or `?mm=&token=`, and `?server=wss://...` for direct mode.
 
 ✅ Check: two browser tabs on **Local server** play together and see the same state.

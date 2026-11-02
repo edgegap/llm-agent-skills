@@ -71,6 +71,8 @@ Responses (`POST` and `GET /backfills/{id}`) return `id`, `profile`, `tickets`, 
 
 ## 4. The server loop
 
+Node.js, Bun and Deno servers don't need to write this loop: `ServerAgent` from Edgegap's official JS SDK ([`@edgegap/sdk`](https://github.com/edgegap/sdk-js-sessions-matchmaker-server-browser), `@edgegap/sdk/matchmaking`) creates backfills up to `targetTeamSize`, polls them, seats players (`playerConnected(ticketId)` returns `null` for a ticket not assigned to this server), frees seats on `abandonPlayer`, abandons players who don't connect within 60 s, and `abandonAllBackfills()` closes them before shutdown. Build its `assignment` from `DeploymentEnvironment.fromEnv(process.env)` and its tickets from `MatchEnvironment.fromEnv(process.env).tickets`, as in the SDK README. Not run by this pack. Unity games use the Unity SDK's equivalent (the Megacity Metro path above).
+
 ```typescript
 // Runs only on matchmaker deployments (MM_MATCH_PROFILE set). Engine-agnostic sketch, not run as written.
 const MM = process.env.MATCHMAKER_URL!, AUTH = process.env.MATCHMAKER_TOKEN!;

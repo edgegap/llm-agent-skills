@@ -2,7 +2,7 @@
 name: edgegap-colyseus
 description: 'Colyseus + Edgegap: host a Colyseus (Node.js) multiplayer game on Edgegap with one dedicated server per match, near its players, that stops itself, end to end. Load this before using any Edgegap MCP tool on a Colyseus project (colyseus or @colyseus/* in package.json, Room classes with onJoin/onLeave, defineServer, app.config.ts, colyseus.js, @colyseus/sdk, the Colyseus Unity, Godot, Cocos Creator, Defold, GameMaker or Haxe SDKs). It has templates verified on Edgegap: a lifecycle module (self-stop on no join, empty server or match end), a Dockerfile, the WS + TLS Upgrade app version, a direct deploy script, a matchmaker config, and matchmaker clients for browser JS/TS, Cocos Creator, Unity and Godot, plus the pitfalls: 502 on a fresh server, wss by FQDN, CORS origins, exposed playground. Use for "host my Colyseus server", "Colyseus on Edgegap", "replace Colyseus Cloud", "one server per match", "Find Match with Colyseus", or debugging Colyseus deployments. Manus games: edgegap-manus.'
 metadata:
-  version: "0.3.0"
+  version: "0.4.0"
 ---
 
 # Edgegap for Colyseus games: one server per match
@@ -68,12 +68,12 @@ Read `references/deploy.md` §4.
 
 ## Phase 4: Clients
 
-Read `references/clients.md`. Copy the matchmaker template for each client engine: `assets/client/js/Matchmaker.ts` + `assets/client/js/joinWithRetry.ts` (browser, and Cocos Creator: copy them into the project's scripts folder), `assets/client/unity/EdgegapMatchmaker.cs` (Unity 2023.1+ / 6), `assets/client/godot/edgegap_matchmaker.gd` (Godot 4). Wire them so:
+Read `references/clients.md`. Copy the matchmaker template for each client engine: `assets/client/js/Matchmaker.ts` + `assets/client/js/joinWithRetry.ts` (browser, and Cocos Creator: copy them into the project's scripts folder; `Matchmaker.ts` wraps the official Edgegap JS SDK, so `npm i @edgegap/sdk` too), `assets/client/unity/EdgegapMatchmaker.cs` (Unity 2023.1+ / 6), `assets/client/godot/edgegap_matchmaker.gd` (Godot 4). Wire them so:
 - an explicit server URL (`?server=`, `--server=`) wins over the matchmaker;
 - the matchmaker URL and Auth Token come from launch arguments, page parameters, build-time env or inspector fields;
 - the first join after `HOST_ASSIGNED` retries 10 times, 2 s apart;
 - the client connects to `wss://<fqdn>:<port>` and cancels its ticket when the player quits while searching.
-Other client SDKs get the direct `server` override; port `Matchmaker.ts` for matchmaking.
+Other client SDKs get the direct `server` override; port `edgegap_matchmaker.gd` (plain HTTP) for matchmaking.
 
 ## Phase 5: End-to-end test and hand-off
 

@@ -16,7 +16,7 @@ Contents
 |---|---|
 | `main.js` | HTTP + `ws` server on `PORT` (7777), one `Room`, SIGTERM handling. Plain HTTP `GET /` answers a status line. |
 | `room.js` | Connections, `hello` handshake, phases, fixed-rate `tick()`, state broadcast at `sendHz`, bots, watchdog timers. Game-agnostic. |
-| `edgegap.js` | Reads `ARBITRIUM_*` and `MM_*`, `selfStop()`. Inert off Edgegap. |
+| `edgegap.js` | Reads `ARBITRIUM_*` and `MM_*` with the Edgegap JS SDK (`DeploymentEnvironment`, `MatchEnvironment` from `@edgegap/sdk`), `selfStop()`. Inert off Edgegap. |
 | `util.js` | `clamp`, `axisIn` (sanitise an axis to [-1, 1]), `pushOutOfBox`, `ffaResult`... |
 | `game.js` | The game. Replace it. |
 
@@ -83,7 +83,7 @@ Make bots beatable and decisive: with smart bots, rounds drag on (light cycles w
 
 ## 6. Matchmaker data
 
-On a matchmaker deployment Edgegap injects `MM_MATCH_ID`, `MM_MATCH_PROFILE`, `MM_TICKET_IDS` (JSON array) and `MM_TICKET_<id>` (JSON: `player_ip`, `group_id`, `team_id`, `attributes`), plus `MM_TEAMS`, `MM_GROUPS`, `MM_EXPANSION`. `edgegap.js` exposes `match = { id, profile, ticketIds, tickets, teamOf(ticketId) }`; `teamOf` maps the matchmaker's team UUIDs to 0, 1... in a stable order.
+On a matchmaker deployment Edgegap injects `MM_MATCH_ID`, `MM_MATCH_PROFILE`, `MM_TICKET_IDS` (JSON array) and `MM_TICKET_<id>` (JSON: `player_ip`, `group_id`, `team_id`, `attributes`), plus `MM_TEAMS`, `MM_GROUPS`, `MM_EXPANSION`. `edgegap.js` parses them with the SDK's `MatchEnvironment.fromEnv(process.env)` (never throws: a malformed value becomes `null`) and exposes `match = { id, profile, ticketIds, tickets, teamOf(ticketId) }`; `teamOf` maps the matchmaker's team UUIDs to 0, 1... in a stable order.
 
 - Expected players = `ticketIds.length` → start when they're all in.
 - Teams: with `team_count: 2` in the profile, the client's `hello.ticket` gives its team. A direct or local join has no ticket: the game balances teams itself (`p.team` null → smaller team).

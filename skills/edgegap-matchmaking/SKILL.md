@@ -2,14 +2,14 @@
 name: edgegap-matchmaking
 description: 'Design matchmaking for a game hosted on Edgegap, any engine: choose between Edgegap''s hosted matchmaker, your own allocator on the Deploy API, or a matchmaker you already use (Unity Matchmaker, Nakama, PlayFab, EOS or Steam lobbies, Pragma, AccelByte, Open Match); design the profile (teams, parties, skill, modes, expansions, queue times); place servers near players (ping beacons, player IPs, region and hub pickers); and add backfill (join in progress, replacing leavers, server-owned backfill tickets). Use for "players wait too long", "EU players land on US servers", "let players join a running match", "replace a player who left", "parties in a 4v4 queue", "skill-based matchmaking", "which matchmaker should we use", "leaving Multiplay or GameLift FlexMatch", or matchmaker config questions not tied to one engine''s client code. Engine skills (edgegap-unity, -ngo, -fishnet, -purrnet, -godot, -unreal, -threejs) own their Find Match client code; edgegap-nakama and edgegap-playfab own those integrations.'
 metadata:
-  version: "0.1.3"
+  version: "0.2.0"
 ---
 
 # Matchmaking for games on Edgegap
 
 Edgegap starts a server near a group of players and returns an address. Matchmaking is everything before that: who plays together, when a partial match is good enough, where the server goes, and what happens when someone leaves. This skill is the design layer, the same for every engine. Done means the developer knows who owns matchmaking, the config or allocator matches the game's real rules, players are placed by measured latency or IP, and, when the game needs it, a running server takes new players through backfill.
 
-The client code that sends tickets lives in the engine skills, and the backend code that calls the Deploy API lives in `edgegap-deployments-api`. Load those for the code; come back here for the decisions. When you act on Edgegap yourself, follow the `edgegap` skill's [references/agent-rules.md](../edgegap/references/agent-rules.md).
+The client code that sends tickets lives in the engine skills, and the backend code that calls the Deploy API lives in `edgegap-deployments-api`. Load those for the code; come back here for the decisions. Edgegap ships the matchmaker clients as SDKs: the Unity SDK ([sdk-unity-sessions-matchmaker-server-browser](https://github.com/edgegap/sdk-unity-sessions-matchmaker-server-browser)) and the JavaScript/TypeScript SDK [`@edgegap/sdk`](https://github.com/edgegap/sdk-js-sessions-matchmaker-server-browser) (browser clients, and Node, Bun or Deno servers: groups and parties, page-reload resume, `ARBITRIUM_*`/`MM_*` parsing, backfill with `ServerAgent`). Prefer them over hand-written HTTP calls. When you act on Edgegap yourself, follow the `edgegap` skill's [references/agent-rules.md](../edgegap/references/agent-rules.md).
 
 ## Step 1: decide who owns matchmaking
 
