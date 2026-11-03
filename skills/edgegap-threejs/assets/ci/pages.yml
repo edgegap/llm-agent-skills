@@ -1,0 +1,36 @@
+# Copy to .github/workflows/pages.yml. Publishes client/ (change "path" if the page lives elsewhere).
+# Turn Pages on once: gh api -X POST repos/<owner>/<repo>/pages -f build_type=workflow
+# On a free GitHub plan this needs a public repo (references/deploy.md §5).
+# Publishes the browser client (client/) to GitHub Pages. The page is static: only the game
+# server runs on Edgegap.
+name: Pages
+
+on:
+  push:
+    branches: [main]
+    paths: [client/**, .github/workflows/pages.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: client
+      - id: deploy
+        uses: actions/deploy-pages@v4

@@ -2,6 +2,21 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.31.0 (unreleased)
+
+Lessons from turning a vibe-coded single-player Three.js game into online multiplayer with an agent, the MCP and these skills ([edgegap/netcode-sample-threejs-vibe-coded](https://github.com/edgegap/netcode-sample-threejs-vibe-coded), verified end to end on Edgegap on 2026-11-03: direct deployment, matchmaker e2e, two browser tabs on the GitHub Pages origin, self-stop every time).
+
+- `edgegap-threejs` 0.3.0:
+  - Single-player games keep their solo mode: the rules move into one DOM-free module that the page and `server/game.js` both import, the Dockerfile copies it, and its bot logic drives the headless test players (`server.md` §9).
+  - `tools/e2e.mjs` gets a direct mode (`SERVER_URL=wss://...`, no matchmaker) for the Phase 3 check on one deployment, and skips the self-stop wait for local `ws://` servers.
+  - `assets/ci/`: `server-image.yml` (local headless match, then build and push a UTC-tagged `linux/amd64` image) and `pages.yml` (client on GitHub Pages). `deploy.md` §5 covers the secrets the developer sets, and Pages needing a public repo on a free GitHub plan (422 otherwise) plus a secret scan first.
+  - App versions get `restart_policy: "never"`. The registry login step says `edgegap_get_registry_credentials` can't return it for a regular API token and to check for an existing `docker` login first.
+  - Logs: read them while the test match is on, because a self-stopping deployment takes them with it. Short test matches via deployment env vars.
+  - Troubleshooting: idle test clients let bots win in about a minute (not a crash); hidden automated tabs get no `requestAnimationFrame` (use `window.__game`, add a `tick(dt)` hook for per-frame solo modes); the Pages 422; the registry-credentials 403.
+- `edgegap-local-testing` 0.3.0: `assets/parity.sh` runs the whole local battery against any image (boot and time to READY, random external port with an optional real client, two servers, secrets in logs, SIGTERM drain, self-stop). Passes a Node.js WebSocket server, fails a shell-form CMD at the drain check. Smoke test: read logs during the match, short timers via deployment env vars.
+- `edgegap-server-design` 0.2.1, `edgegap-containerize` 0.2.3: restart policy Never can be set with the MCP (`restart_policy`, MCP 0.16.0 and later).
+- Versions: `edgegap` 0.31.0, `edgegap-threejs` 0.3.0, `edgegap-local-testing` 0.3.0, `edgegap-server-design` 0.2.1, `edgegap-containerize` 0.2.3.
+
 ## 0.30.0 (unreleased)
 
 - New `edgegap-supabase` 0.1.0: Supabase as the game backend with Edgegap game servers. Anonymous sign-in, profiles with Row Level Security (players rename themselves, never change wins), a `matchmaking` Edge Function that holds the matchmaker token and ties each ticket to a user (group API; the row is keyed by `member_id` because `ticket_id` stays `null` until the player is matched), a game server that verifies Supabase access tokens against the project's JWKS with `jose` and holds no Supabase key, a `report-match` Edge Function and `record_match()` that only accept players with their own unused ticket, a live Realtime leaderboard, a cancel that also runs when the page closes mid-search (keepalive request), and a headless e2e. Templates from [edgegap/netcode-sample-threejs-supabase](https://github.com/edgegap/netcode-sample-threejs-supabase), verified end to end on Edgegap on 2026-11-03 with a hosted Supabase project (CLI 3.0.0, supabase-js 2.118.0). Non-Node game servers, email/OAuth sign-in and Supabase's local stack not run.

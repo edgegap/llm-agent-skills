@@ -1,23 +1,29 @@
 #!/usr/bin/env node
-// End-to-end test through the Edgegap matchmaker, the path the browser clients take:
-// group of one (Edgegap JS SDK) -> HOST_ASSIGNED -> wss to the deployment -> full match -> the server stops itself.
+// End-to-end test of the path the browser clients take, with headless players:
 //
-//   MM_URL=https://<id>.edgegap.net MM_TOKEN=<matchmaker auth token> node tools/e2e.mjs <profile> [players]
+//   Matchmaker mode: group of one (Edgegap JS SDK) -> HOST_ASSIGNED -> wss to the deployment -> full match
+//     MM_URL=https://<id>.edgegap.net MM_TOKEN=<matchmaker auth token> node tools/e2e.mjs <profile> [players]
+//   Direct mode: one deployment started with edgegap_deploy (no matchmaker, no tickets), or a local server
+//     SERVER_URL=wss://<fqdn>:<external port> node tools/e2e.mjs [players]
 //
-// Needs "ws" and "@edgegap/sdk" (both dependencies of the server). Uses only the matchmaker's
-// client token, never the Edgegap API token. Edit makeInput() so the headless players actually
-// play your game (moving toward the goal, shooting...), or the match may only end on time.
+// On wss:// it then checks the server stopped itself after the match (a local ws:// server loops instead).
+// Needs "ws" and "@edgegap/sdk" (both dependencies of the server). Uses only the matchmaker's client
+// token, never the Edgegap API token. Edit makeInput() so the headless players actually play your game
+// (moving toward the goal, shooting...), or the match may only end on time. If the game has bot logic
+// that reads positions, call it here (references/server.md §9).
 
 import { getConnectionUrl } from "@edgegap/sdk";
 import { GroupAgent } from "@edgegap/sdk/matchmaking";
 import { playSession } from "./headless-player.mjs";
 
+const DIRECT = process.env.SERVER_URL;
 const MM = (process.env.MM_URL ?? "").replace(/\/+$/, "");
 const TOKEN = process.env.MM_TOKEN;
-const [profile, playersArg] = process.argv.slice(2);
-const PLAYERS = Number(playersArg ?? 2);
-if (!MM || !TOKEN || !profile) {
-  console.error("Usage: MM_URL=... MM_TOKEN=... node tools/e2e.mjs <profile> [players]");
+const args = process.argv.slice(2);
+const profile = DIRECT ? null : args[0];
+const PLAYERS = Number((DIRECT ? args[0] : args[1]) ?? 2);
+if (!DIRECT && (!MM || !TOKEN || !profile)) {
+  console.error("Usage: MM_URL=... MM_TOKEN=... node tools/e2e.mjs <profile> [players]\n   or: SERVER_URL=wss://<fqdn>:<port> node tools/e2e.mjs [players]");
   process.exit(1);
 }
 
@@ -44,7 +50,10 @@ async function queue(name) {
 
 const problems = [];
 const names = Array.from({ length: PLAYERS }, (_, i) => `e2e-${i + 1}`);
-const seats = await Promise.all(names.map((n, i) => new Promise((r) => setTimeout(r, i * 300)).then(() => queue(n))));
+const seats = DIRECT
+  ? names.map(() => ({ ticketId: undefined, fqdn: new URL(DIRECT).hostname, url: DIRECT }))
+  : await Promise.all(names.map((n, i) => new Promise((r) => setTimeout(r, i * 300)).then(() => queue(n))));
+console.log(`server: ${seats[0].url}`);
 if (new Set(seats.map((s) => s.fqdn)).size !== 1) problems.push("players were split across deployments (stale tickets from an earlier run? restart the matchmaker)");
 
 const reports = await Promise.all(
@@ -52,24 +61,26 @@ const reports = await Promise.all(
 );
 for (const r of reports) {
   if (r.error) problems.push(`${r.name}: ${r.error}`);
-  if (r.match?.players !== PLAYERS) problems.push(`${r.name}: server saw ${JSON.stringify(r.match)} (expected ${PLAYERS} tickets)`);
+  if (!DIRECT && r.match?.players !== PLAYERS) problems.push(`${r.name}: server saw ${JSON.stringify(r.match)} (expected ${PLAYERS} tickets)`);
   for (const p of ["countdown", "playing", "over"]) if (!r.phases.includes(p)) problems.push(`${r.name}: never saw ${p}`);
 }
 console.log(`result: ${reports[0].result?.winner}; teams: ${reports.map((r) => r.team).join(", ")}`);
 
-// The deployment should stop itself shortly after the results screen.
-const t0 = Date.now();
-let stopped = false;
-while (Date.now() - t0 < 90000 && !stopped) {
-  try {
-    await fetch(seats[0].url.replace(/^wss:/, "https:"), { signal: AbortSignal.timeout(4000) });
-    await new Promise((r) => setTimeout(r, 3000));
-  } catch {
-    stopped = true;
+// The deployment should stop itself shortly after the results screen. A local ws:// server loops instead.
+if (seats[0].url.startsWith("wss:")) {
+  const t0 = Date.now();
+  let stopped = false;
+  while (Date.now() - t0 < 90000 && !stopped) {
+    try {
+      await fetch(seats[0].url.replace(/^wss:/, "https:"), { signal: AbortSignal.timeout(4000) });
+      await new Promise((r) => setTimeout(r, 3000));
+    } catch {
+      stopped = true;
+    }
   }
+  if (stopped) console.log(`deployment stopped itself ${((Date.now() - t0) / 1000).toFixed(0)}s after the match`);
+  else problems.push("deployment still answering 90s after the match");
 }
-if (stopped) console.log(`deployment stopped itself ${((Date.now() - t0) / 1000).toFixed(0)}s after the match`);
-else problems.push("deployment still answering 90s after the match");
 
 console.log(problems.length ? `FAIL\n - ${problems.join("\n - ")}` : "PASS");
 process.exit(problems.length ? 1 : 0);

@@ -1,0 +1,64 @@
+# Copy to .github/workflows/server-image.yml.
+# Builds the game server image and pushes it to the Edgegap Container Registry on every push to
+# main that touches the server. The tag is the UTC time (YYYYMMDD-HHMM), also used as the Edgegap
+# app version name. Running matches are not affected; point the app version at the new tag
+# (edgegap_update_app_version, the dashboard, or edgegap/deploy-action) to ship it.
+#
+# Repository settings:
+#   secrets   EDGEGAP_REGISTRY_USERNAME, EDGEGAP_REGISTRY_TOKEN  (Edgegap dashboard > Container Registry;
+#             the developer sets them: gh secret set EDGEGAP_REGISTRY_TOKEN -R <owner>/<repo>)
+#   variables EDGEGAP_REGISTRY_PROJECT                           (the <project> in registry.edgegap.com/<project>/...)
+# Rename IMAGE, and add any file the server imports from outside server/ (a rules file shared with
+# the page, references/server.md §9) to the paths filter.
+name: Server image
+
+on:
+  push:
+    branches: [main]
+    paths: [server/**, package.json, package-lock.json, .github/workflows/server-image.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  IMAGE: game-server
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Local match test (two headless players, no Edgegap)
+        run: |
+          PORT=7777 WAIT_SECONDS=2 COUNTDOWN_SECONDS=1 RESULTS_SECONDS=1 MATCH_SECONDS=20 node server/main.js &
+          sleep 2
+          SERVER_URL=ws://localhost:7777 node tools/e2e.mjs 2
+
+      - name: Image tag
+        id: tag
+        run: echo "tag=$(date -u +%Y%m%d-%H%M)" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: registry.edgegap.com
+          username: ${{ secrets.EDGEGAP_REGISTRY_USERNAME }}
+          password: ${{ secrets.EDGEGAP_REGISTRY_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: server/Dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: registry.edgegap.com/${{ vars.EDGEGAP_REGISTRY_PROJECT }}/${{ env.IMAGE }}:${{ steps.tag.outputs.tag }}
+
+      - name: Summary
+        run: echo "Pushed registry.edgegap.com/${{ vars.EDGEGAP_REGISTRY_PROJECT }}/${{ env.IMAGE }}:${{ steps.tag.outputs.tag }}" >> "$GITHUB_STEP_SUMMARY"

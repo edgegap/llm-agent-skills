@@ -10,6 +10,9 @@ COPY package.json package-lock.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 # Only the server goes into the image: the browser client is served elsewhere.
 COPY server ./server
+# A rules file shared with the page's solo mode (references/server.md §9) goes in too, at the same
+# relative path the server imports it from:
+# COPY client/rules.js ./client/rules.js
 # Internal port. The Edgegap app version maps it as "gameport", protocol WS, TLS Upgrade on.
 EXPOSE 7777/tcp
 USER node
