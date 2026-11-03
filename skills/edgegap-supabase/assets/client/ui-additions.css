@@ -1,0 +1,10 @@
+/* Leaderboard and profile styles: append to client/lib/ui.css from edgegap-threejs. */
+
+.menu .stats { margin: -6px 0 14px; color: #8892a8; font-size: 13px; }
+.menu h2 { margin: 18px 0 6px; font-size: 15px; text-transform: uppercase; letter-spacing: .08em; color: #aab3c8; }
+.menu .leaders { margin: 0 0 14px; padding: 0 0 0 22px; max-height: 220px; overflow: auto; font-size: 14px; }
+.menu .leaders li { padding: 2px 0; }
+.menu .leaders li span { display: inline-block; min-width: 60%; }
+.menu .leaders li b { color: #ffd166; font-weight: 600; }
+.menu .leaders li.me { font-weight: 700; }
+.menu .leaders li.empty { list-style: none; margin-left: -22px; color: #8892a8; }

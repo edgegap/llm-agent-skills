@@ -1,0 +1,13 @@
+# Add to supabase/config.toml (created by `npx supabase init`).
+
+[auth]
+# Players get a real Supabase user without email or password.
+enable_anonymous_sign_ins = true
+
+# Both functions check their callers themselves: "matchmaking" with auth.getUser(),
+# "report-match" with the game server's shared secret.
+[functions.matchmaking]
+verify_jwt = false
+
+[functions.report-match]
+verify_jwt = false

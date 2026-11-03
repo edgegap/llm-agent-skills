@@ -1,0 +1,108 @@
+diff --git a/server/room.js b/server/room.js
+index 6666bbf..53b01d5 100644
+--- a/server/room.js
++++ b/server/room.js
+@@ -9,10 +9,12 @@
+ //             (locally the room goes back to waiting so you can play again).
+ //
+ // Wire protocol, JSON text frames:
+-//   client -> server  {t:"hello", name, ticket?}   {t:"input", ...game fields}
++//   client -> server  {t:"hello", name, ticket?, token?}   {t:"input", ...game fields}
++//   (token = the player's Supabase access token; required when SUPABASE_URL is set)
+ //   server -> client  {t:"welcome", id, game, info}  {t:"state", phase, timer, players, s}  {t:"error", message}
+ 
+-import { onEdgegap, match, selfStop, log } from "./edgegap.js";
++import { onEdgegap, match, requestId, selfStop, log } from "./edgegap.js";
++import { reportMatch, supabaseEnabled, verifyPlayer } from "./supabase.js";
+ 
+ const env = process.env;
+ const num = (v, d) => (v !== undefined && v !== "" && Number.isFinite(Number(v)) ? Number(v) : d);
+@@ -52,6 +54,7 @@ export class Room {
+ 
+   accept(ws) {
+     let player = null;
++    let pending = false;
+     ws.on("message", (data) => {
+       let msg;
+       try {
+@@ -60,8 +63,17 @@ export class Room {
+         return;
+       }
+       if (!player) {
+-        if (msg.t !== "hello") return;
+-        player = this.join(ws, msg);
++        if (msg.t !== "hello" || pending) return;
++        pending = true;
++        this.identify(msg).then(
++          (identity) => {
++            if (ws.readyState === 1) player = this.join(ws, msg, identity);
++          },
++          (err) => {
++            ws.send(JSON.stringify({ t: "error", message: `Not signed in: ${err.message}` }));
++            ws.close();
++          }
++        );
+         return;
+       }
+       if (msg.t === "input" && this.phase !== "over") this.game.input(player, msg);
+@@ -69,7 +81,13 @@ export class Room {
+     ws.on("close", () => player && this.leave(player));
+   }
+ 
+-  join(ws, hello) {
++  /** With Supabase on, every player proves who they are with their access token. */
++  async identify(hello) {
++    if (!supabaseEnabled) return { userId: null };
++    return verifyPlayer(hello.token);
++  }
++
++  join(ws, hello, identity) {
+     const humans = [...this.players.values()].filter((p) => !p.bot);
+     const reject = (message) => {
+       ws.send(JSON.stringify({ t: "error", message }));
+@@ -79,6 +97,7 @@ export class Room {
+     if (REQUIRE_TICKET && match && !match.ticketIds.includes(hello.ticket)) return reject("Unknown matchmaker ticket");
+     if (humans.length >= this.cfg.maxPlayers) return reject("Server full");
+     if (this.phase === "over") return reject("Match already finished");
++    if (identity.userId && humans.some((p) => p.userId === identity.userId)) return reject("Already in this match");
+ 
+     // A late human replaces a bot if the match is full of them.
+     if (this.players.size >= this.cfg.maxPlayers) {
+@@ -88,7 +107,7 @@ export class Room {
+ 
+     const name = String(hello.name ?? "").trim().slice(0, 16) || `Player ${this.nextId}`;
+     const team = match && hello.ticket ? match.teamOf(hello.ticket) : null;
+-    const player = { id: this.nextId++, name, ws, bot: false, ticket: hello.ticket ?? null, team, score: 0 };
++    const player = { id: this.nextId++, name, ws, bot: false, ticket: hello.ticket ?? null, userId: identity.userId, team, score: 0 };
+     this.players.set(player.id, player);
+     this.humansEver++;
+     this.emptySince = 0;
+@@ -96,7 +115,7 @@ export class Room {
+     this.game.addPlayer(player, this);
+     const matchInfo = match ? { id: match.id, profile: match.profile, players: match.ticketIds.length } : null;
+     ws.send(JSON.stringify({ t: "welcome", id: player.id, team: player.team, game: this.game.name, match: matchInfo, info: this.game.info?.() ?? {} }));
+-    log(`join #${player.id} "${name}" ticket=${player.ticket ?? "-"} team=${team ?? "-"} (${humans.length + 1} human)`);
++    log(`join #${player.id} "${name}" user=${player.userId ?? "-"} ticket=${player.ticket ?? "-"} team=${team ?? "-"} (${humans.length + 1} human)`);
+     return player;
+   }
+ 
+@@ -176,6 +195,19 @@ export class Room {
+     this.result = result;
+     log(`match over: ${result.winner}`);
+     this.setPhase("over", RESULTS_SECONDS);
++    this.report(result);
++  }
++
++  /** Matchmade matches go to Supabase: every signed-in player with their ticket, score and place. */
++  report(result) {
++    if (!supabaseEnabled || !match) return;
++    const placed = result.ranking.map((r, i) => ({ ...r, place: i + 1, player: this.players.get(r.id) }));
++    const players = placed
++      .filter((r) => r.player && !r.player.bot && r.player.userId && r.player.ticket)
++      .map((r) => ({ ticket_id: r.player.ticket, user_id: r.player.userId, score: r.score, place: r.place }));
++    const [top, second] = placed;
++    const winnerId = top && (!second || second.score < top.score) && !top.player?.bot ? (top.player?.userId ?? null) : null;
++    reportMatch({ deploymentId: requestId, match, result: result.winner, winnerId, players });
+   }
+ 
+   reset() {

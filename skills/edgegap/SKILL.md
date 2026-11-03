@@ -2,12 +2,12 @@
 name: edgegap
 description: 'Start here for hosting a game on Edgegap (dedicated game servers + matchmaking) when the engine is not Unity, Unreal or Godot, is unknown, or the question is about the platform itself. Use when someone wants to host or deploy a game server, wants a single-player or co-op game to be always online or harder to crack, decompile or pirate, asks how players will connect to matches, wants servers for a custom-engine game, compares hosting options, or asks what Edgegap apps, versions, deployments, fleets or matchmakers are, even if they never say "hosting". It picks the server shape, explains the vocabulary and MCP safety rules, and routes to the right edgegap-* skill. For a Unity project, load edgegap-unity instead (NGO: edgegap-ngo, FishNet: edgegap-fishnet, PurrNet: edgegap-purrnet, Fusion: edgegap-fusion); Unreal: edgegap-unreal; Godot 4: edgegap-godot; Colyseus (Cocos too): edgegap-colyseus; Nakama: edgegap-nakama; Manus: edgegap-manus; Three.js/web: edgegap-threejs; matchmaking design: edgegap-matchmaking.'
 metadata:
-  version: "0.29.0"
+  version: "0.30.0"
 ---
 
 # Edgegap
 
-Pack version: 0.29.0
+Pack version: 0.30.0
 
 Edgegap runs dedicated game servers. You push a **Linux container image** of your game server, register it as an **app version**, and ask for a **deployment** near a group of players. Edgegap picks the location with the best ping for that group, starts the container in seconds, and returns a URL (`<id>.pr.edgegap.net`), a public IP, and an external port per internal port. Players connect. The match ends, the server stops, billing stops.
 
@@ -58,6 +58,7 @@ For a Godot 4 game whose server is Godot itself (high-level multiplayer with ENe
 | A game that keeps PlayFab for players and Matchmaking (or leaves PlayFab Multiplayer Servers): PlayFab Azure Functions start one Edgegap server per match | `edgegap-playfab` |
 | A browser game built with Manus (manus.im): Steam sign-in, backend matchmaking, WebSocket server | `edgegap-manus` |
 | A Three.js (or Babylon.js, PlayCanvas, Phaser, canvas) browser game with its own Node.js WebSocket server: authoritative server per match, Find Match from the page | `edgegap-threejs` |
+| A game with a Supabase backend (Supabase Auth, profiles, leaderboards, Edge Functions): only signed-in players find a match, the game server records results in Supabase | `edgegap-supabase` |
 | Design matchmaking: queues, parties, skill, modes, region selection, join in progress (backfill), or pick a matchmaker | `edgegap-matchmaking` |
 | Write backend code that starts, finds or stops servers, or receives webhooks | `edgegap-deployments-api` |
 | Write or fix a Dockerfile, push to a registry, pick an image tag | `edgegap-containerize` |
