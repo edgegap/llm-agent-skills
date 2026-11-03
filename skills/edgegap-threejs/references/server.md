@@ -9,6 +9,7 @@ Contents
 6. Matchmaker data: expected players, tickets, teams
 7. Self-stop and shutdown
 8. Local checks
+9. A single-player game: one rules file for solo play and the server
 
 ## 1. Files
 
@@ -101,4 +102,16 @@ Node must be PID 1 (`CMD ["node", "server/main.js"]`, no `sh -c`, no `npm start`
 GAME=... PORT=7777 WAIT_SECONDS=2 COUNTDOWN_SECONDS=1 RESULTS_SECONDS=1 MATCH_SECONDS=40 node server/main.js
 ```
 
-then two `playSession()` from `assets/tools/headless-player.mjs` with a `makeInput` that plays the game. Expect both players to see every phase, the same scoreboard and a result. Then the container (`docker run -p 7777:7777`), same test with `ws://localhost:7777`. Simulate Edgegap's lifecycle with `-e ARBITRIUM_REQUEST_ID=local -e EMPTY_TIMEOUT_S=5`: without a delete URL the process exits after the timeout.
+then two `playSession()` from `assets/tools/headless-player.mjs` with a `makeInput` that plays the game. Expect both players to see every phase, the same scoreboard and a result. Then the container (`docker run -p 7777:7777`), same test with `ws://localhost:7777`. Simulate Edgegap's lifecycle with `-e ARBITRIUM_REQUEST_ID=local -e EMPTY_TIMEOUT_S=5`: without a delete URL the process exits after the timeout. `tools/e2e.mjs` in direct mode (`SERVER_URL=ws://localhost:7777 node tools/e2e.mjs`) runs the same two-player check. The full container battery (random external port, two servers, SIGTERM drain, self-stop) is [`parity.sh`](../../edgegap-local-testing/assets/parity.sh) in `edgegap-local-testing`.
+
+## 9. A single-player game: one rules file for solo play and the server
+
+Vibe-coded browser games usually start single-player against bots, with the rules in the page. Keep that mode and reuse the rules instead of porting them:
+
+1. Move the rules into one module with no DOM, no Three.js and no timers: a world object, `addPlayer`/`removePlayer`, `setInput`, `step(world, dt)` returning events (goal, hit, dash) and a bot function that only reads positions (`botInput(view, me, memory, dt)`). Keep it in the client folder (`client/rules.js`) so the static page can import it with a relative path.
+2. Solo mode: the page runs `step()` itself at a fixed 60 Hz with bots, exactly as before.
+3. Online: `server/game.js` imports `../client/rules.js` and wraps it in the room contract (§4); `update(dt)` drives bots and calls `step()`, `snapshot()` sends positions plus the events since the last snapshot so the page can play effects and sounds.
+4. Image: the Dockerfile copies the shared file next to the server (`COPY client/rules.js ./client/rules.js`) and `.dockerignore` keeps the rest of the client out (`client/*` then `!client/rules.js`). A root `package.json` with `"type": "module"` makes Node load the file as ESM.
+5. Tests: because the bot function reads only positions, a headless player's `makeInput` can call it with the snapshot (`{drones: state.s.d, orbs: state.s.o}`-style) and play like a bot. Matches then end on score as real ones do.
+
+Verified on Edgegap on 2026-11-03 with a hover-drone arena game (four drones, glowing orbs pushed into goals): the same file ran solo in the page and at 60 Hz on the server, headless players driven by its bot logic played full matches through the matchmaker, and the deployment stopped itself after each one.

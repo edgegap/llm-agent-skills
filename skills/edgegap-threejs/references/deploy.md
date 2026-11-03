@@ -5,7 +5,7 @@ Contents
 2. App versions (and one image for several games)
 3. One direct deployment
 4. Matchmaker: profiles, teams, ticket API, rate limits
-5. Shipping a new build
+5. Shipping a new build (CI, GitHub Pages)
 6. Cleanup
 
 ## 1. Image
@@ -18,7 +18,7 @@ docker run --rm -p 7777:7777 registry.edgegap.com/<project>/<image>:<tag>    # l
 docker push registry.edgegap.com/<project>/<image>:<tag>
 ```
 
-The developer runs `docker login registry.edgegap.com` with the Container Registry credentials from the dashboard. Tag with a UTC timestamp `YYYYMMDD-HHMM` (e.g. `20261022-1430`, from `date -u +%Y%m%d-%H%M`), the same string as the app version name, so anyone can see when the server was last updated. Never `latest`. `edgegap_list_registry_tags` confirms the push.
+The developer runs `docker login registry.edgegap.com` with the Container Registry credentials from the dashboard (`edgegap_get_registry_credentials` can't return them for a regular API token; `docker` may already be logged in from an earlier project, so check before asking). Tag with a UTC timestamp `YYYYMMDD-HHMM` (e.g. `20261022-1430`, from `date -u +%Y%m%d-%H%M`), the same string as the app version name, so anyone can see when the server was last updated. Never `latest`. `edgegap_list_registry_tags` confirms the push.
 
 ## 2. App versions
 
@@ -30,6 +30,7 @@ The developer runs `docker login registry.edgegap.com` with the Container Regist
 | `ports` | `[{name: "gameport", port: 7777, protocol: "WS", tls_upgrade: true}]` |
 | `cpu_units` / `memory_mb` | 256 / 512 (a Node game server with a few players uses a fraction of that) |
 | `max_duration_minutes` | 30–60: a safety net, the server stops itself |
+| `restart_policy` | `"never"`: the match ends with a self-stop; a crash ends the deployment instead of restarting an empty, half-played match. The API default is `always` |
 | `env` | optional timers (`server.md` §3); `GAME` for several games |
 
 The version needs the registry login to pull from `registry.edgegap.com`: the developer adds the registry username and token to each version in the dashboard (Applications → version → edit), or passes them to `edgegap_update_app_version` themselves. Check `registry_credentials_set: true` in `edgegap_list_app_versions`; without it deployments fail to pull.
@@ -42,9 +43,9 @@ Ask first, then:
 
 1. `edgegap_deploy` with `application`, `version`, `users.ip_addresses: [<player public IP>]`, a test tag (`agent-test`).
 2. `edgegap_wait_for_deployment` → `ports[].connect` = `wss://<request_id>.pr.edgegap.net:<external>`.
-3. Play a match on it (headless players or `?server=`).
-4. `edgegap_get_deployment_logs`: `deployment <id> at <ip> (<host>), direct deploy`, the joins and phases, `self-stop: match over`, `self-stop request: HTTP 200`. Read logs before the deployment ends: they go away with it.
-5. `edgegap_get_deployment` shows `TERMINATING`, then the deployment leaves `edgegap_list_deployments`.
+3. Play a match on it: `SERVER_URL=wss://<fqdn>:<external> node tools/e2e.mjs [players]` (direct mode: headless players without tickets, then it waits for the deployment to stop), or the page with `?server=`. Shorten the match for this test with deployment env vars (`MATCH_SECONDS=40`, `WAIT_SECONDS=5`) rather than a new version.
+4. `edgegap_get_deployment_logs` **while the match runs**: `deployment <id> at <ip> (<host>), direct deploy`, the joins and phases. The deployment stops seconds after the results screen and its logs go with it, so a call after the test usually finds nothing; e2e's "stopped itself" line and `edgegap_get_deployment` showing `TERMINATED` are the proof of the self-stop.
+5. The deployment leaves `edgegap_list_deployments`.
 
 The developer's own scripts use the HTTP API instead: `assets/server/edgegap-deploy.mjs` (`EDGEGAP_API_TOKEN` from their shell, `POST /v2/deployments`, polls `GET /v1/status/{id}`, `--stop <id>`).
 
@@ -76,6 +77,10 @@ The ticket ID in `MM_TICKET_IDS` on the server is the membership's `ticket_id`.
 ## 5. Shipping a new build
 
 Push a new tag, then `edgegap_update_app_version` with `docker_tag` on each version: new matches use it, running ones keep the old build, and the matchmaker config doesn't change. For a change in ports, env or resources, create new versions and point the profiles at them (matchmaker Stop → Edit `application.version` → Start).
+
+**CI.** `assets/ci/server-image.yml` (copy to `.github/workflows/`) runs a local headless match, then builds `linux/amd64` and pushes `registry.edgegap.com/<project>/<image>:<UTC timestamp>` on every push to `main` that touches the server. It needs the secrets `EDGEGAP_REGISTRY_USERNAME` and `EDGEGAP_REGISTRY_TOKEN` and the variable `EDGEGAP_REGISTRY_PROJECT`. The developer sets the secrets (`gh secret set EDGEGAP_REGISTRY_TOKEN -R <owner>/<repo>` prompts for the value); the project name is not secret, so you can set the variable. It only pushes: point a version at the new tag as above, or use `edgegap/deploy-action` (`edgegap-launch`) to create, smoke-test and promote versions from CI.
+
+**GitHub Pages.** `assets/ci/pages.yml` publishes the client folder; turn Pages on with `gh api -X POST repos/<owner>/<repo>/pages -f build_type=workflow`. On a free GitHub plan Pages only works on a public repo (the API answers 422 "Your current plan does not support GitHub Pages for this repository"), so scan the history for secrets (`gitleaks git .`) before making it public: the matchmaker Auth Token in `config.js` is expected, nothing else is. Add `https://<owner>.github.io` to `allowed_cors_origins` (origin only, no repo path) and use relative paths in the page.
 
 ## 6. Cleanup
 

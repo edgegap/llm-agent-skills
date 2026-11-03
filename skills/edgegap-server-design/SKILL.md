@@ -2,7 +2,7 @@
 name: edgegap-server-design
 description: 'Design an authoritative dedicated game server that fits per-match hosting on Edgegap: who owns the game state, the deployment lifecycle (boot, read injected env vars, bind a fixed port on 0.0.0.0, accept players, self-stop at match end, drain on SIGTERM), logging, and what never goes in the server. Use whenever adding online multiplayer to a game, converting a host/client, listen-server or peer-to-peer game to dedicated servers, or when someone asks about netcode architecture, authoritative servers, match lifecycle, tick rate, cheat prevention or how a game server should behave on Edgegap. Engine-agnostic (Unreal, Godot, Node, custom engines); apply it before containerizing. Unity projects get the same rules, already applied, from edgegap-unity.'
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # Designing a server for Edgegap
@@ -52,7 +52,7 @@ DELETE $ARBITRIUM_DELETE_URL
 Authorization: $ARBITRIUM_DELETE_TOKEN
 ```
 
-This is the most important cost control there is: an idle deployment bills until it hits its max duration. A clean exit (code 0) also ends the deployment, but only with restart policy **Never** or **On Crash**; the default, Always, restarts the server and keeps billing. Set restart policy Never on match servers and still self-stop explicitly. Do not loop back to a lobby.
+This is the most important cost control there is: an idle deployment bills until it hits its max duration. A clean exit (code 0) also ends the deployment, but only with restart policy **Never** or **On Crash**; the default, Always, restarts the server and keeps billing. Set restart policy Never on match servers (`restart_policy: "never"` on `edgegap_create_app_version` or `edgegap_update_app_version`, MCP 0.16.0 and later; or the dashboard) and still self-stop explicitly. Do not loop back to a lobby.
 
 Never print the delete token. A Dockerfile or start script that dumps `env` into the logs leaks it.
 

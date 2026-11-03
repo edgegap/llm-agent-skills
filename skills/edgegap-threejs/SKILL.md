@@ -2,7 +2,7 @@
 name: edgegap-threejs
 description: 'Three.js / browser game + Edgegap: make a JavaScript web game multiplayer with an authoritative Node.js WebSocket server per match and the Edgegap matchmaker called from the page, end to end. Load this before using any Edgegap MCP tool on a Three.js, Babylon.js, PlayCanvas engine, Phaser or plain canvas/WebGL game that has (or needs) its own ws server rather than Colyseus or Nakama. Templates verified on Edgegap with five Three.js games (shooter, racer, 2v2 soccer, light cycles, sumo): a room with phases, bots, fixed tick and snapshots, self-stop, matchmaker teams, a no-build Three.js client with Find Match on the Edgegap JS SDK, wss retry, Dockerfile, WS + TLS Upgrade versions, one image for several games, a multi-profile matchmaker config, headless e2e scripts. Use for "make my three.js game multiplayer", "host my browser game server", "Find Match for a web game", "wss from an https page", "several mini-games on one matchmaker", or debugging them. Colyseus: edgegap-colyseus; Manus: edgegap-manus.'
 metadata:
-  version: "0.2.1"
+  version: "0.3.0"
 ---
 
 # Edgegap for Three.js and other browser games: one Node.js server per match
@@ -49,6 +49,8 @@ Read `references/server.md`.
 2. Write the game as `server/game.js` with the contract in `assets/server/game.js` (a working skeleton): move the rules out of the client into `update(dt)`, take only inputs from clients and validate them, send the state in `snapshot()`. Keep snapshots small (rounded numbers, only what is drawn).
 3. Decide bots (`botFill` or `botsNeeded`) so a lone or short-handed match is still a game.
 
+**A single-player game (often vibe-coded) that runs its rules in the browser:** don't rewrite the rules for the server. Move them into one DOM-free module (no `window`, `document` or Three.js: plain state, `step(world, dt)`, bot logic), have the page import it for solo play and `server/game.js` import the same file, and copy that file into the image (`server.md` §9). Solo mode keeps working offline, the server is authoritative online, and the rules can't drift apart. The same bot logic then drives the headless test players, so tests score goals instead of wandering until time runs out.
+
 ✅ Check: `node server/main.js` plus two headless players (`assets/tools/headless-player.mjs`, a 20-line script with short `WAIT_SECONDS`/`MATCH_SECONDS`) go `waiting → countdown → playing → over` with a result, and the room loops back to `waiting` (off Edgegap nothing stops).
 
 ## Phase 2: Browser client
@@ -65,11 +67,11 @@ Read `references/client.md`. Either copy `assets/client/` (`shell.js` gives the 
 ## Phase 3: Image, app version, one direct deployment
 
 Read `references/deploy.md` §1 to §3.
-1. `docker build --platform linux/amd64` (`assets/server/Dockerfile`), the developer runs `docker login registry.edgegap.com`, push a unique tag (UTC timestamp `YYYYMMDD-HHMM`, also the app version name), never `latest`.
-2. `edgegap_create_app` + `edgegap_create_app_version`: port `7777`, protocol **WS**, name `gameport`, `tls_upgrade: true`; 256 CPU units / 512 MB; max duration 30–60. The developer adds the registry credentials to the version; check `registry_credentials_set: true` with `edgegap_list_app_versions`. Several games: one image, one version per game with a `GAME` env var (§2).
+1. `docker build --platform linux/amd64` (`assets/server/Dockerfile`), push a unique tag (UTC timestamp `YYYYMMDD-HHMM`, also the app version name), never `latest`. Before the first push, run the container checks of `edgegap-local-testing` ([`parity.sh`](../edgegap-local-testing/assets/parity.sh) does them in one go). `docker login registry.edgegap.com` is the developer's: `edgegap_get_registry_credentials` returns nothing with a regular API token, so ask for the Container Registry login (or check `docker` is already logged in) instead of retrying it.
+2. `edgegap_create_app` + `edgegap_create_app_version`: port `7777`, protocol **WS**, name `gameport`, `tls_upgrade: true`; 256 CPU units / 512 MB; max duration 30–60; `restart_policy: "never"` (the server ends its match by stopping itself; a crash should not restart a half-played match). The developer adds the registry credentials to the version; check `registry_credentials_set: true` with `edgegap_list_app_versions`. Several games: one image, one version per game with a `GAME` env var (§2).
 3. Ask, then `edgegap_deploy` with the player's public IP and a test tag → `edgegap_wait_for_deployment` → `wss://<fqdn>:<external>`. Or the developer runs `assets/server/edgegap-deploy.mjs` with their own token.
 
-✅ Check: headless players (or the page with `?server=`) play a whole match on it; the log (`edgegap_get_deployment_logs`) shows `direct deploy`, the phases and `self-stop: match over`; `edgegap_get_deployment` turns `TERMINATING`. Don't add the matchmaker on an unproven server.
+✅ Check: `SERVER_URL=wss://<fqdn>:<external> node tools/e2e.mjs` (direct mode: no matchmaker, no tickets) plays a whole match on it and sees the deployment stop itself; or open the page with `?server=`. Read `edgegap_get_deployment_logs` while the match is still on: it shows `direct deploy` and the phases, and the logs are gone once the deployment stops. Don't add the matchmaker on an unproven server.
 
 ## Phase 4: Matchmaker
 
@@ -81,18 +83,20 @@ Read `references/deploy.md` §4.
 
 1. `edgegap_list_deployments` for the app: nothing of yours left running.
 2. `MM_URL=... MM_TOKEN=... node tools/e2e.mjs <profile> <players>` (`assets/tools/e2e.mjs`, with a `makeInput` that plays the game): all players on one deployment, the server saw the tickets (`welcome.match.players`), a result, then self-stop. Run games a few seconds apart: bursts of ticket calls get `429`.
-3. Two real browser tabs (localhost origin) click **Find match** within 20 s and land in the same match.
+3. Two real browser tabs (localhost origin, then the hosted page's origin) click **Find match** within 20 s and land in the same match. Idle tabs lose to the bots: with a score limit the match can end in about a minute, which is the server working, not a crash.
 4. Debug with `references/troubleshooting.md`.
 
-Hand-off: what changed where; app, versions and matchmaker names; how to ship a new build (new tag → `edgegap_update_app_version` on each version, or new versions + matchmaker Stop → Edit → Start); what wasn't tested; before launch: `inspect: false`, real origins only, `REQUIRE_TICKET=1` if only matched players may join, `edgegap-launch`.
+Shipping (optional, `deploy.md` §5): `assets/ci/server-image.yml` builds and pushes the image on every push to `main`, `assets/ci/pages.yml` publishes the page on GitHub Pages. The developer sets the registry secrets (`gh secret set ...`); never pass them through chat or files.
+
+Hand-off: what changed where; app, versions and matchmaker names; how to ship a new build (new tag → `edgegap_update_app_version` on each version, or new versions + matchmaker Stop → Edit → Start); what wasn't tested (two players on different networks is the developer's test); before launch: `inspect: false`, real origins only, `REQUIRE_TICKET=1` if only matched players may join, `edgegap-launch`.
 
 ## Reference files
 
 - `references/server.md`: the room contract, phases and timers, authoritative simulation and input validation, bots, matchmaker env (`MM_TICKET_IDS`, teams), self-stop, the wire protocol.
 - `references/client.md`: no-build Three.js with an import map, the shell, interpolation, input sending, Find Match flow, direct mode, CORS, other renderers.
-- `references/deploy.md`: image, app versions (WS + TLS Upgrade, one image for several games), direct deployments, matchmaker profiles and the ticket API, rate limits, shipping updates.
+- `references/deploy.md`: image, app versions (WS + TLS Upgrade, one image for several games), direct deployments, matchmaker profiles and the ticket API, rate limits, shipping updates, CI and GitHub Pages.
 - `references/troubleshooting.md`: symptom → fix.
-- `assets/`: `server/` (entry, room, lifecycle, utils, skeleton game, Dockerfile, deploy script), `client/` (shell, matchmaker, net, skeleton client and page), `matchmaker/`, `tools/` (headless player, e2e).
+- `assets/`: `server/` (entry, room, lifecycle, utils, skeleton game, Dockerfile, deploy script), `client/` (shell, matchmaker, net, skeleton client and page), `matchmaker/`, `tools/` (headless player, e2e with matchmaker and direct modes), `ci/` (image build, GitHub Pages).
 
 Related skills in this pack, if installed: `edgegap` (platform and safety rules), `edgegap-server-design`, `edgegap-containerize`, `edgegap-deployments-api` (a backend that deploys servers itself), `edgegap-colyseus` (the server is Colyseus), `edgegap-manus` (Manus games, Steam sign-in, backend-owned tickets), `edgegap-supabase` (Supabase sign-in, profiles, leaderboard, results), `edgegap-troubleshoot`, `edgegap-launch`.
 

@@ -48,7 +48,7 @@ runGame({
 
 `ctx` = `{ THREE, scene, camera, renderer, sun, myId, info, input(obj) }`. `create` runs after `welcome`, so `info` (map, sizes) is there to build the level. `state(msg)` gets every state message; `frame(dt)` runs every animation frame. `dispose()` removes the level when the match ends, and the menu comes back ("Match finished. Play again?").
 
-The shell also gives: `createStage` (renderer, lights, shadows, resize), `makeLabel` (name sprites), `EntityMap` (one mesh per server entity id, created and removed with the snapshot), `smooth(dt, rate)`, `lerpAngle`, `keys`/`axis()` for keyboard input, `colorOf(id)`, `TEAM_COLORS`, and `window.__game` (`phase`, `server`, `players`, `error`) for browser automation.
+The shell also gives: `createStage` (renderer, lights, shadows, resize), `makeLabel` (name sprites), `EntityMap` (one mesh per server entity id, created and removed with the snapshot), `smooth(dt, rate)`, `lerpAngle`, `keys`/`axis()` for keyboard input, `colorOf(id)`, `TEAM_COLORS`, and `window.__game` (`phase`, `server`, `players`, `error`) for browser automation. Automated tabs are often hidden, and hidden tabs get no `requestAnimationFrame`: read `window.__game` (fed by WebSocket messages, so it keeps updating) rather than waiting on rendered frames, and if the game also has a solo mode that runs per frame, add a `tick(dt)` to `window.__game` so a test can step it.
 
 ## 3. Rendering server state
 

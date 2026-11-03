@@ -2,12 +2,24 @@
 name: edgegap-local-testing
 description: 'Prove a game server container behaves on a laptop exactly as it will on Edgegap before spending money: the parity docker run with Edgegap-style env vars, the random-external-port test, the SIGTERM drain test, boot timing, two servers on one host, resource sizing with docker stats, then one tagged test deployment on Edgegap with a real client. Use before any first deploy or new build rollout, when a server works locally but not on Edgegap, or when someone asks how to test a game server container, run it with Docker, or smoke-test a deployment. Engine-agnostic.'
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # Testing before you deploy
 
 Every failure this catches costs seconds locally, and a confusing debugging session (or a billed deployment) on Edgegap. Run the local battery on every meaningful server change; run the Edgegap smoke test before a build reaches players or a matchmaker.
+
+## The whole battery in one command
+
+`assets/parity.sh` runs every local check below against an image and stops at the first failure: boot and time to READY, the random external port (with your own client if you give it one), two servers on one host with `docker stats`, secrets in the logs, the SIGTERM drain, and the self-stop path.
+
+```bash
+IMAGE=mygame:dev PORT=7777 PROTO=udp READY='READY' \
+  CLIENT_CMD='./my-test-client $SERVER_HOST $SERVER_PORT' \
+  SELF_STOP_ENV=FIRST_JOIN_TIMEOUT_S=5 bash parity.sh
+```
+
+`READY` is a regex for the server's ready line; `CLIENT_CMD` (optional) must play a match against `$SERVER_HOST:$SERVER_PORT` and exit 0; `SELF_STOP_ENV` (optional) is whatever makes your server give up quickly when nobody joins; `ENV_FILE` passes the version's env vars; `GRACE` matches the version's termination grace period. Checked on 2026-11-03 against a Node.js WebSocket game server (passes) and a shell-form CMD that ignores SIGTERM (fails at the drain test, as it should). The sections below explain each check, for when one fails.
 
 ## Parity run
 
@@ -70,10 +82,10 @@ Do this once per new image, before building a matchmaker or backend on top of it
 2. `edgegap_list_app_versions` → the version points at that tag, `registry_credentials_set: true`, ports and protocol right (and `tls_upgrade` on WS ports for browsers).
 3. `edgegap_deploy` with the developer's public IP as the user (`curl -s https://api.ipify.org`) and a tag such as `agent-test`. Record the `request_id`.
 4. `edgegap_wait_for_deployment` → `fqdn`, `public_ip`, external ports.
-5. `edgegap_get_deployment_logs` → boot line and READY, no crash loop, no restarts.
+5. `edgegap_get_deployment_logs` → boot line and READY, no crash loop, no restarts. Read them again while the test match is still on: a server that self-stops takes its logs with it seconds after the match.
 6. For WS ports, prove the port and TLS Upgrade answer:
    `curl --http1.1 -H "Connection: Upgrade" -H "Upgrade: websocket" -H "Sec-WebSocket-Version: 13" -H "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==" --max-time 5 https://<fqdn>:<external>/` must print HTTP 101.
 7. Connect a real client to `public_ip` (or `fqdn`) and the **external** port. Retry for up to a minute: Ready means the container started, not that the engine finished loading.
-8. If the server self-stops, leave the match and watch the deployment disappear. Otherwise `edgegap_stop_deployment` with the exact `request_id`. Read the logs before stopping if anything failed: they are deleted at stop.
+8. If the server self-stops, finish the match and watch the deployment disappear (`edgegap_get_deployment` → `TERMINATED`). For a short test, pass shorter match timers as deployment env vars rather than building a new version. Otherwise `edgegap_stop_deployment` with the exact `request_id`. Read the logs before stopping if anything failed: they are deleted at stop.
 
 An image that passes this has proven the build, the registry credentials, the port mapping, the env var handling and the shutdown path. Free tier allows one deployment at a time, so make sure nothing is left running afterwards.
