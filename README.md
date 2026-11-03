@@ -1,5 +1,7 @@
 # Edgegap Agent Skills
 
+[![skills.sh](https://skills.sh/b/edgegap/llm-agent-skills)](https://skills.sh/edgegap/llm-agent-skills)
+
 Skills that let a coding agent (Claude Code, and other agents that read `SKILL.md` skills) take a multiplayer game from "works on my machine" to **online play with dedicated servers and matchmaking on [Edgegap](https://edgegap.com)**, end to end.
 
 ```
