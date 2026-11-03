@@ -2,7 +2,7 @@
 name: edgegap-threejs
 description: 'Three.js / browser game + Edgegap: make a JavaScript web game multiplayer with an authoritative Node.js WebSocket server per match and the Edgegap matchmaker called from the page, end to end. Load this before using any Edgegap MCP tool on a Three.js, Babylon.js, PlayCanvas engine, Phaser or plain canvas/WebGL game that has (or needs) its own ws server rather than Colyseus or Nakama. Templates verified on Edgegap with five Three.js games (shooter, racer, 2v2 soccer, light cycles, sumo): a room with phases, bots, fixed tick and snapshots, self-stop, matchmaker teams, a no-build Three.js client with Find Match on the Edgegap JS SDK, wss retry, Dockerfile, WS + TLS Upgrade versions, one image for several games, a multi-profile matchmaker config, headless e2e scripts. Use for "make my three.js game multiplayer", "host my browser game server", "Find Match for a web game", "wss from an https page", "several mini-games on one matchmaker", or debugging them. Colyseus: edgegap-colyseus; Manus: edgegap-manus.'
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # Edgegap for Three.js and other browser games: one Node.js server per match
@@ -24,7 +24,7 @@ Why this shape, so you can defend it:
 - **One deployment = one match.** Edgegap places it near the players and bills it only while it runs. No room routing, no capacity planning.
 - **The server stops itself.** Only the game knows the match is over; an idle deployment otherwise bills until its max duration.
 - **WS + TLS Upgrade.** Pages on `https` can only open `wss://`. Edgegap terminates TLS on the port, so the Node server stays plain `ws`, and the client connects by FQDN so the certificate matches.
-- **The browser calls the matchmaker, never the Deploy API.** The matchmaker Auth Token is made to ship in clients; the Edgegap API token controls the whole organization. Add a backend in between only when players must sign in first (`edgegap-manus` has that design).
+- **The browser calls the matchmaker, never the Deploy API.** The matchmaker Auth Token is made to ship in clients; the Edgegap API token controls the whole organization. Add a backend in between only when players must sign in first (`edgegap-supabase` does it with Supabase Auth and Edge Functions; `edgegap-manus` with Steam).
 
 ## How to work
 
@@ -94,6 +94,6 @@ Hand-off: what changed where; app, versions and matchmaker names; how to ship a 
 - `references/troubleshooting.md`: symptom → fix.
 - `assets/`: `server/` (entry, room, lifecycle, utils, skeleton game, Dockerfile, deploy script), `client/` (shell, matchmaker, net, skeleton client and page), `matchmaker/`, `tools/` (headless player, e2e).
 
-Related skills in this pack, if installed: `edgegap` (platform and safety rules), `edgegap-server-design`, `edgegap-containerize`, `edgegap-deployments-api` (a backend that deploys servers itself), `edgegap-colyseus` (the server is Colyseus), `edgegap-manus` (Manus games, Steam sign-in, backend-owned tickets), `edgegap-troubleshoot`, `edgegap-launch`.
+Related skills in this pack, if installed: `edgegap` (platform and safety rules), `edgegap-server-design`, `edgegap-containerize`, `edgegap-deployments-api` (a backend that deploys servers itself), `edgegap-colyseus` (the server is Colyseus), `edgegap-manus` (Manus games, Steam sign-in, backend-owned tickets), `edgegap-supabase` (Supabase sign-in, profiles, leaderboard, results), `edgegap-troubleshoot`, `edgegap-launch`.
 
 Sources of truth: https://docs.edgegap.com/learn/orchestration/deployments, https://docs.edgegap.com/learn/matchmaking, https://threejs.org/docs, https://github.com/edgegap/netcode-sample-threejs-minigames.

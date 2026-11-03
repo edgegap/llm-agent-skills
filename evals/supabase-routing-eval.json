@@ -1,0 +1,16 @@
+[
+  {"query": "My browser game uses Supabase for login. How do I make only signed-in players able to find a match and get a dedicated server on Edgegap?", "expected_skill": "edgegap-supabase"},
+  {"query": "I want Supabase as the backend of my multiplayer game: player profiles, a leaderboard and match history, with the actual matches running on Edgegap servers", "expected_skill": "edgegap-supabase"},
+  {"query": "how does my node game server on edgegap know which supabase user is connecting? I don't want to put the service role key on the server", "expected_skill": "edgegap-supabase"},
+  {"query": "The game server should write match results and wins into my Supabase database when a match ends, without players being able to fake their scores", "expected_skill": "edgegap-supabase"},
+  {"query": "Can I keep the Edgegap matchmaker token out of my web page by calling the matchmaker from a Supabase Edge Function?", "expected_skill": "edgegap-supabase"},
+  {"query": "phaser game, supabase anonymous auth already works. next step is online matches with a real server per match and a live leaderboard", "expected_skill": "edgegap-supabase"},
+  {"query": "my three.js game has a node ws server; I want a Find Match button and per-match servers on edgegap. no accounts needed", "expected_skill": "edgegap-threejs"},
+  {"query": "We use Nakama for accounts and matchmaking. How do we get one Edgegap server per Nakama match?", "expected_skill": "edgegap-nakama"},
+  {"query": "Our players log in with PlayFab and we use PlayFab Matchmaking. How do we start Edgegap servers for each match?", "expected_skill": "edgegap-playfab"},
+  {"query": "I built a browser game in Manus and want online matchmaking with Steam login", "expected_skill": "edgegap-manus"},
+  {"query": "How do I write a Row Level Security policy so users can only update their own row in a profiles table?", "expected_skill": null},
+  {"query": "supabase edge function returns a CORS error when I call it from localhost, what headers do I need?", "expected_skill": null},
+  {"query": "How do I enable Google OAuth sign-in in Supabase and redirect back to my Next.js app?", "expected_skill": null},
+  {"query": "What's the difference between the Supabase publishable key and the secret key?", "expected_skill": null}
+]

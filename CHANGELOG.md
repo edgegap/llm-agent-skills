@@ -2,6 +2,13 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.30.0 (unreleased)
+
+- New `edgegap-supabase` 0.1.0: Supabase as the game backend with Edgegap game servers. Anonymous sign-in, profiles with Row Level Security (players rename themselves, never change wins), a `matchmaking` Edge Function that holds the matchmaker token and ties each ticket to a user (group API; the row is keyed by `member_id` because `ticket_id` stays `null` until the player is matched), a game server that verifies Supabase access tokens against the project's JWKS with `jose` and holds no Supabase key, a `report-match` Edge Function and `record_match()` that only accept players with their own unused ticket, a live Realtime leaderboard, a cancel that also runs when the page closes mid-search (keepalive request), and a headless e2e. Templates from [edgegap/netcode-sample-threejs-supabase](https://github.com/edgegap/netcode-sample-threejs-supabase), verified end to end on Edgegap on 2026-11-03 with a hosted Supabase project (CLI 3.0.0, supabase-js 2.118.0). Non-Node game servers, email/OAuth sign-in and Supabase's local stack not run.
+- `edgegap-threejs` 0.2.1: points browser games whose players must sign in at `edgegap-supabase`.
+- `edgegap` 0.30.0: routes Supabase backends to `edgegap-supabase`.
+- Versions: `edgegap` 0.30.0, `edgegap-supabase` 0.1.0, `edgegap-threejs` 0.2.1.
+
 ## 0.29.0 (unreleased)
 
 The browser and Node.js templates use Edgegap's official JavaScript SDK, [`@edgegap/sdk`](https://github.com/edgegap/sdk-js-sessions-matchmaker-server-browser) 1.1.0, instead of hand-written matchmaker calls. The Three.js templates follow the same change in [edgegap/netcode-sample-threejs-minigames](https://github.com/edgegap/netcode-sample-threejs-minigames) (PR #2).
