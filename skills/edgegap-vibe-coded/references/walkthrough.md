@@ -50,7 +50,7 @@ The rules file is unchanged.
 ## Edgegap resources
 
 - App `thin-ice-tussle`, versions named by UTC timestamp. Port `7777` named `gameport`, protocol WS, TLS Upgrade on; 256 CPU units, 512 MB; max duration 30 minutes; restart policy `never`; quick-stop env vars (`public-demo.md`).
-- The developer added the registry login to the version and created the matchmaker from `floe.json`.
+- The developer created the matchmaker from `floe.json`.
 
 ## After `after`: what running it in public taught
 

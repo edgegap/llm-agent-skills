@@ -2,7 +2,7 @@
 name: edgegap-eos-voice
 description: 'Add in-game voice chat with EOS Voice (Epic Online Services) to an Unreal Engine game that runs on Edgegap dedicated servers. The game server is the trusted server: it checks each player''s EOS ID token, puts them in a match or team room from the Edgegap matchmaker data, gets room tokens from the EOS Voice Web API (EOS voice doesn''t run on Linux servers) and removes players who leave. Ships tested C++ drop-ins (device ID login so players need no Epic account, a replicated component that needs no game class edits, server token service), Developer Portal client policies, Edgegap env vars, local two-client test with fake audio, and fixes for pitfalls. Use for "add voice chat", "team voice", "proximity or party chat", "EOS voice", "push to talk", "players can''t hear each other", Vivox replacement, or voice on an Unreal game hosted on Edgegap. Needs a working Edgegap dedicated server first (edgegap-unreal). Not for Unity yet, lobby-only voice without a server, or Mumble.'
 metadata:
-  version: "0.1.2"
+  version: "0.1.3"
 ---
 
 # EOS Voice on Edgegap dedicated servers (Unreal Engine)
@@ -69,7 +69,7 @@ Read `references/testing.md` §1. Server: `UnrealEditor.exe <uproject> /Game/<pa
 
 Read `references/testing.md` §2.
 1. Package the Linux server and build/push a **new image tag** (UTC timestamp `YYYYMMDD-HHMM`, also the app version name) (never reuse a tag a host may have pulled).
-2. App version for that tag, with environment variables `EOS_VOICE_CLIENT_ID`, `EOS_VOICE_CLIENT_SECRET` (hidden), `EOS_VOICE_DEPLOYMENT_ID`, and optionally `EOS_VOICE_GAME_CLIENT_ID` (then tokens must be issued to the game client). Voice turns on in the server when `EOS_VOICE_CLIENT_ID` is set. The Edgegap MCP `edgegap_create_app_version` can't mark a variable hidden and needs the registry login; if the developer can't share it, they duplicate the previous version in the dashboard and change tag and variables (the dashboard refuses to save until the tag exists in the registry).
+2. App version for that tag, with environment variables `EOS_VOICE_CLIENT_ID`, `EOS_VOICE_CLIENT_SECRET` (hidden), `EOS_VOICE_DEPLOYMENT_ID`, and optionally `EOS_VOICE_GAME_CLIENT_ID` (then tokens must be issued to the game client). Voice turns on in the server when `EOS_VOICE_CLIENT_ID` is set. The Edgegap MCP `edgegap_create_app_version` can't mark a variable hidden (it attaches the registry login itself through `registry_profile: "Edgegap"`); if that matters, the developer duplicates the previous version in the dashboard and change tag and variables (the dashboard refuses to save until the tag exists in the registry).
 3. Point the matchmaker profile's `application.version` at it (a free-tier matchmaker stops after 3 hours: recreate it and update the client's URL and token).
 
 ✅ Check: two clients matched by the matchmaker into one deployment hear each other; the deployment log shows `gets room` lines and `removed … (204)` when a player quits. With a one-team profile the room is `<match>-team-<id>`, which proves the IP-to-ticket lookup; telling two teams apart needs clients on two networks (`references/testing.md` §2).

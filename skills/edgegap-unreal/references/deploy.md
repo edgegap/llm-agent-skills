@@ -76,7 +76,7 @@ From Git Bash on Windows, prefix `docker run` commands that pass a container pat
 | `cpu_units` / `memory_mb` | `1024` / `2048` for a small map; raise for large worlds or many players |
 | `max_duration_minutes` | e.g. `60` for tests, so a forgotten server ends on its own |
 
-The **registry credentials** must be on the version, or deploys fail with "Unable to pull image". The MCP can't read them for regular tokens, so the developer adds them: dashboard → Applications → app → version → Edit → private registry username + token. Then `edgegap_list_app_versions` must show `registry_credentials_set: true`.
+The **registry credentials** must be on the version, or deploys fail with "Unable to pull image". For registry.edgegap.com you add none: `edgegap_create_app_version` sends `registry_profile: "Edgegap"` when you leave `registry_username`/`registry_token` out (MCP 0.17.0+), and Edgegap pulls with the organization's own registry login. `edgegap_list_app_versions` must show `registry_credentials_set: true`.
 
 `edgegap_validate_server_config` checks the Dockerfile text against the planned ports and resources before you build. Use it.
 

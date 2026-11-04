@@ -20,7 +20,7 @@
 | `[edgegap-br200] error: ...` and the deployment exits | A `BR200_*` value is invalid. The line names it. |
 | `ServerBuild: not found` | The image was built from another folder. Rebuild to `Builds/EdgegapServer`, or pass `SERVER_BUILD_PATH` and allow that folder in `.dockerignore`. |
 | `bad interpreter` / `\r` errors | CRLF line endings. Keep the kit's `.gitattributes`. The Dockerfile also strips CRLF. |
-| Deployment 424 / pull error | The app version has no registry login. The developer adds it in the dashboard. |
+| Deployment 424 / pull error | The app version has no registry login. Create a new version without one so `edgegap_create_app_version` sends `registry_profile: "Edgegap"` (MCP 0.17.0+), or the developer adds it in the dashboard. |
 
 ## Joining
 

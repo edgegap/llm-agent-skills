@@ -2,7 +2,7 @@
 name: edgegap-godot
 description: 'Godot 4 + Edgegap: take a Godot multiplayer game (MultiplayerAPI, @rpc, ENetMultiplayerPeer, WebSocketMultiplayerPeer, MultiplayerSpawner, netfox) to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a Godot project (project.godot, .gd, .tscn, export_presets.cfg). It has tested GDScript templates (a server lifecycle autoload that waits for the matched players and stops its own deployment, a matchmaker client and Find Match button), the Edgegap Godot plugin build (export, image, push from the editor), app version ports (UDP for ENet, WS + TLS Upgrade for web and wss), matchmaker config, and fixes for Godot pitfalls: empty server logs, export allowlists that drop new scripts, join validation that silently blocks matched players. Use when a Godot dev wants online play: "host my Godot game", "nobody should host", "Find Match button", "Godot web multiplayer", or is debugging Godot deployments, ports or matchmaking on Edgegap.'
 metadata:
-  version: "0.2.1"
+  version: "0.2.2"
 ---
 
 # Edgegap for Godot 4: dedicated servers + matchmaking
@@ -73,7 +73,7 @@ No editor at hand (CI, or the developer wants you to do it): the same build is t
 ## Phase 4: App version and a direct deploy
 
 Read `references/deploy.md` §4-§5.
-1. Port `gameport` = `PORT`: **UDP** for ENet; **WS** with **TLS Upgrade** on for WebSocket (`tls_upgrade: true`). Registry credentials set (`registry_credentials_set: true`). Push the image before creating the version.
+1. Port `gameport` = `PORT`: **UDP** for ENet; **WS** with **TLS Upgrade** on for WebSocket (`tls_upgrade: true`). Registry credentials set (`registry_credentials_set: true`; for registry.edgegap.com the tool attaches them through `registry_profile: "Edgegap"`). Push the image before creating the version.
 2. `edgegap_deploy` near the developer → `edgegap_wait_for_deployment` → logs show `EDGEGAP ready edgegap=true request_id=<id>`.
 3. Two clients join `<public_ip>:<external>` (ENet) or `wss://<fqdn>:<external>` (WebSocket).
 4. The server stops itself (nobody joined in 120 s, everyone left for 30 s, or the match ended), or `edgegap_stop_deployment`.

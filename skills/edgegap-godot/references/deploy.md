@@ -82,9 +82,9 @@ Confirm with `edgegap_list_registry_tags` (image name only). `edgegap_get_regist
 | cpu_units / memory_mb | `512` / `1024` is enough for most Godot servers (the sample ran at 0.5 vCPU / 1 GB); raise for heavy physics |
 | ports, ENet | `[{"port": 7777, "protocol": "UDP", "name": "gameport"}]` |
 | ports, WebSocket | `[{"port": 7777, "protocol": "WS", "name": "gameport", "tls_upgrade": true}]` |
-| registry_username / registry_token | **required**, even for registry.edgegap.com. The developer pastes them for this call or sets them in the dashboard (version → Edit → Private registry) |
+| registry_username / registry_token | leave them out for registry.edgegap.com: the tool sends `registry_profile: "Edgegap"` and Edgegap pulls with the organization's registry login (MCP 0.17.0+; older servers need them). Only other private registries (Docker Hub, GHCR…) need a pull login |
 
-Verify with `edgegap_list_app_versions`: `registry_credentials_set: true`, and `tls_upgrade: true` on a WS port. Without credentials every deploy fails with `Unable to pull image from registry`. MCP servers older than 0.3.3 have no `tls_upgrade` field; tick **TLS Upgrade** on the port in the dashboard. A duplicated version keeps its own registry fields; check them on the copy too.
+Verify with `edgegap_list_app_versions`: `registry_credentials_set: true`, and `tls_upgrade: true` on a WS port. A registry.edgegap.com version created without `registry_profile: "Edgegap"` and without credentials fails every deploy with `Unable to pull image from registry`: create a new one. MCP servers older than 0.3.3 have no `tls_upgrade` field; tick **TLS Upgrade** on the port in the dashboard. A duplicated version keeps its own registry fields; check them on the copy too.
 
 ## 5. Direct test deployment
 

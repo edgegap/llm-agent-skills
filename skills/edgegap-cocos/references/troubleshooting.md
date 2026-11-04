@@ -8,7 +8,7 @@
 | Panel: "not a quick-start token" / `403 This token is not a quick start token` | A regular API token: use **Get a token** (one-click sign-in), or fill in Project, Username and Token from the dashboard's Container Registry page. Headless: set the three `EDGEGAP_REGISTRY_*` variables. |
 | Panel: "No Dockerfile in ..." | Server folder setting points elsewhere, or no Dockerfile: copy `assets/server/Dockerfile` (better than **Create Dockerfile**'s generic `npm start` starter). |
 | Headless e2e: "Local container never answered" | The server doesn't listen on `PORT`, crashed at start (`docker logs`), or listens on `127.0.0.1` only. Bind `0.0.0.0`. |
-| Deployment can't pull the image | The version has no or wrong registry login: sign out and in again and re-upload (extension), or the developer adds the credentials; check `registry_credentials_set: true`. |
+| Deployment can't pull the image | The version has no or wrong registry login: sign out and in again and re-upload (extension), or create a new version through `edgegap_create_app_version` without a login (it sends `registry_profile: "Edgegap"`); check `registry_credentials_set: true`. |
 | `exec format error` in deployment logs | Image built for ARM (Apple Silicon): rebuild with `--platform linux/amd64`. |
 | Deployment errors right after start | Read `edgegap_get_deployment_logs`: usually the `CMD`, a missing dependency (`tsx` in devDependencies with `--omit=dev`), or a port mismatch between the server and the version. |
 | Client: first connection fails or 502 right after the match is found | Normal for a few seconds: keep the retry in `GameSocket.connect` (10 × 1.5 s). |

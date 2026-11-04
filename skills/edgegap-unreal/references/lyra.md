@@ -31,7 +31,7 @@ The Launcher engine runs the editor and clients; the Linux server is built in `g
 
 ## 4. Edgegap and the matchmaker
 
-- App version: port 7777 UDP named `gameport`, 1.5 vCPU / 3 GB, registry credentials, env `EOS_SERVER_CLIENT_ID` and `EOS_SERVER_CLIENT_SECRET` (hidden). With a regular token the MCP can't set the registry login or read back secret values: the developer adds those in the dashboard.
+- App version: port 7777 UDP named `gameport`, 1.5 vCPU / 3 GB, no registry login (the tool sends `registry_profile: "Edgegap"`), env `EOS_SERVER_CLIENT_ID` and `EOS_SERVER_CLIENT_SECRET` (hidden). The MCP can't read back secret values: the developer adds those in the dashboard.
 - `matchmaker-config.json` has one profile per playlist (`controlpoint`, `elimination`, `topdown`); set the app version, create it in the dashboard, copy URL and token to `UserEngine.ini`. The playlist → profile map lives in `DefaultEngine.ini`.
 
 ## 5. Test

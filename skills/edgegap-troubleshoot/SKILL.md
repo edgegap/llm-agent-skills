@@ -2,7 +2,7 @@
 name: edgegap-troubleshoot
 description: 'Diagnose why a game server on Edgegap will not start, keeps restarting, stops early, or cannot be reached, for any engine: image push and pull failures (401, 403, 424 "unable to pull image"), exec format errors, 422 couldn''t allocate, Error deployments, crash loops and OOM kills, 100% CPU, deployments stopping after 60 minutes or 24 hours, missing logs, clients timing out or failing to connect (internal vs external port, protocol, 0.0.0.0 binding, wss and TLS Upgrade), and matchmaker players stuck searching. Use when someone says their Edgegap deployment, server or matchmaking "isn''t working", or pastes an Edgegap error. Unity-specific build and SDK issues are in edgegap-unity.'
 metadata:
-  version: "0.2.2"
+  version: "0.2.3"
 ---
 
 # Troubleshooting an Edgegap deployment
@@ -28,7 +28,7 @@ Also check https://status.edgegap.com before deep debugging.
 
 | Symptom | Cause / fix |
 |---|---|
-| `Unable to pull image from registry` / `424` | The version has no or wrong registry credentials (required even for registry.edgegap.com), or wrong registry host, image path (`<project>/<image>`) or tag. Check `registry_credentials_set` with `edgegap_list_app_versions` |
+| `Unable to pull image from registry` / `424` | The version has no or wrong registry credentials, or wrong registry host, image path (`<project>/<image>`) or tag. Check `registry_credentials_set` with `edgegap_list_app_versions`. For registry.edgegap.com, create a new version without a login so it gets `registry_profile: "Edgegap"` (PATCH can't add it) |
 | `verify_image` fails "Unable to login with the given credentials" | Credentials on the version are wrong |
 | `422` couldn't allocate | vCPU/memory too high for the tier (free: 1.5 vCPU / 3 GB; memory at most 2× vCPU units), or no capacity near those users right now. Lower resources, or retry with backoff |
 | `400` on deploy | Unknown app or version name, or bad body. Read `message` |

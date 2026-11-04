@@ -30,7 +30,7 @@ Every row below happened in a real run. Engine and compiler problems are in `eng
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| Deploy: "Unable to pull image" | No registry credentials on the version. | Developer adds them in the dashboard; check `registry_credentials_set`. |
+| Deploy: "Unable to pull image" | No registry credentials on the version. | Create a new version without a login so the tool sends `registry_profile: "Edgegap"` (MCP 0.17.0+); check `registry_credentials_set`. |
 | Deployed server seems to run old code after a push | Likely a re-used image tag that the host had already pulled. | New tag + new app version for every build. |
 | Server log on a matchmaker deployment lacks `Started by the Edgegap matchmaker` (drop-ins) | Old image (re-used tag), or the drop-in not compiled into the server. | Check with a fresh tag; run the image locally with `-e MM_MATCH_ID=test`. |
 | Matchmaker deployment never stops | Drop-ins: self-stop inactive (see above), or a player still connected. SDK: it stops only when the server process exits or calls `Self Stop`, never just because the match is empty. | Drop-ins: logs show `Stopping deployment` when it works. SDK: add end-of-match code (`sdk.md` §5); its log shows `stopping the Edgegap deployment`. `edgegap_stop_deployment` meanwhile. |

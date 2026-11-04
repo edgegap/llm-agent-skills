@@ -100,15 +100,11 @@ The developer runs `docker login registry.edgegap.com -u '<username>'` (Containe
 | docker_tag | the pushed tag |
 | cpu_units / memory_mb | start with `1024` / `2048` (1 vCPU, 2 GB). Free tier max 1536 / 3072. memory ≤ 2 × cpu |
 | ports | `[{"port": <internal listen port>, "protocol": "UDP"|"TCP"|"WS", "name": "gameport"}]`; add `"tls_upgrade": true` on WS ports for WebGL/wss clients |
-| registry_username / registry_token | **required even for registry.edgegap.com**: Edgegap pulls with the version's credentials, not the API token. Without them deployments fail to pull (424 / image pull error) |
+| registry_username / registry_token | leave them out for registry.edgegap.com: the tool sends `registry_profile: "Edgegap"` and Edgegap pulls with the organization's registry login (MCP 0.17.0+; older servers need them). Only other private registries (Docker Hub, GHCR…) need a pull login |
 | max_duration_minutes | leave default (60 on hosted MCP) |
-| verify_image | `true` once credentials are set |
+| verify_image | `true` |
 
-Registry credentials are a secret. Two acceptable ways:
-1. Developer pastes username/token for this call (they only grant registry access). Don't repeat them in chat or write them anywhere.
-2. Create the version without them, then the developer opens the version in the dashboard → Edit → **Private registry** "Username Token"/"Password Token", saves.
-
-Either way, verify with `edgegap_list_app_versions`: it reports `registry_credentials_set` (presence only) and `tls_upgrade` per port. `edgegap_create_app_version` also returns `notes` warning when a registry.edgegap.com image has no login. Read them. In the real end-to-end test the developer was asked for the credentials and still skipped the field, and the first deploy failed with `Unable to pull image from registry`.
+For registry.edgegap.com there is no secret to handle: the version gets Edgegap's registry login through `registry_profile: "Edgegap"`, so `edgegap_list_app_versions` shows `registry_credentials_set: true` (presence only) right away, with `tls_upgrade` per port. Verified on Edgegap 2026-11-04: without a login and without the profile, `verify_image` fails with `Unable to login with the given credentials`; with the profile the version verifies and deploys. A version created earlier (or by an MCP server older than 0.17.0) with no login fails to pull: create a new one, since `edgegap_update_app_version` can't add the profile. For another private registry, the developer pastes its username/token for this call (don't repeat them or write them anywhere) or adds them in the dashboard (version → Edit → **Private registry**).
 
 **WebGL / WebSocket transport**: the port must be `WS` with `"tls_upgrade": true` (Edgegap terminates TLS for `*.pr.edgegap.net`, so the server stays plain ws). `edgegap_generate_dockerfile` with a WS netcode already returns `ports_for_create_app_version` with it set. If the connected MCP is older than 0.3.3 and has no `tls_upgrade` field, the developer ticks **TLS Upgrade** on the port in the dashboard instead.
 

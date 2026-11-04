@@ -22,7 +22,7 @@ Edgegap MCP: `edgegap_create_app` once, then `edgegap_create_app_version`:
 | max duration | 30 to 60 min while testing; above the server's own hard cap |
 | env | none needed: the Fleet Manager injects the Nakama URLs and metadata |
 
-**Registry login on the app version.** The developer adds the registry username and token to the version (dashboard, or once through the tool); `edgegap_list_app_versions` must show `registry_credentials_set: true`. Without it every deployment fails to pull, and Nakama players get 113.
+**Registry login on the app version.** None to add for `registry.edgegap.com`: `edgegap_create_app_version` sends `registry_profile: "Edgegap"` when you leave `registry_username`/`registry_token` out (MCP 0.17.0+), and Edgegap pulls with the organization's own registry login. `edgegap_list_app_versions` must show `registry_credentials_set: true`. Without it every deployment fails to pull, and Nakama players get 113.
 
 ## 2. One direct deployment first
 

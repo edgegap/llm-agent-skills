@@ -2,7 +2,7 @@
 name: edgegap-fusion
 description: 'Photon Fusion 2 + Edgegap: run a Unity game built on Photon Fusion as a dedicated server on Edgegap, verified end to end with Photon''s BR200 Battle Royale sample. Load this before using any Edgegap MCP tool on a Fusion project (Assets/Photon/Fusion, NetworkRunner, StartGameArgs, GameMode.Server, PhotonAppSettings, NetworkProjectConfig, TPSBR, BR200). It has a drop-in BR200 kit that changes no sample code (server build with preflight checks, Dockerfile, start script mapping Edgegap variables to BR200''s command-line options, Photon region, self-stop), headless test clients logging the connection type, and fixes for pitfalls: Loader IP 127.0.0.1 forcing Photon relays, public IP failing to bind, IL2CPP required on the server, Linux toolchain packages and App ID/AppVersion/region mismatches. Use when a Fusion dev wants dedicated servers, "host BR200", "CT shows Relayed", GameNotFound. Simple FPS sample: edgegap-fusion-simplefps. Other Unity netcodes: edgegap-unity, edgegap-ngo, edgegap-fishnet, edgegap-purrnet.'
 metadata:
-  version: "0.1.4"
+  version: "0.1.5"
 ---
 
 # Edgegap for Photon Fusion 2: dedicated servers
@@ -55,7 +55,7 @@ Read `references/deploy.md` §2-3.
 
 Read `references/deploy.md` §6.
 1. The developer runs `docker login registry.edgegap.com`; push with `scripts/package.sh registry.edgegap.com/<project>/br200 <new-tag>`.
-2. App version: port `7777` UDP named `gameport` (`to_check: false`), 1 vCPU / 2 GB to start, max duration 60, restart policy `never` where you can set it. Registry credentials: the developer adds them in the dashboard; check `registry_credentials_set: true`.
+2. App version: port `7777` UDP named `gameport` (`to_check: false`), 1 vCPU / 2 GB to start, max duration 60, restart policy `never` where you can set it. No registry login: the tool sends `registry_profile: "Edgegap"`; check `registry_credentials_set: true`.
 3. `edgegap_deploy` with the players' IPs and a test tag → `edgegap_wait_for_deployment` → logs. The first two lines are the kit's: `bind=0.0.0.0:7777/udp public=<ip>:<port>` and `photon_region=<code> (nearest to <city>)`.
 
 ## Phase 4: Two clients and the connection type

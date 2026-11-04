@@ -49,7 +49,7 @@ Expected clients: `CT=Relayed ... players=2 ... runnerScene=Deathmatch#1`, `exce
    - ports `[{"name": "gameport", "port": 7777, "protocol": "UDP", "to_check": false}]`
    - `max_duration_minutes` 60 for tests
    - optional env `PHOTON_REGION` to fix the region for every deployment of the version
-3. The developer adds the registry username and token on that version in the dashboard. Every new version needs them. Check `registry_credentials_set: true`.
+3. No registry login: leave it out and the tool sends `registry_profile: "Edgegap"` (MCP 0.17.0+). Same for every new version. Check `registry_credentials_set: true`.
 4. `edgegap_deploy` with the players' public IPs and a tag such as `simplefps-e2e`, then `edgegap_wait_for_deployment` (FQDN, public IP, external port). The deployment was ready in about 5 seconds.
 5. `edgegap_get_deployment_logs`: read the `server started` line for the session and region. Read logs before stopping: they disappear with the deployment unless Endpoint Storage is set on the version.
 

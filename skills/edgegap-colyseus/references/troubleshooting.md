@@ -7,7 +7,7 @@ Find the layer first: image → deployment → client ↔ server → matchmaker.
 | Symptom | Cause / fix |
 |---|---|
 | `exec format error` in the deployment log | image built for ARM (Apple Silicon): rebuild with `--platform linux/amd64` |
-| Deployment fails to pull | registry credentials missing on the app version, or wrong tag. `edgegap_list_app_versions` → `registry_credentials_set`; `edgegap_list_registry_tags` |
+| Deployment fails to pull | registry credentials missing on the app version (create a new version without a login so it gets `registry_profile: "Edgegap"`), or wrong tag. `edgegap_list_app_versions` → `registry_credentials_set`; `edgegap_list_registry_tags` |
 | `Cannot find module 'tsx'` / `ERR_MODULE_NOT_FOUND` | `tsx` is in devDependencies; `NODE_ENV=production npm ci` skips them. Move it to `dependencies`, or compile with `tsc` in the build and run `node lib/index.js` |
 | Server ignores SIGTERM, deployment takes long to stop | Node isn't PID 1: `CMD npm start`, a shell form `CMD`, or PM2. Use the exec form `CMD ["node", ...]` |
 | Deployment keeps running after everyone left | `playerJoined`/`playerLeft` not wired in every room, or `startLifecycle()` never called. Look for the `[edgegap] deployment ...` boot line |

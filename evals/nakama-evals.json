@@ -30,7 +30,7 @@
         "NAKAMA_ACCESS_URL is a public HTTPS URL (real host or tunnel), not localhost; HANDOFF explains why",
         "Client points at Nakama's public URL (or HANDOFF says to) so stored player IPs are public",
         "App version port is UDP on the server's ENet port, name matching EDGEGAP_PORT_NAME",
-        "HANDOFF tells the developer to add the registry credentials to the Edgegap app version",
+        "HANDOFF does not ask the developer for a registry login on the app version (registry_profile \"Edgegap\" covers registry.edgegap.com) and the version shows registry_credentials_set: true",
         "No Edgegap API token in client or game server code; the token lives only in Nakama's runtime env",
         "Delivered Nakama module compiles with heroiclabs/nakama-pluginbuilder:3.39.0 (checked by docker build)"
       ]
@@ -62,7 +62,7 @@
         "Client connects to Nakama through the public URL (or HANDOFF says to), not 127.0.0.1",
         "App version port protocol fits the ws server (WS, or TCP), internal port 9100, name matching EDGEGAP_PORT_NAME; client connects to the external port",
         "Server Dockerfile runs Node as PID 1 (exec form) and HANDOFF uses --platform linux/amd64 with a unique tag",
-        "HANDOFF tells the developer to add the registry credentials to the Edgegap app version",
+        "HANDOFF does not ask the developer for a registry login on the app version (registry_profile \"Edgegap\" covers registry.edgegap.com) and the version shows registry_credentials_set: true",
         "No Edgegap API token in client or server code",
         "Delivered Nakama Go module compiles with heroiclabs/nakama-pluginbuilder:3.39.0 (checked by docker build)"
       ]
@@ -80,7 +80,7 @@
         "Explains the 'Unable to start a game server' failures: no AfterAuthenticate hook for email (only Custom), so no PlayerIp and Create fails; registers RegisterAfterAuthenticateEmail and notes players must sign in again",
         "Explains the crash as the callback dereferencing a nil instanceInfo.ConnectionInfo and makes it nil-safe (falls back to READY game_server metadata)",
         "MatchmakerMatched returns \"\" instead of a JSON reply, and passes the matched user IDs in Create's metadata",
-        "Explains the failed deployments as missing registry credentials on the app version and tells the developer to add them",
+        "Explains the failed deployments as missing registry credentials on the app version and fixes it with a new version created without a login (registry_profile \"Edgegap\")",
         "Explains that localhost NAKAMA_ACCESS_URL makes Edgegap webhooks and servers unable to call Nakama; sets/asks for a public HTTPS URL",
         "Notes the private player IP (172.18.0.1) in the log and makes clients use Nakama's public URL",
         "Removes sh -x from the compose entrypoint and tells the developer to rotate the Edgegap API token and the http_key",

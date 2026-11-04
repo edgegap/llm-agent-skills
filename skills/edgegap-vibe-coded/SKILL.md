@@ -2,7 +2,7 @@
 name: edgegap-vibe-coded
 description: 'Make a vibe-coded game online multiplayer on Edgegap: a single-player browser game made with an AI tool (Claude, Cursor, Codex, ChatGPT, Lovable, Bolt, v0, Replit, Websim...) that plays against bots in the page, turned into online matches with one authoritative server per match, Find Match and a matchmaker, while solo play keeps working. Load this first for "make my vibe-coded game multiplayer", "add online play to the game I made with AI", "play this with friends online", "my Lovable/Bolt game needs multiplayer", or which game ideas work online. It checks whether the game holds up with network delay, gets the code out of the AI tool into a repo, moves the rules into one file shared by page and server, and runs a public demo cheaply (matchmaker always on, servers stop fast, free-tier limits). Verified with Thin Ice Tussle. Server and client templates: edgegap-threejs; games on Supabase: edgegap-supabase; Manus: edgegap-manus.'
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
 ---
 
 # Edgegap for vibe-coded games: from single-player to online matches
@@ -74,10 +74,11 @@ Load `edgegap-threejs` and follow its Phases 1 to 5 with this game:
 
 Only these, each with the exact link or value:
 1. An Edgegap account and an API token, put in the agent's MCP settings (never in the game, the repo or chat).
-2. The Container Registry login added to the app version you created (a regular API token can't read the registry credentials, so you can't fill them in; check `registry_credentials_set: true` afterwards).
-3. Create the matchmaker in the dashboard from the config file you wrote (give its full path), and start it.
-4. Secrets for the image workflow in GitHub, if CI builds the image.
-5. Play it with someone on another network.
+2. Create the matchmaker in the dashboard from the config file you wrote (give its full path), and start it.
+3. Secrets for the image workflow in GitHub, if CI builds the image.
+4. Play it with someone on another network.
+
+The app version needs no registry login from them: `edgegap_create_app_version` sends `registry_profile: "Edgegap"`; check `registry_credentials_set: true`.
 
 ## Phase 4: A public demo that stays up
 

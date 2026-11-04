@@ -3,8 +3,7 @@
   "docker_repository": "registry.edgegap.com",
   "docker_image": "<your-registry-project>/br200",
   "docker_tag": "20261019-1430",
-  "private_username": "<registry username from the dashboard>",
-  "private_token": "<registry token from the dashboard>",
+  "registry_profile": "Edgegap",
   "req_cpu": 1024,
   "req_memory": 2048,
   "ports": [
