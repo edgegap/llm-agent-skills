@@ -18,7 +18,7 @@
         "Server stops its own deployment via ARBITRIUM_DELETE_URL / self-stop when the match ends or is empty",
         "Server build and image go through the Edgegap Unity plugin (or its Dockerfile from the command line) for linux/amd64 with a unique (non-latest) tag",
         "App version port is UDP with the internal port equal to the transport port, and the port name matches the client lookup",
-        "Registry credentials on the app version are called out as required",
+        "Registry credentials on the app version are handled: left out for registry.edgegap.com so the tool sends registry_profile \"Edgegap\", and registry_credentials_set checked",
         "Matchmaker config is valid JSON and its profile name equals the client's profile",
         "Edgegap API token is never written to project files; developer is told how to connect the Edgegap MCP / provide the token safely",
         "Gives step-by-step dashboard instructions for creating the matchmaker and retrieving API URL + Auth Token"

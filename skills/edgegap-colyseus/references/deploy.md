@@ -25,7 +25,7 @@ Edgegap MCP: `edgegap_create_app` once, then `edgegap_create_app_version`:
 | `max_duration_minutes` | 60 while testing; raise to fit real matches |
 | `env` (optional) | `EMPTY_TIMEOUT_S`, `FIRST_JOIN_TIMEOUT_S`, the game's own settings |
 
-Registry login: the developer adds the registry username and token on the version in the dashboard (or passes them to the tool once); `edgegap_list_app_versions` shows `registry_credentials_set: true`. Without it, deployments fail to pull.
+Registry login: none needed for `registry.edgegap.com`: `edgegap_create_app_version` sends `registry_profile: "Edgegap"` when you leave `registry_username`/`registry_token` out (MCP 0.17.0+), and Edgegap pulls with the organization's own registry login. `edgegap_list_app_versions` shows `registry_credentials_set: true`. A version created without the profile or a login fails to pull: create a new one (`edgegap_update_app_version` can't add it).
 
 Dashboard instead: Applications → Create → version with the same values; the port row is `2567`, **WS**, name `gameport`, **TLS Upgrade** on.
 
@@ -56,4 +56,4 @@ Latency placement: desktop clients can add a `latencies` rule with beacon pings 
 
 ## 5. Shipping a new server build
 
-Build → push a new tag → new app version (duplicate the old one in the dashboard and change the tag, or create it with `edgegap_create_app_version` from the old one's non-secret settings plus the registry login from the dashboard: the API reads it back as `This value is set and encrypted`, never the real value) → matchmaker: Stop → Edit `application.version` → Start. Direct mode: deploy the new version name. Free tier: the matchmaker stops 3 hours after each start, one deployment at a time, two app versions.
+Build → push a new tag → new app version (duplicate the old one in the dashboard and change the tag, or create it with `edgegap_create_app_version` from the old one's non-secret settings and no registry login, so it gets `registry_profile: "Edgegap"`; the old login reads back as `This value is set and encrypted`, never the real value) → matchmaker: Stop → Edit `application.version` → Start. Direct mode: deploy the new version name. Free tier: the matchmaker stops 3 hours after each start, one deployment at a time, two app versions.

@@ -2,7 +2,7 @@
 name: edgegap-containerize
 description: 'Package any game server (Unreal, Godot, Node, Go, Rust, C++, a Unity build) into a Docker image that runs correctly on Edgegap, push it to the Edgegap Container Registry or Docker Hub, GHCR, ECR, GCR or GitLab, and register it as an app version: the container contract, Dockerfile patterns, linux/amd64 builds on Apple Silicon, image tags, registry credentials on the version, and port mapping. Use whenever writing or fixing a Dockerfile for a game server, building on a Mac, pushing to registry.edgegap.com, getting "unable to pull image" or exec format errors, or when someone asks how to get a server build onto Edgegap. Engine-agnostic; edgegap-unity has a ready Unity Dockerfile.'
 metadata:
-  version: "0.2.3"
+  version: "0.2.4"
 ---
 
 # Containerizing a game server for Edgegap
@@ -81,7 +81,7 @@ Confirm the push with `edgegap_list_registry_tags` (image name only, without pro
 | tag | the tag you pushed |
 | vCPU / memory | 1024 units = 1 vCPU; minimum 256 (0.25 vCPU); memory at most 2× vCPU units in MB. Start at 1024 / 2048 and size from measurements |
 | ports | `[{ "port": 7777, "protocol": "UDP", "name": "gameport" }]`, internal port = what the server binds |
-| registry credentials | **required even for registry.edgegap.com**: Edgegap pulls with the version's credentials, not the API token. Missing credentials are the top cause of `Unable to pull image from registry` / 424 |
+| registry credentials | none for registry.edgegap.com: `edgegap_create_app_version` sends `registry_profile: "Edgegap"` when you leave `registry_username`/`registry_token` out (MCP 0.17.0+), and Edgegap pulls with the organization's own registry login. Other private registries need their pull login; a version without one is the top cause of `Unable to pull image from registry` / 424 |
 | restart policy | `never` for match servers (`restart_policy: "never"` on `edgegap_create_app_version`, MCP 0.16.0+) |
 | max duration | minutes; cloud maximum 1440 (24 h), free tier 60 |
 

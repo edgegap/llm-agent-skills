@@ -57,7 +57,7 @@ This produces a Windows IL2CPP client in `Builds/TestClient/Client.exe` in about
    - image `registry.edgegap.com` / `<project>/br200` / the new tag, 1024 CPU units and 2048 MB to start.
    - port `{"name": "gameport", "port": 7777, "protocol": "UDP", "to_check": false}`, max duration 60 for tests.
    - optional `BR200_*` env vars, such as `BR200_MAX_PLAYERS`.
-   - Edgegap pulls with the version's registry login, so the developer adds the username and token on the version in the dashboard. Every new version needs them again.
+   - No registry login: leave it out and the tool sends `registry_profile: "Edgegap"`, so Edgegap pulls with the organization's registry login. Same for every new version.
    - Restart policy `never` (dashboard or API: `restart_policy`) lets the deployment end when BR200 exits. The kit also calls the self-stop URL.
 2. `edgegap_deploy` with the players' public IPs, a test tag, and per-match env (`BR200_MODE=battleRoyale`, `BR200_REGION`, ...).
 3. `edgegap_wait_for_deployment` gives the FQDN (the session name), the public IP and the external port.

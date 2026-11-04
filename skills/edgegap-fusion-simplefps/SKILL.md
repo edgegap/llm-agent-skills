@@ -2,7 +2,7 @@
 name: edgegap-fusion-simplefps
 description: 'Photon''s Simple FPS (Fusion 2) sample + Edgegap: run it as a dedicated server on Edgegap and join through its Party menu, verified end to end. Load this before using any Edgegap MCP tool on a Simple FPS project (SimpleFPS namespace, Deathmatch and Startup scenes, FusionBootstrap, FusionMenuUIParty, MenuConnectionBehaviour, SceneObjects). It has a drop-in kit that edits no Simple FPS or Fusion file: a bootstrap subclass that starts the server and names the session after the deployment FQDN, a Party menu subclass that joins by FQDN and Photon region, an editor setup and IL2CPP build, a Dockerfile, and headless test clients. It fixes the two traps of the usual Simple FPS dedicated-server steps: a server built with only the Deathmatch scene, and a scene that is not active on load, which both make clients throw NullReferenceException in Player.FixedUpdateNetwork. Use for "Simple FPS on Edgegap", "join a deployment from the Party menu" or that error. Other Fusion games, BR200: edgegap-fusion.'
 metadata:
-  version: "0.1.3"
+  version: "0.1.4"
 ---
 
 # Photon Simple FPS on Edgegap
@@ -55,7 +55,7 @@ Ask, in one message, only what you couldn't infer: the Fusion App ID (if empty),
 ## Phase 3: Edgegap app version and deployment
 
 1. The developer runs `docker login registry.edgegap.com`; push with `scripts/package.sh registry.edgegap.com/<project>/simplefps <new-tag>`.
-2. `edgegap_create_app` (once) and `edgegap_create_app_version`: port `7777` UDP named `gameport`, `to_check: false`, 1024 CPU units / 2048 MB, max duration 60 for tests. The developer adds the registry username and token on the version in the dashboard; check `registry_credentials_set: true` with `edgegap_list_app_versions`.
+2. `edgegap_create_app` (once) and `edgegap_create_app_version`: port `7777` UDP named `gameport`, `to_check: false`, 1024 CPU units / 2048 MB, max duration 60 for tests. No registry login: the tool sends `registry_profile: "Edgegap"`; check `registry_credentials_set: true` with `edgegap_list_app_versions`.
 3. `edgegap_deploy` with the players' IPs and a test tag → `edgegap_wait_for_deployment` → `edgegap_get_deployment_logs`. Read the Photon region from `[edgegap-simplefps] server started: session=<fqdn> photon_region=<code>`. To force one, set `PHOTON_REGION` on the deployment (the verified runs used the best-ping region; the override isn't tested yet).
 
 ## Phase 4: Two clients through the Party menu

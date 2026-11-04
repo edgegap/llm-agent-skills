@@ -2,7 +2,7 @@
 name: edgegap-nakama
 description: 'Nakama + Edgegap: keep Nakama for accounts, matchmaking and leaderboards, and run every match on its own Edgegap dedicated server near the players through the Edgegap Fleet Manager for Nakama (nakama-edgegap), end to end. Load this before using any Edgegap MCP tool on a project with a Nakama backend (a Go, TypeScript or Lua Nakama module, heroiclabs/nakama images, a Nakama client SDK: nakama-godot, nakama-unity, nakama-js). Engine-agnostic templates verified on Edgegap with Fish Game (Godot 4.7, Nakama 3.39): the Go module (Fleet Manager, AfterAuthenticate hook for the real sign-in method, MatchmakerMatched hook, notifications 111/112/113, a leaderboard only the server writes), game server code for READY, connection events, STOP and player checks, Dockerfile, compose. Use for "host my Nakama game on Edgegap", "Nakama matchmaker should start a dedicated server", "replace Nakama relayed matches", "Heroic Cloud plus Edgegap", or debugging nakama-edgegap. Unity servers: edgegap-server-nakama-plugin-unity.'
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # Edgegap for Nakama games: Nakama matches players, Edgegap runs the match
@@ -57,7 +57,7 @@ Read `references/game-server.md`. The server needs a dedicated mode (headless, n
 
 Read `references/infra.md` §1 to §2.
 1. Server Dockerfile for the engine (`edgegap-containerize`; Godot: the sample's `server/Dockerfile`), `docker build --platform linux/amd64`, the developer runs `docker login registry.edgegap.com`, push a new tag (UTC timestamp `YYYYMMDD-HHMM`, also the app version name).
-2. `edgegap_create_app` + `edgegap_create_app_version`: the game port with its protocol (UDP for ENet), name `gameport`; 0.5 vCPU / 512 MB to start; max duration 30 to 60. No env vars needed: the Fleet Manager injects them. The developer adds the registry credentials on the version; check `registry_credentials_set: true`.
+2. `edgegap_create_app` + `edgegap_create_app_version`: the game port with its protocol (UDP for ENet), name `gameport`; 0.5 vCPU / 512 MB to start; max duration 30 to 60. No env vars needed: the Fleet Manager injects them. No registry login: the tool sends `registry_profile: "Edgegap"`; check `registry_credentials_set: true`.
 3. Ask, then one direct `edgegap_deploy` with a test tag. With no Nakama env the server lets anyone in: connect a client to `<ip>:<external port>`.
 
 ✅ Check: a client plays on the deployment and the deployment stops after the match (or stop it). Don't add Nakama on an unproven server.

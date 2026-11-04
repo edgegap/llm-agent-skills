@@ -30,7 +30,7 @@ Work from the layer that failed. Always get evidence first (Unity build log, `do
 ## Edgegap deployment
 | Symptom | Cause / fix |
 |---|---|
-| `Unable to pull image from registry` / 424 | app version has no registry credentials (needed even for registry.edgegap.com), wrong image path/tag |
+| `Unable to pull image from registry` / 424 | app version has no registry credentials (for registry.edgegap.com, create a new version without a login so the tool sends `registry_profile: "Edgegap"`), wrong image path/tag |
 | `verify_image` 400 "Unable to login with the given credentials" | registry credentials missing/wrong on the version |
 | 422 can't allocate | resources too high for tier (free: 1.5 vCPU/3 GB) or location issue |
 | Ready, then restarts repeatedly / OOM | crash in server code (read logs before stopping), memory too low, missing scene. Set restart policy Never to see the real exit |

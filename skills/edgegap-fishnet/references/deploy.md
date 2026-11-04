@@ -59,9 +59,9 @@ The developer runs `docker login registry.edgegap.com -u '<username>'` (Containe
 | docker_image / docker_tag | `<project>/<image>` / the pushed tag |
 | cpu_units / memory_mb | `1024` / `2048` to start (free tier max 1536 / 3072) |
 | ports | Bayou: `[{"port": 7770, "protocol": "WS", "name": "gameport", "tls_upgrade": true}]`. Tugboat: `[{"port": 7770, "protocol": "UDP", "name": "gameport"}]` |
-| registry_username / registry_token | **required**, even for registry.edgegap.com. The developer pastes them for this call or sets them in the dashboard afterwards (version → Edit → Private registry) |
+| registry_username / registry_token | leave them out for registry.edgegap.com: the tool sends `registry_profile: "Edgegap"` and Edgegap pulls with the organization's registry login (MCP 0.17.0+; older servers need them). Only other private registries (Docker Hub, GHCR…) need a pull login |
 
-Verify with `edgegap_list_app_versions`: `registry_credentials_set: true`, and `tls_upgrade: true` on the WS port. Without credentials the deployment fails with `Unable to pull image from registry`. MCP servers older than 0.3.3 have no `tls_upgrade` field; tick **TLS Upgrade** on the port in the dashboard. Restart policy "Never" is recommended.
+Verify with `edgegap_list_app_versions`: `registry_credentials_set: true`, and `tls_upgrade: true` on the WS port. A registry.edgegap.com version created without `registry_profile: "Edgegap"` and without credentials fails with `Unable to pull image from registry`: create a new one. MCP servers older than 0.3.3 have no `tls_upgrade` field; tick **TLS Upgrade** on the port in the dashboard. Restart policy "Never" is recommended.
 
 ## 5. Direct test deployment
 

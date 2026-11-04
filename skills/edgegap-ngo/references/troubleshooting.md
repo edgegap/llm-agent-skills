@@ -60,7 +60,7 @@ In order:
 | Plugin's **Containerize** step is very slow or the image is huge | No `.dockerignore` in the project root: Docker sends the whole project. Copy `assets/docker/.dockerignore` |
 | Plugin's local container: clients can't reach `127.0.0.1:7777` | Default run parameters `-p 7777/udp` map a random host port: set `-p 7777:7777/udp` |
 | Plugin's local container exits after 2 minutes | The mock env makes the server act as on Edgegap (120 s no-player self-stop): connect sooner, or **Terminate** and redeploy |
-| `Unable to login with the given credentials` when saving a version | Stale registry login on that version: re-enter it from the Container Registry page |
+| `Unable to login with the given credentials` when saving a version | Stale or missing registry login on that version. For registry.edgegap.com, create the version without a login so the tool sends `registry_profile: "Edgegap"`; otherwise re-enter it from the Container Registry page |
 | Linux toolchain/sysroot errors on Windows | Add `com.unity.toolchain.win-x86_64-linux-x86_64` |
 | Batch build refuses to start | Project open in the Editor: close it or build from the menu |
 | First batch import seems stuck at `Package Manager log level set to [2]` | Resolving git packages and importing: wait (10+ minutes on large projects), read the log for `error CS` |

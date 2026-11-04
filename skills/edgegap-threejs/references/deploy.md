@@ -33,7 +33,7 @@ The developer runs `docker login registry.edgegap.com` with the Container Regist
 | `restart_policy` | `"never"`: the match ends with a self-stop; a crash ends the deployment instead of restarting an empty, half-played match. The API default is `always` |
 | `env` | optional timers (`server.md` §3; for an always-on matchmaker: `EMPTY_TIMEOUT_S=10`, `FIRST_JOIN_TIMEOUT_S=45`, `IDLE_TIMEOUT_S=75`, `REQUIRE_TICKET=1`, §7); `GAME` for several games |
 
-The version needs the registry login to pull from `registry.edgegap.com`: the developer adds the registry username and token to each version in the dashboard (Applications → version → edit), or passes them to `edgegap_update_app_version` themselves. Check `registry_credentials_set: true` in `edgegap_list_app_versions`; without it deployments fail to pull.
+The version needs no registry login from you to pull from `registry.edgegap.com`: `edgegap_create_app_version` sends `registry_profile: "Edgegap"` when you leave `registry_username`/`registry_token` out (MCP 0.17.0+), and Edgegap pulls with the organization's own registry login. Check `registry_credentials_set: true` in `edgegap_list_app_versions`; a version created without it fails to pull, so create a new one (`edgegap_update_app_version` can't add the profile).
 
 **One image, several games.** Put every game's `server.js` in the image and pick one with an env var: `main.js` does `await import(\`../games/${process.env.GAME}/server.js\`)` after checking `GAME` against a list. Then one version per game (`blaster-v1`, `kart-v1`...) on the same tag, each with its `GAME`. One build, one push, and the matchmaker gets one profile per version. The sample repo does exactly this for five games.
 

@@ -2,7 +2,7 @@
 name: edgegap-unreal
 description: 'Unreal Engine + Edgegap: get an Unreal multiplayer game online with dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on an Unreal project: it has the Unreal workflow, Edgegap''s Unreal SDK plugin for UE 5.0-5.8 (Find Match with latency beacons, server ticket check, self-stop) with tested C++ drop-ins as fallback, source-engine and Linux cross-compile setup, server packaging, Dockerfile, matchmaker config and fixes for the pitfalls that cost hours. Use when an Unreal dev wants online play: "put my game online", "players can only join on LAN", "nobody should have to host", "click Play and get matched", listen server to dedicated server, a .uproject that needs servers, "open <ip>" connections, packaging a Linux server, or debugging Edgegap deployments, ports or matchmaking for an Unreal game. Covers C++ and Blueprint-only projects. Use even for beginners who never say Edgegap, servers or Docker. Not for Unity (edgegap-unity), Godot or non-game backends.'
 metadata:
-  version: "0.4.0"
+  version: "0.4.1"
 ---
 
 # Edgegap for Unreal Engine: dedicated servers + matchmaking
@@ -76,7 +76,7 @@ Read `references/deploy.md` §2-4. With the SDK, the developer can instead run *
 ## Phase 5: App, version, direct deploy
 
 Read `references/deploy.md` §5-6.
-1. `edgegap_list_apps` → `edgegap_create_app` if needed → `edgegap_create_app_version`: port `7777`, `UDP`, named `gameport`; 1 vCPU / 2 GB is plenty for a small map. The developer adds the **registry credentials** to the version in the dashboard; `edgegap_list_app_versions` must show `registry_credentials_set: true`.
+1. `edgegap_list_apps` → `edgegap_create_app` if needed → `edgegap_create_app_version`: port `7777`, `UDP`, named `gameport`; 1 vCPU / 2 GB is plenty for a small map. No registry login to add: the tool sends `registry_profile: "Edgegap"`; `edgegap_list_app_versions` must show `registry_credentials_set: true`.
 2. `edgegap_deploy` → `edgegap_wait_for_deployment` → `edgegap_get_deployment_logs` (look for `listening on port 7777`).
 3. A client connects with `open <public_ip>:<external port>`.
 4. `edgegap_stop_deployment`.

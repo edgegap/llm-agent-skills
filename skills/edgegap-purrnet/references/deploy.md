@@ -60,9 +60,9 @@ The developer runs `docker login registry.edgegap.com -u '<username>'` (Containe
 | docker_image / docker_tag | `<project>/<image>` / the pushed tag (push first: the dashboard checks the tag exists) |
 | cpu_units / memory_mb | `1024` / `2048` to start (free tier max 1536 / 3072) |
 | ports | `[{"port": 7777, "protocol": "UDP", "name": "gameport"}]` |
-| registry_username / registry_token | **required**, even for registry.edgegap.com. The developer pastes them for this call or sets them in the dashboard (version → Edit → Private registry) |
+| registry_username / registry_token | leave them out for registry.edgegap.com: the tool sends `registry_profile: "Edgegap"` and Edgegap pulls with the organization's registry login (MCP 0.17.0+; older servers need them). Only other private registries (Docker Hub, GHCR…) need a pull login |
 
-Verify with `edgegap_list_app_versions`: `registry_credentials_set: true`. A version without credentials fails every deploy with `Unable to pull image from registry`. A duplicated version keeps its own registry fields; check them on the copy too.
+Verify with `edgegap_list_app_versions`: `registry_credentials_set: true`. A registry.edgegap.com version created without `registry_profile: "Edgegap"` and without credentials fails every deploy with `Unable to pull image from registry`: create a new one. A duplicated version keeps its own registry fields; check them on the copy too.
 
 ## 5. Direct test deployment
 

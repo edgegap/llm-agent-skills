@@ -1,6 +1,6 @@
 {
   "name": "edgegap",
-  "version": "0.33.1",
+  "version": "0.34.0",
   "description": "Get multiplayer games online on Edgegap: dedicated servers, matchmaking, backend integration, launch and troubleshooting for Unity (including NGO, FishNet, PurrNet and Photon Fusion), Unreal Engine, Godot 4, Colyseus (including Cocos Creator clients), Nakama, PlayFab, Supabase, Three.js, vibe-coded and Manus browser games and any other engine, plus Edgegap relays for host/client games, driven by your coding agent.",
   "author": {
     "name": "Edgegap",

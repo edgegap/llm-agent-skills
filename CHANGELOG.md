@@ -2,6 +2,15 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.34.0 (unreleased)
+
+Edgegap now attaches its own registry login to a version: `POST /v1/app/{app}/version` takes `"registry_profile": "Edgegap"` for images on `registry.edgegap.com`, so nobody has to paste the Container Registry username and token on each version. Verified on Edgegap 2026-11-04: without a login and without the field, `verify_image` fails with `Unable to login with the given credentials`; with it, the version verifies, reads back with the login set, deploys and serves traffic. The field is case-sensitive (`"edgegap"` is a 404 `Registry profile edgegap not found`), is refused for any other `docker_repository` (400), and is create-only (`PATCH` answers 400 `Unknown arguments: registry_profile`).
+
+- Every skill that told the developer to add the registry login to a version for `registry.edgegap.com` now says to leave `registry_username`/`registry_token` out: `edgegap_create_app_version` sends `registry_profile: "Edgegap"` (MCP 0.17.0+). A version created without it fails to pull, and the fix is a new version, not an update. The developer's registry login is still needed for `docker login`/`docker push`, and other registries still need their pull login.
+- `edgegap-deployments-api` documents the field and its errors; the `edgegap-fusion` `app-version.json` example uses it instead of `private_username`/`private_token`.
+- Not changed: what the engine plugins and `edgegap/deploy-action` send.
+- Versions: `edgegap` 0.34.0, `edgegap-cocos` 0.1.1, `edgegap-colyseus` 0.4.2, `edgegap-containerize` 0.2.4, `edgegap-deployments-api` 0.2.13, `edgegap-eos-voice` 0.1.3, `edgegap-fishnet` 0.3.3, `edgegap-fusion` 0.1.5, `edgegap-fusion-simplefps` 0.1.4, `edgegap-godot` 0.2.2, `edgegap-manus` 0.1.7, `edgegap-nakama` 0.2.1, `edgegap-ngo` 0.2.3, `edgegap-playfab` 0.3.3, `edgegap-purrnet` 0.3.3, `edgegap-supabase` 0.1.1, `edgegap-threejs` 0.3.4, `edgegap-troubleshoot` 0.2.3, `edgegap-unity` 0.2.3, `edgegap-unreal` 0.4.1, `edgegap-vibe-coded` 0.1.2.
+
 ## 0.33.1 (unreleased)
 
 Fixes the idle timeout added in 0.32.1, which dropped players who had only switched tabs. Found on Edgegap with Thin Ice Tussle on 2026-11-04: with `IDLE_TIMEOUT_S=30`, a hidden tab sent no input (no animation frames), so its player was disconnected, and when the other player left the server stopped.

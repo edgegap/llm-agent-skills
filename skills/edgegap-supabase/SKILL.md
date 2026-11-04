@@ -2,7 +2,7 @@
 name: edgegap-supabase
 description: 'Supabase + Edgegap: use Supabase as the backend of a multiplayer game (sign-in, player profiles, leaderboards, match history) while Edgegap runs one authoritative game server per match, end to end. Load this before using any Edgegap MCP tool on a project that has or wants Supabase (@supabase/supabase-js, a supabase/ folder, Supabase Auth, Edge Functions, Row Level Security). Templates verified on Edgegap with a Three.js game: anonymous sign-in, Postgres schema with RLS, an Edge Function that holds the Edgegap matchmaker token and ties tickets to users, a game server that verifies Supabase access tokens with JWKS and holds no Supabase key, results reported through a second Edge Function and checked in Postgres, a live Realtime leaderboard, headless e2e. Use for "Supabase as my game backend", "only signed-in players can find a match", "save match results/wins from the game server", "leaderboard with Supabase", "Supabase auth + dedicated servers". Nakama: edgegap-nakama; PlayFab: edgegap-playfab.'
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # Edgegap with Supabase: Supabase is the backend, Edgegap runs the matches
@@ -28,7 +28,7 @@ Why this shape, so you can defend it:
 
 ## How to work
 
-- **Be the engineer.** Write the schema, functions, server and client changes, run the Supabase CLI (`npx supabase`), Docker and the Edgegap MCP tools. Hand the developer only account steps: `npx supabase login`, the registry login on the app version, creating the matchmaker in the dashboard and pasting its URL and token.
+- **Be the engineer.** Write the schema, functions, server and client changes, run the Supabase CLI (`npx supabase`), Docker and the Edgegap MCP tools. Hand the developer only account steps: `npx supabase login`, creating the matchmaker in the dashboard and pasting its URL and token.
 - **One layer at a time**: game on a local server → Supabase project (schema, sign-in, RLS checked) → server verifying tokens locally → image and app version → matchmaker → Edge Functions → e2e on Edgegap → browser.
 - **Secrets** (full rules: [the edgegap skill's agent rules](../edgegap/references/agent-rules.md)): the Edgegap API token never goes anywhere in this design. The matchmaker token and the game server secret go in `npx supabase secrets set`; the game server secret also in a **hidden** env var on the app version. The Supabase secret / service role key never leaves Supabase (Edge Functions get it injected). The publishable key may ship in the page.
 - **Hosted Supabase changes need consent.** Creating a project, `db push`, `config push`, `secrets set` and `functions deploy` change the developer's account: ask once for the plan, then pass `--yes` (the CLI refuses in agent mode without it).

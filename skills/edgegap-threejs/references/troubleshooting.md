@@ -2,7 +2,7 @@
 
 | Symptom | Cause → fix |
 |---|---|
-| Deployment errors right away, "image pull" / 424 | No registry login on the version (`registry_credentials_set: false`) or wrong tag. The developer adds the Container Registry username/token to the version; `edgegap_list_registry_tags` for the tag. |
+| Deployment errors right away, "image pull" / 424 | No registry login on the version (`registry_credentials_set: false`) or wrong tag. Create a new version without `registry_username`/`registry_token` so the tool sends `registry_profile: "Edgegap"`; `edgegap_list_registry_tags` for the tag. |
 | Container exits at once, log says `Set GAME to one of...` | The version lacks the `GAME` env var (several-games image). |
 | Browser: `WebSocket connection to 'wss://...' failed` once, then works | Fresh deployment not accepting yet. Expected: `net.js` retries. If it never works: port not WS + TLS Upgrade, or connecting by IP instead of FQDN (certificate mismatch). |
 | Browser: mixed content / `ws://` blocked | `https` page with `ws://`. Use the `wss://<fqdn>:<external>` from the assignment; TLS Upgrade must be on. |
