@@ -68,15 +68,18 @@ console.log(`result: ${reports[0].result?.winner}; teams: ${reports.map((r) => r
 
 // The deployment should stop itself shortly after the results screen. A local ws:// server loops instead.
 if (seats[0].url.startsWith("wss:")) {
+  // Down = three failed requests in a row: a fresh TLS proxy can fail a single request now and then.
   const t0 = Date.now();
   let stopped = false;
+  let fails = 0;
   while (Date.now() - t0 < 90000 && !stopped) {
     try {
       await fetch(seats[0].url.replace(/^wss:/, "https:"), { signal: AbortSignal.timeout(4000) });
-      await new Promise((r) => setTimeout(r, 3000));
+      fails = 0;
     } catch {
-      stopped = true;
+      stopped = ++fails >= 3;
     }
+    if (!stopped) await new Promise((r) => setTimeout(r, 2000));
   }
   if (stopped) console.log(`deployment stopped itself ${((Date.now() - t0) / 1000).toFixed(0)}s after the match`);
   else problems.push("deployment still answering 90s after the match");

@@ -2,6 +2,19 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.32.1 (unreleased)
+
+From running Thin Ice Tussle ([edgegap/netcode-sample-threejs-thin-ice-tussle](https://github.com/edgegap/netcode-sample-threejs-thin-ice-tussle)) with a matchmaker that stays up while every deployment comes and goes (verified on Edgegap 2026-11-04).
+
+- `edgegap-threejs` 0.3.1:
+  - `room.js`: `IDLE_TIMEOUT_S` disconnects a player who sent nothing during play (close code 4000). Closed or backgrounded tabs kept their WebSocket open and one match ran 132 s with nobody playing; with `IDLE_TIMEOUT_S=30` an abandoned match stopped at 48 s. `shell.js` tells the player why.
+  - `server.md` §7: the quick-stop env set for an always-on matchmaker (`EMPTY_TIMEOUT_S=10`, `FIRST_JOIN_TIMEOUT_S=45`, `IDLE_TIMEOUT_S=30`, `RESULTS_SECONDS=8`, `REQUIRE_TICKET=1`, restart policy never), with measured stop times.
+  - `tools/e2e.mjs` counts a deployment as stopped after three failed requests in a row: one failed request through the TLS proxy reported a stop while the deployment still ran.
+  - `assets/ci/server-image.yml`: the local match must last long enough to produce a result (a 20 s match failed a round-based game's CI).
+  - Troubleshooting rows for both.
+- `edgegap-samples` 0.1.1: the vibe-coded samples use tags, not branches.
+- Versions: `edgegap` 0.32.1, `edgegap-threejs` 0.3.1, `edgegap-samples` 0.1.1.
+
 ## 0.32.0 (unreleased)
 
 Three new skills and Unreal moved onto Edgegap's Unreal SDK.

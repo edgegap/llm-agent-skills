@@ -280,11 +280,12 @@ export async function runGame(def) {
         renderHud(ui, msg, ctx.myId, def);
         game.state(msg);
       });
-      conn.onclose = () => {
+      conn.onclose = (e) => {
         game?.dispose?.();
         game = null;
         conn = null;
-        showMenu(debug.phase === "over" ? "Match finished. Play again?" : "Disconnected from the server.");
+        // 4000 = the server dropped this player for sending nothing (IDLE_TIMEOUT_S), e.g. a backgrounded tab.
+        showMenu(debug.phase === "over" ? "Match finished. Play again?" : e?.code === 4000 ? "You were away too long, so you left the match." : "Disconnected from the server.");
       };
     } catch (err) {
       debug.error = String(err.message ?? err);

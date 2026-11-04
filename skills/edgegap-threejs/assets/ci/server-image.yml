@@ -37,6 +37,7 @@ jobs:
       - run: npm ci
       - name: Local match test (two headless players, no Edgegap)
         run: |
+          # MATCH_SECONDS must let a match produce a result: 20 s fits the skeleton, round-based games need more (90).
           PORT=7777 WAIT_SECONDS=2 COUNTDOWN_SECONDS=1 RESULTS_SECONDS=1 MATCH_SECONDS=20 node server/main.js &
           sleep 2
           SERVER_URL=ws://localhost:7777 node tools/e2e.mjs 2

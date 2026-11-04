@@ -31,7 +31,7 @@ The developer runs `docker login registry.edgegap.com` with the Container Regist
 | `cpu_units` / `memory_mb` | 256 / 512 (a Node game server with a few players uses a fraction of that) |
 | `max_duration_minutes` | 30–60: a safety net, the server stops itself |
 | `restart_policy` | `"never"`: the match ends with a self-stop; a crash ends the deployment instead of restarting an empty, half-played match. The API default is `always` |
-| `env` | optional timers (`server.md` §3); `GAME` for several games |
+| `env` | optional timers (`server.md` §3; for an always-on matchmaker: `EMPTY_TIMEOUT_S=10`, `FIRST_JOIN_TIMEOUT_S=45`, `IDLE_TIMEOUT_S=30`, `REQUIRE_TICKET=1`, §7); `GAME` for several games |
 
 The version needs the registry login to pull from `registry.edgegap.com`: the developer adds the registry username and token to each version in the dashboard (Applications → version → edit), or passes them to `edgegap_update_app_version` themselves. Check `registry_credentials_set: true` in `edgegap_list_app_versions`; without it deployments fail to pull.
 

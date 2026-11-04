@@ -23,6 +23,10 @@ const RESULTS_SECONDS = num(env.RESULTS_SECONDS, 12);
 const FIRST_JOIN_TIMEOUT = num(env.FIRST_JOIN_TIMEOUT_S, 120);
 const EMPTY_TIMEOUT = num(env.EMPTY_TIMEOUT_S, 30);
 const REQUIRE_TICKET = env.REQUIRE_TICKET === "1";
+// A playing client sends input several times a second. One that sent nothing for this long during
+// a round is a closed or backgrounded tab whose socket hasn't dropped yet: disconnect it, so an
+// abandoned match still ends with EMPTY_TIMEOUT_S. 0 turns it off.
+const IDLE_TIMEOUT = num(env.IDLE_TIMEOUT_S, 0);
 
 const BOT_NAMES = ["Bolt", "Pixel", "Nova", "Rusty", "Zed", "Mochi", "Turbo", "Echo"];
 
@@ -64,6 +68,7 @@ export class Room {
         player = this.join(ws, msg);
         return;
       }
+      player.seenAt = Date.now();
       if (msg.t === "input" && this.phase !== "over") this.game.input(player, msg);
     });
     ws.on("close", () => player && this.leave(player));
@@ -88,7 +93,7 @@ export class Room {
 
     const name = String(hello.name ?? "").trim().slice(0, 16) || `Player ${this.nextId}`;
     const team = match && hello.ticket ? match.teamOf(hello.ticket) : null;
-    const player = { id: this.nextId++, name, ws, bot: false, ticket: hello.ticket ?? null, team, score: 0 };
+    const player = { id: this.nextId++, name, ws, bot: false, ticket: hello.ticket ?? null, team, score: 0, seenAt: Date.now() };
     this.players.set(player.id, player);
     this.humansEver++;
     this.emptySince = 0;
@@ -128,6 +133,7 @@ export class Room {
 
   setPhase(phase, seconds = 0) {
     this.phase = phase;
+    this.phaseStartedAt = Date.now();
     this.phaseEnds = seconds ? Date.now() + seconds * 1000 : 0;
     log(`phase ${phase}${seconds ? ` (${seconds}s)` : ""}`);
   }
@@ -186,8 +192,18 @@ export class Room {
   }
 
   watchdog() {
-    if (!onEdgegap) return;
     const now = Date.now();
+    if (IDLE_TIMEOUT && this.phase === "playing") {
+      for (const p of this.humans()) {
+        // Count from the start of play: nobody sends input during the countdown.
+        const since = Math.max(p.seenAt, this.phaseStartedAt ?? 0);
+        if (now - since > IDLE_TIMEOUT * 1000) {
+          log(`idle #${p.id} "${p.name}": nothing for ${IDLE_TIMEOUT}s, disconnecting`);
+          p.ws?.close(4000, "idle");
+        }
+      }
+    }
+    if (!onEdgegap) return;
     if (!this.humansEver && now - this.bootAt > FIRST_JOIN_TIMEOUT * 1000) selfStop(`nobody joined within ${FIRST_JOIN_TIMEOUT}s`);
     if (this.emptySince && now - this.emptySince > EMPTY_TIMEOUT * 1000) selfStop(`empty for ${EMPTY_TIMEOUT}s`);
   }
