@@ -49,6 +49,7 @@ JSON text frames, small and explicit:
 | `RESULTS_SECONDS` | 12 | Results stay on screen, then self-stop (locally: back to `waiting`). |
 | `FIRST_JOIN_TIMEOUT_S` | 120 | Nobody connected at all → self-stop. |
 | `EMPTY_TIMEOUT_S` | 30 | Every human left → self-stop. |
+| `IDLE_TIMEOUT_S` | off | During play, disconnect a human who sent nothing for this long (`30` works: a playing client sends input several times a second). A closed, backgrounded or crashed tab can keep its WebSocket open for minutes, and a match nobody is playing then never looks empty. |
 | `REQUIRE_TICKET` | off | `1` refuses a `hello` whose ticket isn't in `MM_TICKET_IDS`. |
 
 The server starts as soon as every matched player is in (`MM_TICKET_IDS` count), so a full match doesn't wait the 15 s.
@@ -91,6 +92,8 @@ On a matchmaker deployment Edgegap injects `MM_MATCH_ID`, `MM_MATCH_PROFILE`, `M
 - Logging the match on boot (`describeDeployment()`) makes `edgegap_get_deployment_logs` show `match <id> profile <p>, N ticket(s)`, the first thing to check when a match looks wrong.
 
 ## 7. Self-stop and shutdown
+
+**Servers that should stop fast.** For a matchmaker that stays up while every deployment comes and goes, set on the app version: `EMPTY_TIMEOUT_S=10`, `FIRST_JOIN_TIMEOUT_S=45`, `IDLE_TIMEOUT_S=30`, `RESULTS_SECONDS=8`, `REQUIRE_TICKET=1`, plus `restart_policy: "never"`. Verified on Edgegap on 2026-11-04 (Thin Ice Tussle): a match both players left stopped about 12 s later, and a match left open in two background tabs, which kept their sockets, stopped 48 s after it started (3 s countdown + 30 s idle + 10 s empty).
 
 `selfStop(reason)` sends `DELETE $ARBITRIUM_DELETE_URL` with header `Authorization: $ARBITRIUM_DELETE_TOKEN` (raw). Edgegap then sends SIGTERM; `main.js` closes sockets (code 1001) and exits. If the request fails, the process exits, which also ends the deployment.
 
