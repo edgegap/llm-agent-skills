@@ -2,6 +2,13 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.33.0 (unreleased)
+
+A skill for vibe-coded games, from the two vibe-coded samples ([Thin Ice Tussle](https://github.com/edgegap/netcode-sample-threejs-thin-ice-tussle), verified on Edgegap 2026-11-04, and [Orb Herders](https://github.com/edgegap/netcode-sample-threejs-vibe-coded), 2026-11-03).
+
+- New `edgegap-vibe-coded` 0.1.0: a single-player browser game made with an AI tool, taken to online matches while solo play keeps working. Phase 0 checks the game against network delay (no client prediction in the templates: what feels fine, what needs care, what needs a design change), gets the code out of Lovable, Bolt, v0 or a single-file artifact into a repo, and finds the rules. Then one rules file shared by the page and the server, the `edgegap-threejs` templates for the rest, the account steps only the developer can do, and a hand-off. `references/walkthrough.md` goes through Thin Ice Tussle's `before` to `after` diff file by file with the prompts; `references/public-demo.md` covers an always-on matchmaker with servers that stop within seconds (measured stop times), free-tier limits (one deployment, matchmaker stops after about 3 hours), the missing deployment cap, the splash page and going public. Not verified: two networks, React + Vite projects from Lovable, Bolt or v0.
+- Routing: `edgegap` 0.33.0 (description and tables), `edgegap-threejs` 0.3.2 points single-player vibe-coded games to the new skill, `edgegap-samples` 0.1.2 lists it for both vibe-coded samples. New `evals/vibe-coded-routing-eval.json`; the vibe-coded prompt in `evals/samples-routing-eval.json` now expects `edgegap-vibe-coded`.
+
 ## 0.32.1 (unreleased)
 
 From running Thin Ice Tussle ([edgegap/netcode-sample-threejs-thin-ice-tussle](https://github.com/edgegap/netcode-sample-threejs-thin-ice-tussle)) with a matchmaker that stays up while every deployment comes and goes (verified on Edgegap 2026-11-04).
