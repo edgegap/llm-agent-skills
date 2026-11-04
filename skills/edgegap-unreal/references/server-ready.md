@@ -4,12 +4,12 @@ Contents
 1. Blueprint-only projects: add a C++ module
 2. Server target and build settings
 3. Maps, game mode, listen-server habits
-4. Drop-in files
+4. The integration: Edgegap SDK (recommended) or drop-in files (fallback)
 5. Local dedicated server test
 
 ## 1. Blueprint-only projects: add a C++ module
 
-No `Modules` in the `.uproject` and no `Source/` folder means Blueprint-only. Dedicated server targets and the drop-in subsystems need a C++ module. Easiest for the developer: in the editor, **Tools → New C++ Class → None (empty class)** creates the module, the targets and the `.sln`. Without the editor, create it yourself (module name = project name, no spaces):
+No `Modules` in the `.uproject` and no `Source/` folder means Blueprint-only. Dedicated server targets, the Edgegap SDK plugin (it compiles only in a project with C++) and the drop-in subsystems all need a C++ module. Easiest for the developer: in the editor, **Tools → New C++ Class → None (empty class)** creates the module, the targets and the `.sln`. Without the editor, create it yourself (module name = project name, no spaces):
 
 - `Source/<Module>/<Module>.Build.cs`:
   ```csharp
@@ -27,7 +27,7 @@ No `Modules` in the `.uproject` and no `Source/` folder means Blueprint-only. De
 - `Source/<Module>.Target.cs`, `<Module>Editor.Target.cs`, `<Module>Server.Target.cs` (§2).
 - In the `.uproject`: `"Modules": [{ "Name": "<Module>", "Type": "Runtime", "LoadingPhase": "Default" }]`.
 
-Blueprints keep working unchanged. They reach the integration through `Get Game Instance → Get Subsystem (EdgegapMatchmakerSubsystem)`: `Find Match`, `Cancel Match`, `Get Status Text`, and the `On Status Changed` event for a UMG menu.
+Blueprints keep working unchanged. With the SDK they call `Find Match (<profile>)` (or `Find Match` on the `Edgegap Matchmaker` subsystem) and bind its `On Status`, `On Match Found` and `On Failed` events (`sdk.md` §4); server-side nodes are under **Edgegap > Server**. With the drop-ins they use `Get Game Instance → Get Subsystem (EdgegapMatchmakerSubsystem)`: `Find Match`, `Cancel Match`, `Get Status Text`, and the `On Status Changed` event for a UMG menu.
 
 ## 2. Server target and build settings
 
@@ -60,7 +60,11 @@ List both maps under `+MapsToCook=` in `[/Script/UnrealEd.ProjectPackagingSettin
 
 Listen-server projects (`open Map?listen`, Sessions with a hosting player, "Host game" buttons): the dedicated server replaces the host. Gameplay replication usually works as is. Check code that assumes a local player on the server (`GetFirstPlayerController()` on the server, HUD or audio in server code paths), guard it with `IsRunningDedicatedServer()` or `GetNetMode() == NM_DedicatedServer`, and drop the host flow from the menu.
 
-## 4. Drop-in files
+## 4. The integration: Edgegap SDK (recommended) or drop-in files (fallback)
+
+**UE 5.0-5.8: the Edgegap SDK.** Copy `Plugin/EdgegapSDK` from https://github.com/edgegap/sdk-unreal-engine into `Plugins/`, regenerate project files, build the editor target, then wire the server side (ticket check through the game mode's `PreLogin`, end-of-match `Self Stop`). Everything is in `sdk.md` §3-5. Nothing below this paragraph is needed with the SDK, and the two must not be combined (same class names).
+
+**Fallback: the drop-in files**, for engines outside 5.0-5.8 or a team that won't add a plugin. They have no server-side ticket check: any client that knows the address can join.
 
 Copy `assets/unreal/Source/*` into `Source/<Module>/` and extend `<Module>.Build.cs`:
 

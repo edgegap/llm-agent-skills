@@ -2,14 +2,14 @@
 name: edgegap-matchmaking
 description: 'Design matchmaking for a game hosted on Edgegap, any engine: choose between Edgegap''s hosted matchmaker, your own allocator on the Deploy API, or a matchmaker you already use (Unity Matchmaker, Nakama, PlayFab, EOS or Steam lobbies, Pragma, AccelByte, Open Match); design the profile (teams, parties, skill, modes, expansions, queue times); place servers near players (ping beacons, player IPs, region and hub pickers); and add backfill (join in progress, replacing leavers, server-owned backfill tickets). Use for "players wait too long", "EU players land on US servers", "let players join a running match", "replace a player who left", "parties in a 4v4 queue", "skill-based matchmaking", "which matchmaker should we use", "leaving Multiplay or GameLift FlexMatch", or matchmaker config questions not tied to one engine''s client code. Engine skills (edgegap-unity, -ngo, -fishnet, -purrnet, -godot, -unreal, -threejs) own their Find Match client code; edgegap-nakama and edgegap-playfab own those integrations.'
 metadata:
-  version: "0.2.0"
+  version: "0.3.0"
 ---
 
 # Matchmaking for games on Edgegap
 
 Edgegap starts a server near a group of players and returns an address. Matchmaking is everything before that: who plays together, when a partial match is good enough, where the server goes, and what happens when someone leaves. This skill is the design layer, the same for every engine. Done means the developer knows who owns matchmaking, the config or allocator matches the game's real rules, players are placed by measured latency or IP, and, when the game needs it, a running server takes new players through backfill.
 
-The client code that sends tickets lives in the engine skills, and the backend code that calls the Deploy API lives in `edgegap-deployments-api`. Load those for the code; come back here for the decisions. Edgegap ships the matchmaker clients as SDKs: the Unity SDK ([sdk-unity-sessions-matchmaker-server-browser](https://github.com/edgegap/sdk-unity-sessions-matchmaker-server-browser)) and the JavaScript/TypeScript SDK [`@edgegap/sdk`](https://github.com/edgegap/sdk-js-sessions-matchmaker-server-browser) (browser clients, and Node, Bun or Deno servers: groups and parties, page-reload resume, `ARBITRIUM_*`/`MM_*` parsing, backfill with `ServerAgent`). Prefer them over hand-written HTTP calls. When you act on Edgegap yourself, follow the `edgegap` skill's [references/agent-rules.md](../edgegap/references/agent-rules.md).
+The client code that sends tickets lives in the engine skills, and the backend code that calls the Deploy API lives in `edgegap-deployments-api`. Load those for the code; come back here for the decisions. Edgegap ships the matchmaker clients as SDKs: the Unity SDK ([sdk-unity-sessions-matchmaker-server-browser](https://github.com/edgegap/sdk-unity-sessions-matchmaker-server-browser)) and the JavaScript/TypeScript SDK [`@edgegap/sdk`](https://github.com/edgegap/sdk-js-sessions-matchmaker-server-browser) (browser clients, and Node, Bun or Deno servers: groups and parties, page-reload resume, `ARBITRIUM_*`/`MM_*` parsing, backfill with `ServerAgent`), and the [Edgegap SDK for Unreal Engine](https://github.com/edgegap/sdk-unreal-engine) (UE 5.0-5.8, beta: beacons, groups, a server-side check that admits only players with a ticket for that server, `MM_*` readers, self-stop; steps in `edgegap-unreal`). Prefer them over hand-written HTTP calls or a hand-written ticket check. When you act on Edgegap yourself, follow the `edgegap` skill's [references/agent-rules.md](../edgegap/references/agent-rules.md).
 
 ## Step 1: decide who owns matchmaking
 
@@ -77,8 +77,9 @@ Matchmaker version: the pack's templates were verified on `3.3.2`. Edgegap's rel
 ## What was verified
 
 - Profiles, Group Up, beacons and the ticket contract: end to end on Edgegap with the Unity, Unreal, FishNet, PurrNet, NGO, Godot, Colyseus and Three.js samples (October 2026, matchmaker 3.3.2).
+- Unreal SDK (beta 0.1.x): two clients matched to one deployment and the server's ticket check (missing, made-up, prefix and in-use tickets refused) run live on Edgegap with UE 5.8 on 2026-11-02, per the SDK's own compatibility page; its backfill and party calls were not run.
 - Backfill: end to end on Edgegap with the Megacity Metro sample (Unity Netcode for Entities, Edgegap Unity SDK 3.5.5, 2026-10-21). Two clients matched, a third queued later and joined the same deployment through a backfill, and the server closed its backfills before stopping itself. The language-agnostic loop in `references/backfill.md` follows that code but was not run as written; parties larger than one, team backfill and backfill-only profiles were not run.
-- Third-party matchmakers: Nakama and PlayFab end to end (their own skills). Unity Matchmaker uses Unity's official `EdgegapAllocator` module, not run here. Pragma, AccelByte and Open Match have no Edgegap-specific integration: the pattern in `references/third-party.md` is the generic allocator.
+- Third-party matchmakers: Nakama and PlayFab end to end (their own skills). Unity Matchmaker uses Unity's `EdgegapAllocator` Cloud Code module: load `edgegap-ugs-matchmaker`. Pragma, AccelByte and Open Match have no Edgegap-specific integration: the pattern in `references/third-party.md` is the generic allocator.
 
 Say which of these the developer's setup relies on when it matters.
 

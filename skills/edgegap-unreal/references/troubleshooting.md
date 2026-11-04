@@ -1,6 +1,6 @@
 # Troubleshooting: symptom → cause → fix
 
-Every row below happened in a real run. Engine and compiler problems are in `engine-setup.md` §4, matchmaker ones in `matchmaker.md` §9.
+Every row below happened in a real run. Engine and compiler problems are in `engine-setup.md` §4, matchmaker ones in `matchmaker.md` §9, Edgegap SDK ones in `sdk.md` §9. Rows that name the drop-ins (overlay, `Started by the Edgegap matchmaker`, `bEnabled`) don't apply to the SDK.
 
 ## Engine, project, build
 
@@ -32,8 +32,8 @@ Every row below happened in a real run. Engine and compiler problems are in `eng
 |---|---|---|
 | Deploy: "Unable to pull image" | No registry credentials on the version. | Developer adds them in the dashboard; check `registry_credentials_set`. |
 | Deployed server seems to run old code after a push | Likely a re-used image tag that the host had already pulled. | New tag + new app version for every build. |
-| Server log on a matchmaker deployment lacks `Started by the Edgegap matchmaker` | Old image (re-used tag), or the drop-in not compiled into the server. | Check with a fresh tag; run the image locally with `-e MM_MATCH_ID=test`. |
-| Matchmaker deployment never stops | Self-stop inactive (see above), or a player still connected. | Logs show `Stopping deployment` when it works; `edgegap_stop_deployment` meanwhile. |
+| Server log on a matchmaker deployment lacks `Started by the Edgegap matchmaker` (drop-ins) | Old image (re-used tag), or the drop-in not compiled into the server. | Check with a fresh tag; run the image locally with `-e MM_MATCH_ID=test`. |
+| Matchmaker deployment never stops | Drop-ins: self-stop inactive (see above), or a player still connected. SDK: it stops only when the server process exits or calls `Self Stop`, never just because the match is empty. | Drop-ins: logs show `Stopping deployment` when it works. SDK: add end-of-match code (`sdk.md` §5); its log shows `stopping the Edgegap deployment`. `edgegap_stop_deployment` meanwhile. |
 
 ## Client connection
 
@@ -41,7 +41,8 @@ Every row below happened in a real run. Engine and compiler problems are in `eng
 |---|---|---|
 | `Couldn't resolve host name` (host `tickets`) | Unquoted ini URL. | Quote `MatchmakerUrl`. |
 | `assigned to …` then back to the menu | Connection failed (port, protocol, server crashed). | Direct deploy + `open ip:port`; check the version port is UDP 7777 named like `PortName`. |
-| Overlay doesn't show | `bEnabled=False`, `bShowDefaultUI=False`, or the map isn't standalone. | Check the ini section name uses the module name. |
+| Overlay doesn't show (drop-ins) | `bEnabled=False`, `bShowDefaultUI=False`, or the map isn't standalone. | Check the ini section name uses the module name. The SDK has no overlay: bind a menu button to `Find Match`. |
+| SDK: joins refused with `403: Unauthorized (no matchmaking ticket)` | The client connected without its ticket (manual `open`, or a party leader travelled it). | Expected on matchmaker deployments; travel through the SDK, each player with its own ticket (`sdk.md` §5). |
 | Closing clients: server stops only ~75 s later | Killed clients don't say goodbye; the server waits for the connection timeout (~60 s), then the 15 s grace. | Expected. A clean disconnect stops it in ~15 s. |
 
 ## EOS sessions with a dedicated server (verified with Lyra, UE 5.8.4)

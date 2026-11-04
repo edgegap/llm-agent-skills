@@ -23,7 +23,7 @@ Edgegap has no fixed region list to pick from. Servers start in hundreds of loca
 - Each beacon has a host, `udp_port`, `tcp_port` and a location (city). The client measures round-trip time to each (ICMP, UDP or TCP; the measurement itself is not rate limited) and sends `{"<city>": ms, ...}` as the `beacons` attribute.
 - Reload the list before every matchmaking round: beacons are added, removed and replaced in real time.
 - Drop failed measurements (0 or timeout) rather than sending 0, which reads as a perfect ping.
-- The Unity SDK and the Unreal integration kit measure beacons for you; the engine skills show how to turn it on.
+- Edgegap's Unity, JavaScript and Unreal SDKs measure beacons for you (the Unreal SDK by UDP echo with a TCP fallback); the engine skills show how to turn it on.
 
 Rule settings (ms): `max_latency` discards beacons above it for that player; `difference` is the most two players' pings to the same beacon may differ. A starting point is `difference: 100, max_latency: 200`, relaxed in expansion stages so players on poor connections still match after a short wait.
 

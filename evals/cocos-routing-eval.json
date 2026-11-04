@@ -1,0 +1,18 @@
+[
+  {"query": "I'm making a 4-player party game in Cocos Creator 3.8 and wrote my own Node.js server with the ws package. How do I host the server on Edgegap so every match gets its own server?", "expected_skill": "edgegap-cocos"},
+  {"query": "how do I use the Edgegap extension in Cocos Creator? I installed it in extensions/ and the panel says my token is not a quick start token", "expected_skill": "edgegap-cocos"},
+  {"query": "cocos creator web-desktop build on https can't connect to my socket.io game server, I want dedicated servers with wss on edgegap", "expected_skill": "edgegap-cocos"},
+  {"query": "Our Cocos Creator game ships as a WeChat mini game. The backend is a Go websocket server. Can we run one server per match on Edgegap and what about the socket domain allowlist?", "expected_skill": "edgegap-cocos"},
+  {"query": "Cocos Creator 3.8 card game, right now one player's client runs the rules over a websocket relay. I want an authoritative server per match and a Find Match button with the Edgegap JS SDK.", "expected_skill": "edgegap-cocos"},
+  {"query": "edgegap deployment of my cocos game server never stops on its own after the match, it's a plain node ws server in the Server folder of the cocos project", "expected_skill": "edgegap-cocos"},
+  {"query": "cocos native android build connects to wss://xxx.pr.edgegap.net:port and fails the handshake, the web build works fine. custom node server, no colyseus", "expected_skill": "edgegap-cocos"},
+  {"query": "I made a two-player card game in Cocos Creator 3.8 with a Colyseus server. How do I put the server on Edgegap with a Find Match button in the Cocos client?", "expected_skill": "edgegap-colyseus"},
+  {"query": "cocos creator client with colyseus.js 0.14 can't join my colyseus 0.17 server hosted on edgegap", "expected_skill": "edgegap-colyseus"},
+  {"query": "my phaser 3 browser game has a node ws server, how do I host it on edgegap with matchmaking from the page?", "expected_skill": "edgegap-threejs"},
+  {"query": "three.js arena game, single player for now, I want online matches with a real server on edgegap", "expected_skill": "edgegap-threejs"},
+  {"query": "Godot 4 HTML5 export with WebSocketMultiplayerPeer, I need dedicated servers players can reach over wss", "expected_skill": "edgegap-godot"},
+  {"query": "How do I make a sprite follow the mouse in Cocos Creator 3.8?", "expected_skill": null},
+  {"query": "cocos creator tween: how do I chain a scale and a fade animation on a node?", "expected_skill": null},
+  {"query": "How do I publish a Cocos Creator game to the WeChat mini game platform and reduce the package size under 4 MB?", "expected_skill": null},
+  {"query": "In Cocos Creator, how do I load a prefab from a remote asset bundle at runtime?", "expected_skill": null}
+]

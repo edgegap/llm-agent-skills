@@ -1,0 +1,14 @@
+[
+  {"query": "Is there an Edgegap sample project for FishNet I can look at before I start?", "expected_skill": "edgegap-samples"},
+  {"query": "show me example repos of games already running on edgegap, ideally three.js", "expected_skill": "edgegap-samples"},
+  {"query": "I found github.com/edgegap/netcode-game-sample-unity-mirror-tanks, is that still up to date or should I use something else?", "expected_skill": "edgegap-samples"},
+  {"query": "Do you have a demo of Lyra or any Unreal game on Edgegap with matchmaking that I can clone?", "expected_skill": "edgegap-samples"},
+  {"query": "Which Edgegap template should I start from for a Godot 4 game with a dedicated server?", "expected_skill": "edgegap-samples"},
+  {"query": "what samples does edgegap have for photon fusion, and which ones are current?", "expected_skill": "edgegap-samples"},
+  {"query": "Host my FishNet game on Edgegap with a Find Match button", "expected_skill": "edgegap-fishnet"},
+  {"query": "My Godot server works locally, how do I deploy it to Edgegap?", "expected_skill": "edgegap-godot"},
+  {"query": "Make my vibe-coded three.js game online multiplayer on Edgegap", "expected_skill": "edgegap-threejs"},
+  {"query": "What is an Edgegap app version and how is it different from a deployment?", "expected_skill": "edgegap"},
+  {"query": "Find me an open-source Unity FPS template on the asset store", "expected_skill": null},
+  {"query": "Show me Photon's official Fusion sample list", "expected_skill": null}
+]

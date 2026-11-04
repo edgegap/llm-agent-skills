@@ -5,7 +5,7 @@
     {
       "id": 1,
       "prompt": "hey, I've got an Unreal Engine 5.5 top-down multiplayer game (C++, made from the template) in the project folder. right now people connect by typing open <ip> in the console after I deploy a server by hand on Edgegap. I want players to just click Play and get put in a match with others near them, nobody hosting. can you set it up?",
-      "expected_output": "C++ matchmaker client with latency beacons, server self-stop, deps, target upgrade, quoted ini URL, matchmaker config with latency rule, Dockerfile running binary as non-root with stdout flags, handoff with packaging/registry/version/dashboard steps.",
+      "expected_output": "Matchmaker client with latency beacons (Edgegap SDK plugin on UE 5.5, or the C++ drop-ins with a stated reason), server self-stop (with the SDK: end-of-match Self Stop code) and, with the SDK, the server ticket check, deps, target upgrade, quoted ini URL, matchmaker config with latency rule, Dockerfile running binary as non-root with stdout flags, handoff with packaging/registry/version/dashboard steps.",
       "files": [
         "fixtures/topdown-cpp"
       ]
@@ -13,7 +13,7 @@
     {
       "id": 2,
       "prompt": "My game is Blueprint only (UE 5.5, it's in the project folder, no C++ at all). I'd like online matches on Edgegap with automatic matchmaking for 2-4 players. Is that even possible without C++? Please make whatever changes are needed.",
-      "expected_output": "Adds a C++ module + targets (incl. Server), uproject Modules, drop-in subsystems, Blueprint access path, ini, matchmaker config, Dockerfile, handoff noting source engine.",
+      "expected_output": "Adds a C++ module + targets (incl. Server), uproject Modules, the Edgegap SDK plugin (or the drop-in subsystems with a stated reason), Blueprint access path, ini, matchmaker config, Dockerfile, handoff noting source engine.",
       "files": [
         "fixtures/topdown-bp"
       ]

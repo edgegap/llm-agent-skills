@@ -4,6 +4,8 @@ For a project built on Epic's Lyra Starter Game, use [edgegap/game-sample-unreal
 
 Verified on Edgegap with UE 5.8.4 on 2026-11-02: Epic account login, Lyra's own **Start a Game** → Edgegap matchmaker → dedicated server → joined with the player's EOS identity; two clients queued together shared one server; the server created its EOS session with Edgegap's external port and stopped its deployment after the players left. Not run: **Browse** or **Quick Play** finding a running match from a second Epic account. Say so when it matters.
 
+The Lyra sample does not use the [Edgegap SDK for Unreal](https://github.com/edgegap/sdk-unreal-engine) (`sdk.md`): its plugin plugs into CommonUser's session flow, which the SDK doesn't. Don't add the SDK next to it: both define `UEdgegapServerSubsystem`, so the project won't compile. The SDK's ticket check is written to survive Lyra's controller swap (it holds tickets by connection, SDK 0.1.1), but the SDK has not been run with Lyra; treat moving the sample to it as untested work.
+
 Contents: 1. What the plugin does · 2. Setup order · 3. Build · 4. Edgegap and the matchmaker · 5. Test · 6. Pitfalls
 
 ## 1. What the plugin does

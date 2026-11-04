@@ -2,6 +2,30 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.32.0 (unreleased)
+
+Three new skills and Unreal moved onto Edgegap's Unreal SDK.
+
+- `edgegap-unreal` 0.4.0: the [Edgegap Unreal SDK](https://github.com/edgegap/sdk-unreal-engine) (beta, `main` 0.1.1) is the recommended path on UE 5.0 to 5.8. It covers the matchmaker client with beacon pings, the server's ticket check (`EdgegapGameMode::CheckPreLogin` from an existing game mode's `PreLogin`, or `EdgegapGameModeBase` for games without one), MM env helpers and `Self Stop`. The hand-written subsystems in `assets/unreal/Source/` are the fallback outside that range or without a plugin. New `references/sdk.md`. What changed from the drop-ins:
+  - The SDK doesn't stop an empty server by itself, so the game needs end-of-match code.
+  - Beacons are UDP with a TCP fallback.
+  - Players queue as a one-member group.
+  - Settings and console command names are different.
+  - Never install the SDK, the drop-ins and the Lyra plugin together: they share class names.
+  - Live runs only on UE 5.8; the SDK's backfill path and the suggested self-stop code are untested.
+- `edgegap-matchmaking` 0.3.0: Unreal developers are pointed to the SDK, not their own client or ticket check. Unity Matchmaker goes to `edgegap-ugs-matchmaker`, and the UGS row points to Unity's own repo.
+- New `edgegap-ugs-matchmaker` 0.1.0: keep Unity Matchmaker (UGS), for example when leaving Multiplay Hosting, and have Unity's `EdgegapAllocator` Cloud Code module start one Edgegap server per match. The module was merged into Unity-Technologies/matchmaker-hosting-providers on 2026-01-29, with a timeout fix on 2026-10-08; Edgegap's fork is older. Covers the UGS CLI deploy, the `EDGEGAP_API_TOKEN` secret, the queue's Cloud Code hosting, `player_ip` in ticket custom data, the client ticket flow, and `MATCH_ID` plus self-stop on the server. Written from the module's code, tests and Unity's docs; not run end to end.
+- New `edgegap-cocos` 0.1.0: Cocos Creator 3.8 games whose server is not Colyseus. It covers:
+  - A Node.js `ws` server skeleton with self-stop and a ticket check, plus a Dockerfile.
+  - Deploying with the Edgegap Cocos extension (2.0) or the MCP.
+  - A Cocos WebSocket client with a first-connection retry, and Find Match with `@edgegap/sdk`.
+  - WeChat and Douyin mini-game domain allowlists, which a new deployment hostname per match runs into.
+  - Tested locally (Node 22 and Docker: two clients, ticket check, self-stop call); not run on Edgegap.
+- New `edgegap-samples` 0.1.0: a catalog of every public Edgegap sample, SDK and tool. For each: stack, last commit on the default branch (checked 2026-11-04), current, dated or legacy, and the skill that covers it. Flags the 2024 Unity samples and relay samples as legacy, and Edgegap's UGS fork as stale.
+- `edgegap` 0.32.0: routes UGS Matchmaker to `edgegap-ugs-matchmaker`, Cocos without Colyseus to `edgegap-cocos`, and sample requests to `edgegap-samples`. `edgegap-colyseus` 0.4.1 and `edgegap-deployments-api` 0.2.12 point to the new skills.
+- Evals: `ugs-matchmaker-routing-eval.json`, `cocos-routing-eval.json` and `samples-routing-eval.json` are new. The UGS prompts in the PlayFab and matchmaking routing evals now expect `edgegap-ugs-matchmaker`. `unreal-evals.json` accepts the SDK or the drop-ins with a stated reason. The new evals have not been run.
+- Versions: `edgegap` 0.32.0, `edgegap-unreal` 0.4.0, `edgegap-matchmaking` 0.3.0, `edgegap-colyseus` 0.4.1, `edgegap-deployments-api` 0.2.12, `edgegap-ugs-matchmaker` 0.1.0, `edgegap-cocos` 0.1.0, `edgegap-samples` 0.1.0.
+
 ## 0.31.0 (unreleased)
 
 Lessons from turning a vibe-coded single-player Three.js game into online multiplayer with an agent, the MCP and these skills ([edgegap/netcode-sample-threejs-vibe-coded](https://github.com/edgegap/netcode-sample-threejs-vibe-coded), verified end to end on Edgegap on 2026-11-03: direct deployment, matchmaker e2e, two browser tabs on the GitHub Pages origin, self-stop every time).
