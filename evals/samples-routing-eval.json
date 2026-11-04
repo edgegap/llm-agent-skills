@@ -7,7 +7,7 @@
   {"query": "what samples does edgegap have for photon fusion, and which ones are current?", "expected_skill": "edgegap-samples"},
   {"query": "Host my FishNet game on Edgegap with a Find Match button", "expected_skill": "edgegap-fishnet"},
   {"query": "My Godot server works locally, how do I deploy it to Edgegap?", "expected_skill": "edgegap-godot"},
-  {"query": "Make my vibe-coded three.js game online multiplayer on Edgegap", "expected_skill": "edgegap-threejs"},
+  {"query": "Make my vibe-coded three.js game online multiplayer on Edgegap", "expected_skill": "edgegap-vibe-coded"},
   {"query": "What is an Edgegap app version and how is it different from a deployment?", "expected_skill": "edgegap"},
   {"query": "Find me an open-source Unity FPS template on the asset store", "expected_skill": null},
   {"query": "Show me Photon's official Fusion sample list", "expected_skill": null}

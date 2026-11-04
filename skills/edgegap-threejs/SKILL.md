@@ -2,7 +2,7 @@
 name: edgegap-threejs
 description: 'Three.js / browser game + Edgegap: make a JavaScript web game multiplayer with an authoritative Node.js WebSocket server per match and the Edgegap matchmaker called from the page, end to end. Load this before using any Edgegap MCP tool on a Three.js, Babylon.js, PlayCanvas engine, Phaser or plain canvas/WebGL game that has (or needs) its own ws server rather than Colyseus or Nakama. Templates verified on Edgegap with five Three.js games (shooter, racer, 2v2 soccer, light cycles, sumo): a room with phases, bots, fixed tick and snapshots, self-stop, matchmaker teams, a no-build Three.js client with Find Match on the Edgegap JS SDK, wss retry, Dockerfile, WS + TLS Upgrade versions, one image for several games, a multi-profile matchmaker config, headless e2e scripts. Use for "make my three.js game multiplayer", "host my browser game server", "Find Match for a web game", "wss from an https page", "several mini-games on one matchmaker", or debugging them. Colyseus: edgegap-colyseus; Manus: edgegap-manus.'
 metadata:
-  version: "0.3.1"
+  version: "0.3.2"
 ---
 
 # Edgegap for Three.js and other browser games: one Node.js server per match
@@ -49,7 +49,7 @@ Read `references/server.md`.
 2. Write the game as `server/game.js` with the contract in `assets/server/game.js` (a working skeleton): move the rules out of the client into `update(dt)`, take only inputs from clients and validate them, send the state in `snapshot()`. Keep snapshots small (rounded numbers, only what is drawn).
 3. Decide bots (`botFill` or `botsNeeded`) so a lone or short-handed match is still a game.
 
-**A single-player game (often vibe-coded) that runs its rules in the browser:** don't rewrite the rules for the server. Move them into one DOM-free module (no `window`, `document` or Three.js: plain state, `step(world, dt)`, bot logic), have the page import it for solo play and `server/game.js` import the same file, and copy that file into the image (`server.md` §9). Solo mode keeps working offline, the server is authoritative online, and the rules can't drift apart. The same bot logic then drives the headless test players, so tests score goals instead of wandering until time runs out.
+**A single-player game (often vibe-coded) that runs its rules in the browser** (`edgegap-vibe-coded` covers the steps around this one: whether the game holds up online, getting it out of Lovable or Bolt, a public demo): don't rewrite the rules for the server. Move them into one DOM-free module (no `window`, `document` or Three.js: plain state, `step(world, dt)`, bot logic), have the page import it for solo play and `server/game.js` import the same file, and copy that file into the image (`server.md` §9). Solo mode keeps working offline, the server is authoritative online, and the rules can't drift apart. The same bot logic then drives the headless test players, so tests score goals instead of wandering until time runs out.
 
 ✅ Check: `node server/main.js` plus two headless players (`assets/tools/headless-player.mjs`, a 20-line script with short `WAIT_SECONDS`/`MATCH_SECONDS`) go `waiting → countdown → playing → over` with a result, and the room loops back to `waiting` (off Edgegap nothing stops).
 

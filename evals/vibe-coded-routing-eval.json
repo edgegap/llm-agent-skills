@@ -1,0 +1,14 @@
+[
+  {"query": "I made a little 3D penguin game with Claude, it's single player vs bots. Can you make it online so I can play with my friends?", "expected_skill": "edgegap-vibe-coded"},
+  {"query": "My Lovable game is a browser arena brawler against AI. I want real multiplayer with matchmaking but keep the solo mode.", "expected_skill": "edgegap-vibe-coded"},
+  {"query": "I vibe coded a game in Cursor, it's one index.html with a canvas. How do I add online multiplayer without rewriting everything?", "expected_skill": "edgegap-vibe-coded"},
+  {"query": "Which of my game ideas would still feel good online on mobile data: a rhythm game, a bumper-car arena, or a platformer race?", "expected_skill": "edgegap-vibe-coded"},
+  {"query": "Built a Bolt.new game, want a Find Match button and real servers, I've never done backend stuff", "expected_skill": "edgegap-vibe-coded"},
+  {"query": "We want the demo matchmaker running 24/7 on our public page but every game server must shut down as soon as players leave. It's a vibe-coded three.js game.", "expected_skill": "edgegap-vibe-coded"},
+  {"query": "My three.js game already has a Node ws server; host it on Edgegap with one server per match", "expected_skill": "edgegap-threejs"},
+  {"query": "Several mini-games on one matchmaker, each with its own profile, Three.js clients", "expected_skill": "edgegap-threejs"},
+  {"query": "I built a browser game with Manus and want Steam sign-in plus matchmaking", "expected_skill": "edgegap-manus"},
+  {"query": "My web game uses Supabase auth and a leaderboard; only signed-in players should find matches", "expected_skill": "edgegap-supabase"},
+  {"query": "Vibe code me a snake game in a single HTML file", "expected_skill": null},
+  {"query": "How do I deploy my Lovable app's landing page to a custom domain?", "expected_skill": null}
+]
