@@ -11,7 +11,7 @@ Set on the app version (all read by the `edgegap-threejs` room, `server.md` §3 
 | `REQUIRE_TICKET` | `1` | Only players the matchmaker sent can join, so nobody keeps a server alive by connecting to its address directly. |
 | `FIRST_JOIN_TIMEOUT_S` | `45` | Matched players who never connect (closed the tab while the server booted). |
 | `EMPTY_TIMEOUT_S` | `10` | Everyone left. |
-| `IDLE_TIMEOUT_S` | `30` | Tabs that are closed or hidden can keep their WebSocket open for minutes; a player who sends nothing during play gets disconnected. |
+| `IDLE_TIMEOUT_S` | `75` | Closed tabs can keep their WebSocket open for minutes; a client that sends nothing at all (no input, no heartbeat) gets disconnected. The page must send a heartbeat from a timer (`net.js` in `edgegap-threejs` does, every 5 s): hidden tabs send no input, and without it a player who switched tabs is dropped. |
 | `RESULTS_SECONDS` | `8` | Results screen, then stop. |
 | Restart policy | `never` | A crashed match should end, not restart half-played. |
 | Max duration | 30 minutes | The backstop if everything above fails. |
