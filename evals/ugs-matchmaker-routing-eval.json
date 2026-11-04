@@ -1,0 +1,82 @@
+[
+  {
+    "query": "We're leaving Multiplay Hosting but our Unity game keeps Unity Matchmaker. How do I get each UGS match to start an Edgegap server and give the players its IP and port?",
+    "expected_skill": "edgegap-ugs-matchmaker"
+  },
+  {
+    "query": "How do I deploy the EdgegapAllocator Cloud Code module with the ugs CLI, and where does the Edgegap API token go?",
+    "expected_skill": "edgegap-ugs-matchmaker"
+  },
+  {
+    "query": "Our .mmq queue pool uses Multiplay for match hosting. What do I change so it uses Cloud Code with Matchmaker_AllocateServer and Matchmaker_PollAllocation for Edgegap?",
+    "expected_skill": "edgegap-ugs-matchmaker"
+  },
+  {
+    "query": "Every match from our Unity Matchmaker queue ends up on an Edgegap server in New Mexico even though our players are in Europe. The Cloud Code log says no valid player IPs.",
+    "expected_skill": "edgegap-ugs-matchmaker"
+  },
+  {
+    "query": "MatchmakerService.Instance.GetTicketAsync returns a MultiplayAssignment with Found but my NGO client can't connect to the Edgegap server. Which port should I use?",
+    "expected_skill": "edgegap-ugs-matchmaker"
+  },
+  {
+    "query": "Unity Matchmaker tickets fail right away after I switched the pool to the Edgegap Cloud Code allocator. Cloud Code logs show a 401 from api.edgegap.com.",
+    "expected_skill": "edgegap-ugs-matchmaker"
+  },
+  {
+    "query": "Can I keep UGS Authentication and Unity Matchmaker rules for skill and region, but host the dedicated servers on Edgegap instead of Multiplay?",
+    "expected_skill": "edgegap-ugs-matchmaker"
+  },
+  {
+    "query": "Our Unity client calls MultiplayerService.Instance.MatchmakeSessionAsync. If the matchmaker allocates Edgegap servers through Cloud Code, what does the server have to do so players can join?",
+    "expected_skill": "edgegap-ugs-matchmaker"
+  },
+  {
+    "query": "Our dedicated server uses MultiplayService.Instance.ReadyServerForPlayersAsync and the server query handler. We're moving hosting to Edgegap but keeping the UGS matchmaker queue. What do I remove and how does the server learn its match ID?",
+    "expected_skill": "edgegap-ugs-matchmaker"
+  },
+  {
+    "query": "Which Edgegap app version and port name does the Unity matchmaker-hosting-providers EdgegapAllocator need, and how do I ship a new server build afterwards?",
+    "expected_skill": "edgegap-ugs-matchmaker"
+  },
+  {
+    "query": "New Unity Mirror game, no matchmaker or backend yet. I want a Find Match button that puts players on Edgegap dedicated servers.",
+    "expected_skill": "edgegap-unity"
+  },
+  {
+    "query": "Unity NGO game with Unity Relay today. I want to drop Relay and have players matched onto Edgegap dedicated servers with Edgegap's matchmaker.",
+    "expected_skill": "edgegap-ngo"
+  },
+  {
+    "query": "We use PlayFab for login and matchmaking in our Unity game. How do we get each PlayFab match onto its own Edgegap server?",
+    "expected_skill": "edgegap-playfab"
+  },
+  {
+    "query": "Should we keep Unity Matchmaker, switch to Edgegap's matchmaker, or use Nakama for our upcoming 5v5 game? We have no matchmaking code yet.",
+    "expected_skill": "edgegap-matchmaking"
+  },
+  {
+    "query": "How do I set up parties of 2 to 4 and backfill for leavers in the Edgegap matchmaker config for our co-op game?",
+    "expected_skill": "edgegap-matchmaking"
+  },
+  {
+    "query": "Our own Go backend forms matches. How do we call Edgegap's API to start a server, wait until it is ready and stop it after?",
+    "expected_skill": "edgegap-deployments-api"
+  },
+  {
+    "query": "FishNet game with Edgegap's matchmaker: matched players time out connecting to the deployment. Where do I look?",
+    "expected_skill": "edgegap-fishnet"
+  },
+  {
+    "query": "How do I write a Unity Matchmaker rule that matches players by skill within 200 points and relaxes it after 30 seconds? We host on Multiplay and are not changing that.",
+    "expected_skill": null
+  },
+  {
+    "query": "How do I store player progress with UGS Cloud Save and read it from a Cloud Code C# module?",
+    "expected_skill": null
+  },
+  {
+    "query": "Unity Authentication sign in with Steam returns an invalid ticket error in the editor. How do I fix it?",
+    "expected_skill": null
+  }
+]

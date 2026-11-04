@@ -71,7 +71,7 @@ Responses (`POST` and `GET /backfills/{id}`) return `id`, `profile`, `tickets`, 
 
 ## 4. The server loop
 
-Node.js, Bun and Deno servers don't need to write this loop: `ServerAgent` from Edgegap's official JS SDK ([`@edgegap/sdk`](https://github.com/edgegap/sdk-js-sessions-matchmaker-server-browser), `@edgegap/sdk/matchmaking`) creates backfills up to `targetTeamSize`, polls them, seats players (`playerConnected(ticketId)` returns `null` for a ticket not assigned to this server), frees seats on `abandonPlayer`, abandons players who don't connect within 60 s, and `abandonAllBackfills()` closes them before shutdown. Build its `assignment` from `DeploymentEnvironment.fromEnv(process.env)` and its tickets from `MatchEnvironment.fromEnv(process.env).tickets`, as in the SDK README. Not run by this pack. Unity games use the Unity SDK's equivalent (the Megacity Metro path above).
+Node.js, Bun and Deno servers don't need to write this loop: `ServerAgent` from Edgegap's official JS SDK ([`@edgegap/sdk`](https://github.com/edgegap/sdk-js-sessions-matchmaker-server-browser), `@edgegap/sdk/matchmaking`) creates backfills up to `targetTeamSize`, polls them, seats players (`playerConnected(ticketId)` returns `null` for a ticket not assigned to this server), frees seats on `abandonPlayer`, abandons players who don't connect within 60 s, and `abandonAllBackfills()` closes them before shutdown. Build its `assignment` from `DeploymentEnvironment.fromEnv(process.env)` and its tickets from `MatchEnvironment.fromEnv(process.env).tickets`, as in the SDK README. Not run by this pack. Unity games use the Unity SDK's equivalent (the Megacity Metro path above). Unreal games on the [Edgegap SDK for Unreal](https://github.com/edgegap/sdk-unreal-engine) get the backfill calls as generated nodes and `FEdgegapMMApi` functions (`Create Backfill (<profile>)`, get, delete) and the `MM_*` readers in `UEdgegapServerLibrary`, but no ready-made loop: write the loop below with them, and call the ticket gate's `Allow Ticket` (or `Allow Backfill Tickets`) for each seated ticket, or the server refuses the backfilled player. Not run by this pack; steps in `edgegap-unreal`.
 
 ```typescript
 // Runs only on matchmaker deployments (MM_MATCH_PROFILE set). Engine-agnostic sketch, not run as written.
@@ -136,7 +136,7 @@ Delete every open backfill before the server stops itself, then stop the deploym
 
 | Situation | Handling |
 |---|---|
-| A joining player sends a ticket ID the server wasn't given | reject, or admit and log (Megacity admits them: the seat may have expired a moment earlier) |
+| A joining player sends a ticket ID the server wasn't given | reject, or admit and log (Megacity admits them: the seat may have expired a moment earlier; the Unreal SDK's ticket gate rejects them unless allowed first) |
 | A backfill is `ASSIGNED` while the server is stopping | the player is sent to a closing server; log it. Closing backfills first keeps this rare |
 | Every original player left | no real ticket left to send: stop opening backfills and let the server stop |
 | Create returns 429 | back off a few seconds; don't retry in a tight loop |

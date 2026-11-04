@@ -1,0 +1,18 @@
+{
+  "__version__": "1.0.0",
+  "server": {
+    "serverDir": "Server",
+    "imageName": "my-cocos-game-server",
+    "tag": "20261104-1200",
+    "app": "my-cocos-game",
+    "port": {
+      "name": "gameport",
+      "port": 7777,
+      "protocol": "WS",
+      "tlsUpgrade": true
+    },
+    "cpuUnits": 256,
+    "memoryMb": 512,
+    "maxDurationMinutes": 60
+  }
+}

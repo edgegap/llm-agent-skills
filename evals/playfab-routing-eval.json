@@ -45,7 +45,7 @@
   },
   {
     "query": "Keep Unity Matchmaker (UGS) and have a Cloud Code module start Edgegap servers. How do I write that module?",
-    "expected_skill": "edgegap-deployments-api"
+    "expected_skill": "edgegap-ugs-matchmaker"
   },
   {
     "query": "FishNet Unity game, no backend at all. I want a Find Match button that puts players on an Edgegap dedicated server.",

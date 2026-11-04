@@ -25,7 +25,7 @@
   },
   {
     "query": "We're leaving Unity Multiplay but we want to keep Unity Matchmaker. How does Unity Matchmaker start servers on Edgegap, and what about player locations?",
-    "expected_skill": "edgegap-matchmaking"
+    "expected_skill": "edgegap-ugs-matchmaker"
   },
   {
     "query": "Our studio uses Pragma for accounts and matchmaking. Can Pragma's matches run on Edgegap dedicated servers? What's the architecture?",
