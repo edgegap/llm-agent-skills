@@ -2,6 +2,19 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.33.1 (unreleased)
+
+Fixes the idle timeout added in 0.32.1, which dropped players who had only switched tabs. Found on Edgegap with Thin Ice Tussle on 2026-11-04: with `IDLE_TIMEOUT_S=30`, a hidden tab sent no input (no animation frames), so its player was disconnected, and when the other player left the server stopped.
+
+- `edgegap-threejs` 0.3.3:
+  - `net.js` sends `{t:"ping"}` every 5 s from a timer, which keeps running in background tabs. The server counts any message as activity.
+  - `room.js` pings every socket every 10 s and drops one that misses a pong, which catches lost networks and killed tabs within about 20 s. It also logs socket errors instead of leaving them unhandled.
+  - The recommended `IDLE_TIMEOUT_S` is now 75 s, because Chrome slows hidden-tab timers to once a minute after 5 minutes.
+  - Verified on Edgegap: after one of two players left, the other, in a background tab, kept playing over 100 s, and the server stopped 24 s after the last one left.
+  - Troubleshooting has a row for players dropped while still in the game.
+- `edgegap-vibe-coded` 0.1.1: same recommendation (75 s, with the heartbeat).
+- Versions: `edgegap` 0.33.1, `edgegap-threejs` 0.3.3, `edgegap-vibe-coded` 0.1.1.
+
 ## 0.33.0 (unreleased)
 
 A skill for vibe-coded games, from the two vibe-coded samples ([Thin Ice Tussle](https://github.com/edgegap/netcode-sample-threejs-thin-ice-tussle), verified on Edgegap 2026-11-04, and [Orb Herders](https://github.com/edgegap/netcode-sample-threejs-vibe-coded), 2026-11-03).

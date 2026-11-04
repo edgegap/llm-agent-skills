@@ -23,9 +23,9 @@ const RESULTS_SECONDS = num(env.RESULTS_SECONDS, 12);
 const FIRST_JOIN_TIMEOUT = num(env.FIRST_JOIN_TIMEOUT_S, 120);
 const EMPTY_TIMEOUT = num(env.EMPTY_TIMEOUT_S, 30);
 const REQUIRE_TICKET = env.REQUIRE_TICKET === "1";
-// A playing client sends input several times a second. One that sent nothing for this long during
-// a round is a closed or backgrounded tab whose socket hasn't dropped yet: disconnect it, so an
-// abandoned match still ends with EMPTY_TIMEOUT_S. 0 turns it off.
+// Clients send input while playing and a heartbeat every 5 s (also from background tabs). One that
+// sent nothing for this long is gone even though its socket is open (a suspended phone browser):
+// disconnect it, so an abandoned match still ends with EMPTY_TIMEOUT_S. 0 turns it off.
 const IDLE_TIMEOUT = num(env.IDLE_TIMEOUT_S, 0);
 
 const BOT_NAMES = ["Bolt", "Pixel", "Nova", "Rusty", "Zed", "Mochi", "Turbo", "Echo"];
@@ -50,12 +50,28 @@ export class Room {
     setInterval(() => this.tick(), 1000 / this.cfg.tickHz);
     setInterval(() => this.broadcastState(), 1000 / this.cfg.sendHz);
     setInterval(() => this.watchdog(), 1000);
+    // WebSocket ping every 10 s: a connection that misses a pong (network gone, tab killed) is
+    // dropped within about 20 s. Browsers answer pings themselves, background tabs included.
+    setInterval(() => {
+      for (const p of this.humans()) {
+        if (!p.ws) continue;
+        if (p.ws.pongMissed) {
+          log(`no pong from #${p.id} "${p.name}", dropping`);
+          p.ws.terminate();
+        } else {
+          p.ws.pongMissed = true;
+          p.ws.ping();
+        }
+      }
+    }, 10000);
   }
 
   // ---- connections -------------------------------------------------------------------------
 
   accept(ws) {
     let player = null;
+    ws.on("pong", () => (ws.pongMissed = false));
+    ws.on("error", (err) => log(`socket error: ${err.message}`));
     ws.on("message", (data) => {
       let msg;
       try {

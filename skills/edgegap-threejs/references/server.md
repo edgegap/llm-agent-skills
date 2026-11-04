@@ -49,7 +49,7 @@ JSON text frames, small and explicit:
 | `RESULTS_SECONDS` | 12 | Results stay on screen, then self-stop (locally: back to `waiting`). |
 | `FIRST_JOIN_TIMEOUT_S` | 120 | Nobody connected at all → self-stop. |
 | `EMPTY_TIMEOUT_S` | 30 | Every human left → self-stop. |
-| `IDLE_TIMEOUT_S` | off | During play, disconnect a human who sent nothing for this long (`30` works: a playing client sends input several times a second). A closed, backgrounded or crashed tab can keep its WebSocket open for minutes, and a match nobody is playing then never looks empty. |
+| `IDLE_TIMEOUT_S` | off | During play, disconnect a human who sent nothing at all for this long (`75`). `net.js` sends a heartbeat every 5 s from a timer, which background tabs keep running (Chrome slows hidden-tab timers to once a minute after 5 minutes, hence 75 rather than 30), so only a page that is really gone, or a phone browser that froze the page, is dropped. Without the heartbeat, a player who switches tabs sends no input (no animation frames) and gets dropped. Separately, `room.js` pings every socket every 10 s and drops one that misses a pong, which catches lost networks and killed tabs within about 20 s. |
 | `REQUIRE_TICKET` | off | `1` refuses a `hello` whose ticket isn't in `MM_TICKET_IDS`. |
 
 The server starts as soon as every matched player is in (`MM_TICKET_IDS` count), so a full match doesn't wait the 15 s.
@@ -93,7 +93,7 @@ On a matchmaker deployment Edgegap injects `MM_MATCH_ID`, `MM_MATCH_PROFILE`, `M
 
 ## 7. Self-stop and shutdown
 
-**Servers that should stop fast.** For a matchmaker that stays up while every deployment comes and goes, set on the app version: `EMPTY_TIMEOUT_S=10`, `FIRST_JOIN_TIMEOUT_S=45`, `IDLE_TIMEOUT_S=30`, `RESULTS_SECONDS=8`, `REQUIRE_TICKET=1`, plus `restart_policy: "never"`. Verified on Edgegap on 2026-11-04 (Thin Ice Tussle): a match both players left stopped about 12 s later, and a match left open in two background tabs, which kept their sockets, stopped 48 s after it started (3 s countdown + 30 s idle + 10 s empty).
+**Servers that should stop fast.** For a matchmaker that stays up while every deployment comes and goes, set on the app version: `EMPTY_TIMEOUT_S=10`, `FIRST_JOIN_TIMEOUT_S=45`, `IDLE_TIMEOUT_S=75`, `RESULTS_SECONDS=8`, `REQUIRE_TICKET=1`, plus `restart_policy: "never"`. Verified on Edgegap on 2026-11-04 (Thin Ice Tussle): a match both players left stopped about 12 s and 24 s later; after one of two players left, the other, whose tab was in the background, kept playing for over 100 s (rounds 4 to 6) instead of being dropped. An earlier build with `IDLE_TIMEOUT_S=30` and no heartbeat dropped background-tab players, and when the other player then left the whole server stopped: keep the heartbeat whenever the idle timeout is on.
 
 `selfStop(reason)` sends `DELETE $ARBITRIUM_DELETE_URL` with header `Authorization: $ARBITRIUM_DELETE_TOKEN` (raw). Edgegap then sends SIGTERM; `main.js` closes sockets (code 1001) and exits. If the request fails, the process exits, which also ends the deployment.
 

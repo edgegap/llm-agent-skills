@@ -2,7 +2,7 @@
 name: edgegap-vibe-coded
 description: 'Make a vibe-coded game online multiplayer on Edgegap: a single-player browser game made with an AI tool (Claude, Cursor, Codex, ChatGPT, Lovable, Bolt, v0, Replit, Websim...) that plays against bots in the page, turned into online matches with one authoritative server per match, Find Match and a matchmaker, while solo play keeps working. Load this first for "make my vibe-coded game multiplayer", "add online play to the game I made with AI", "play this with friends online", "my Lovable/Bolt game needs multiplayer", or which game ideas work online. It checks whether the game holds up with network delay, gets the code out of the AI tool into a repo, moves the rules into one file shared by page and server, and runs a public demo cheaply (matchmaker always on, servers stop fast, free-tier limits). Verified with Thin Ice Tussle. Server and client templates: edgegap-threejs; games on Supabase: edgegap-supabase; Manus: edgegap-manus.'
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # Edgegap for vibe-coded games: from single-player to online matches
@@ -82,7 +82,7 @@ Only these, each with the exact link or value:
 ## Phase 4: A public demo that stays up
 
 When the game will sit on a public page with the matchmaker on all the time, read [references/public-demo.md](references/public-demo.md). The short version:
-- Only the matchmaker runs non-stop. Every deployment stops itself fast: `EMPTY_TIMEOUT_S=10`, `FIRST_JOIN_TIMEOUT_S=45`, `IDLE_TIMEOUT_S=30`, `RESULTS_SECONDS=8`, `REQUIRE_TICKET=1`, restart policy `never`, max duration 30 minutes as the backstop.
+- Only the matchmaker runs non-stop. Every deployment stops itself fast: `EMPTY_TIMEOUT_S=10`, `FIRST_JOIN_TIMEOUT_S=45`, `IDLE_TIMEOUT_S=75` (with the client heartbeat), `RESULTS_SECONDS=8`, `REQUIRE_TICKET=1`, restart policy `never`, max duration 30 minutes as the backstop.
 - The free tier's matchmaker stops about 3 hours after each start, and it allows one deployment at a time. A demo that must stay up needs a paid tier; tell the developer before they announce it.
 - Edgegap's matchmaker has no cap on concurrent deployments and no per-player ticket limit. Say so plainly if the developer asks for one; a small gate service in front of the matchmaker is the option, not a config setting.
 - The matchmaker's client token in the page is by design. Scan the repo for secrets before making it public.

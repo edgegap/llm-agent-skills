@@ -55,7 +55,7 @@ The rules file is unchanged.
 ## After `after`: what running it in public taught
 
 - **Splash page.** The menu became a landing page: one big Play online button, Practice vs bots, a collapsed How to play, and four bots playing a real match behind it, run in the page by the same `rules.js` (no server cost). The queue shows elapsed time and Cancel.
-- **Background tabs keep sockets open.** Two closed or hidden tabs kept a match alive for 132 s. `IDLE_TIMEOUT_S=30` now disconnects a player who sends nothing while playing (close code 4000, and the page says why); that abandoned match then stopped at 48 s. This is in `edgegap-threejs` 0.3.1.
+- **Background tabs keep sockets open.** Two closed or hidden tabs kept a match alive for 132 s. `IDLE_TIMEOUT_S` now disconnects a player who sends nothing while playing (close code 4000, and the page says why); that abandoned match then stopped at 48 s. At 30 s and without a heartbeat it also dropped players who had only switched tabs, and when the other player left the server stopped: the page now sends a heartbeat every 5 s from a timer, the server pings sockets to catch dead ones, and the timeout is 75 s. A background-tab player then kept playing over 100 s after the other left. This is in `edgegap-threejs` 0.3.3.
 - **The free-tier matchmaker stopped** about 3 hours after it was created (its URL stopped resolving), so the live page's Play online broke until it was restarted. A demo that stays up needs a paid tier.
 
 ## The prompts that matter
