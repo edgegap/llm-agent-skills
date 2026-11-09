@@ -1,0 +1,12 @@
+[
+  {"query": "I made a little arena shooter with fal Agent on fal.ai. Can you make it online so my friends can play?", "expected_skill": "edgegap-fal"},
+  {"query": "What should I tell fal Agent so the game it writes can later run on a multiplayer server?", "expected_skill": "edgegap-fal"},
+  {"query": "fal.ai wrote me rules.js, main.js and index.html for a canvas game vs bots. Add Find Match and real servers on Edgegap.", "expected_skill": "edgegap-fal"},
+  {"query": "I generate my game art with fal and the game code came from fal Agent too; I want matchmaking and one server per match", "expected_skill": "edgegap-fal"},
+  {"query": "My Lovable game is a browser brawler against AI. I want real multiplayer with matchmaking but keep the solo mode.", "expected_skill": "edgegap-vibe-coded"},
+  {"query": "I vibe coded a game in Cursor, it's one index.html with a canvas. How do I add online multiplayer?", "expected_skill": "edgegap-vibe-coded"},
+  {"query": "My three.js game already has a Node ws server; host it on Edgegap with one server per match", "expected_skill": "edgegap-threejs"},
+  {"query": "I built a browser game with Manus and want Steam sign-in plus matchmaking", "expected_skill": "edgegap-manus"},
+  {"query": "Use fal.ai to generate a pixel-art sprite sheet for my platformer", "expected_skill": null},
+  {"query": "Which fal model is best for image-to-video of a game trailer?", "expected_skill": null}
+]
