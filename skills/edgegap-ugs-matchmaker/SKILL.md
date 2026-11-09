@@ -2,7 +2,7 @@
 name: edgegap-ugs-matchmaker
 description: 'Unity Gaming Services (UGS) Matchmaker + Edgegap: keep Unity Matchmaker queues and pools and have each match start its own Edgegap dedicated server near the players, through the EdgegapAllocator Cloud Code module (Matchmaker_AllocateServer deploys, Matchmaker_PollAllocation returns IP:port to the tickets). Load this before using any Edgegap MCP tool on a Unity project that uses com.unity.services.matchmaker or MatchmakeSessionAsync, has .mmq queue files, ugs deploy, Cloud Code hosting, or is leaving Multiplay Hosting (MultiplayService, server query, allocation payload). Covers deploying the module with the UGS CLI, the EDGEGAP_API_TOKEN secret, app/version/port constants, the queue''s Cloud Code hosting, player_ip in ticket custom data, the client ticket flow, MATCH_ID and self-stop on the server. Not run end to end yet. A new game with no matchmaker: edgegap-matchmaking + edgegap-unity. PlayFab: edgegap-playfab. Choosing a matchmaker: edgegap-matchmaking.'
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # Edgegap for Unity Matchmaker (UGS): Unity matches players, Edgegap runs the match
@@ -33,7 +33,7 @@ Why this shape, so you can defend it:
 
 ## How to work
 
-- **Be the engineer.** Read the project, edit the module's constants, run `dotnet`, the `ugs` CLI, Unity builds, Docker and the Edgegap MCP tools, and read the logs. Hand the developer only account steps: the Edgegap token into UGS Secrets, a UGS service account for the CLI, `docker login`, registry credentials on the app version, Dashboard clicks, playtesting.
+- **Be the engineer.** Read the project, edit the module's constants, run `dotnet`, the `ugs` CLI, Unity builds, Docker and the Edgegap MCP tools, and read the logs. Hand the developer only account steps: the Edgegap token into UGS Secrets, a UGS service account for the CLI, `docker login`, Dashboard clicks, playtesting.
 - **One layer at a time:** server runs locally → image → one direct Edgegap deployment → module deployed → queue on Cloud Code → client → two-client match. Each phase has a check; don't wire Matchmaker to an unproven server.
 - **Safety.** Follow the `edgegap` skill's [agent rules](../edgegap/references/agent-rules.md): ask before deploying, timestamp image tags and versions, stop only what you started. The UGS service account key and the Edgegap token are secrets: the developer types them into the Dashboard or their own terminal (`ugs login`), never into chat, code or the repo.
 - **Money.** Every match starts a deployment until the server stops itself. Free tier: one deployment at a time, so a leftover test server makes every allocation fail.

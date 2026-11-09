@@ -2,7 +2,7 @@
 name: edgegap-threejs
 description: 'Three.js / browser game + Edgegap: make a JavaScript web game multiplayer with an authoritative Node.js WebSocket server per match and the Edgegap matchmaker called from the page, end to end. Load this before using any Edgegap MCP tool on a Three.js, Babylon.js, PlayCanvas engine, Phaser or plain canvas/WebGL game that has (or needs) its own ws server rather than Colyseus or Nakama. Templates verified on Edgegap with five Three.js games (shooter, racer, 2v2 soccer, light cycles, sumo): a room with phases, bots, fixed tick and snapshots, self-stop, matchmaker teams, a no-build Three.js client with Find Match on the Edgegap JS SDK, wss retry, Dockerfile, WS + TLS Upgrade versions, one image for several games, a multi-profile matchmaker config, headless e2e scripts. Use for "make my three.js game multiplayer", "host my browser game server", "Find Match for a web game", "wss from an https page", "several mini-games on one matchmaker", or debugging them. Colyseus: edgegap-colyseus; Manus: edgegap-manus.'
 metadata:
-  version: "0.3.4"
+  version: "0.3.5"
 ---
 
 # Edgegap for Three.js and other browser games: one Node.js server per match
@@ -28,7 +28,7 @@ Why this shape, so you can defend it:
 
 ## How to work
 
-- **Be the engineer.** Read the game, write the server and client changes, run Node, Docker and the Edgegap MCP tools, read logs. Hand the developer only account steps: `docker login`, the registry credentials on each app version, creating the matchmaker in the dashboard, playtesting.
+- **Be the engineer.** Read the game, write the server and client changes, run Node, Docker and the Edgegap MCP tools, read logs. Hand the developer only account steps: `docker login`, creating the matchmaker in the dashboard, playtesting.
 - **One layer at a time**: game on a local server → container → one direct deployment → matchmaker → browser. Each phase has a check.
 - **Secrets** (full rules: [the edgegap skill's agent rules](../edgegap/references/agent-rules.md)): the Edgegap API token never goes in a page, the image, a deployment env var, git or chat. The matchmaker Auth Token may ship in the page.
 - **Money.** Ask before deploying. Tag test deployments and stop only the ones you started. Free tier: one deployment at a time.

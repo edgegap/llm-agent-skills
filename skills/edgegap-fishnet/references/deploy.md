@@ -49,7 +49,7 @@ The developer runs `docker login registry.edgegap.com -u '<username>'` (Containe
 
 ## 4. App and app version
 
-**Plugin (preferred):** **Upload image and Create app version** creates the application if needed and opens the dashboard's version form with the version name, image and tag filled in. The developer replaces the default port with `gameport` and the game's port and protocol, adds the registry credentials if the form asks, and saves. **Rebuild from Source** later does build, image, push and opens the form again. Registry tokens get rotated: if saving or `verify_image` fails with `Unable to login with the given credentials`, the stored login is stale; re-enter it from the Container Registry page.
+**Plugin (preferred):** **Upload image and Create app version** creates the application if needed and opens the dashboard's version form with the version name, image and tag filled in. The developer replaces the default port with `gameport` and the game's port and protocol, makes sure the registry login is set (a Registry Profile, or the Container Registry username and token), and saves. **Rebuild from Source** later does build, image, push and opens the form again. Registry tokens get rotated: if saving or `verify_image` fails with `Unable to login with the given credentials`, the stored login is stale; create a new version through `edgegap_create_app_version` without a login (it sends `registry_profile: "Edgegap"`), or re-enter it from the Container Registry page.
 
 **MCP:** `edgegap_list_apps` first; the free tier allows 2 apps and 2 versions. `edgegap_create_app` if needed, then `edgegap_create_app_version`:
 

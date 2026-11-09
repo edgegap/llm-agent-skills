@@ -2,7 +2,7 @@
 name: edgegap-cocos
 description: 'Cocos Creator + Edgegap without Colyseus: host the authoritative server of a Cocos Creator 3.8 game (usually Node.js with ws or socket.io, any language works) on Edgegap, one server per match near its players, end to end. Load this before using Edgegap MCP tools on a Cocos project whose server is not Colyseus. It covers the server shape (Linux container, one WebSocket port with TLS Upgrade for wss://, env config, self-stop), deploying with the Edgegap Cocos extension (install, panel flow, quick-start vs regular token, headless e2e) or with MCP tools/dashboard, the Cocos client (wss by FQDN, first-connection retry, Find Match with @edgegap/sdk), WeChat/Douyin mini-game domain allowlists, testing and troubleshooting. Use for "host my Cocos Creator game server", "Cocos multiplayer on Edgegap", "Edgegap Cocos extension/plugin", "wss from a Cocos web build", "Cocos mini-game with dedicated servers". Colyseus server: edgegap-colyseus. Three.js/Phaser/Babylon browser game: edgegap-threejs. Godot: edgegap-godot.'
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
 ---
 
 # Edgegap for Cocos Creator games (without Colyseus)
@@ -34,7 +34,7 @@ Why this shape, so you can defend it:
 
 ## How to work
 
-- **Be the engineer.** Read the server and the Cocos scripts, write the changes, run Node, Docker and the Edgegap MCP tools, read logs. Hand the developer only account steps: signing in to the extension (or `docker login`), registry credentials on the version, creating the matchmaker in the dashboard, playtesting in the editor.
+- **Be the engineer.** Read the server and the Cocos scripts, write the changes, run Node, Docker and the Edgegap MCP tools, read logs. Hand the developer only account steps: signing in to the extension (or `docker login`), creating the matchmaker in the dashboard, playtesting in the editor.
 - **One layer at a time**: server locally → container → one direct deployment → matchmaker → Cocos client. Each phase has a check.
 - **Secrets** (full rules: [the edgegap skill's agent rules](../edgegap/references/agent-rules.md)): the Edgegap API token never goes into the client, the server image, a deployment env var, the extension's project settings, git or chat. The matchmaker Auth Token may ship in clients.
 - **Money.** Ask before deploying. Tag test deployments and stop only the ones you started. Free tier: one deployment at a time.

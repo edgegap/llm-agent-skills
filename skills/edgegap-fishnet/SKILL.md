@@ -2,7 +2,7 @@
 name: edgegap-fishnet
 description: 'FishNet (Fish-Networking) + Edgegap: take a Unity game built on FishNet to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a FishNet project (Assets/FishNet, Tugboat, Bayou, Multipass, ServerManager, NetworkHudCanvas). It has FishNet-ready C# templates verified on Edgegap (matchmaker client, server self-stop, scene-change persistence), the Start On Headless and WebGL/Bayou wss setup, port 7770 app version, Dockerfile, matchmaker config and fixes for known pitfalls, including the SDK JSON bug on Unity before 2022.3. Use when a FishNet dev wants online play: "host my FishNet game", "players should not host", "works on LAN but not online", "Find Match button", "FishNet WebGL on Edgegap", moving off the old FishNet Edgegap samples that call the API from the client, or debugging FishNet deployments, ports or matchmaking. Other Unity netcodes (NGO, Mirror): edgegap-unity.'
 metadata:
-  version: "0.3.3"
+  version: "0.3.4"
 ---
 
 # Edgegap for FishNet: dedicated servers + matchmaking
@@ -57,7 +57,7 @@ Make sure the developer has an Edgegap account, Docker running, and the Unity **
 Copy `assets/docker/.dockerignore` to the project root (the plugin's Docker context is the project root; without it Docker sends the whole project). Then the developer opens **Tools → Edgegap Server Hosting** and goes top to bottom:
 1. **Sign in with Edgegap** → **Build server** → **Containerize with Docker** (Image Name; empty tag = UTC timestamp).
 2. **Test Your Server Locally**: Optional Docker Run Parameters `-p 7770:7770 (Tugboat: -p 7770:7770/udp)` → **Deploy local container**; connect a client to `127.0.0.1:7770`; **Terminate**.
-3. **Upload image and Create app version** (Application Name). It pushes and opens the dashboard version form: replace the default port with `gameport` / `7770` / **WS** with TLS Upgrade on for Bayou, **UDP** for Tugboat, add registry credentials if asked, save.
+3. **Upload image and Create app version** (Application Name). It pushes and opens the dashboard version form: replace the default port with `gameport` / `7770` / **WS** with TLS Upgrade on for Bayou, **UDP** for Tugboat, make sure the registry login is set (a Registry Profile, or the Container Registry username and token), save.
 
 No Editor (CI, or you run it): the same steps from the command line in `references/deploy.md` §2-4.
 

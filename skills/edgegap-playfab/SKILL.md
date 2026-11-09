@@ -2,7 +2,7 @@
 name: edgegap-playfab
 description: 'PlayFab + Edgegap: keep PlayFab for players, login and Matchmaking, and run each match on its own Edgegap dedicated server near the players, started by PlayFab Azure Functions (CloudScript using Azure Functions), end to end. Load this before using any Edgegap MCP tool on a project that uses PlayFab for matchmaking (a PlayFab title ID, playfabapi.com, PlayFabMultiplayerAPI, CreateMatchmakingTicket) or is leaving PlayFab Multiplayer Servers (MPS, GSDK). Verified on Edgegap with a Unity FishNet game: match_found rule, StartEdgegapDeployment (POST /v2/deployments near the players), ready webhook, server address in player read-only data. Ships the Azure Functions, setup scripts, a dependency-free Unity client, server self-stop, and fixes for PlayFab pitfalls (new titles block LoginWithCustomID player creation, legacy CloudScript, ticket polling limits). Use for "PlayFab matchmaking with Edgegap servers", "replace PlayFab Multiplayer Servers", "PlayFab CloudScript Edgegap bridge", or debugging one.'
 metadata:
-  version: "0.3.3"
+  version: "0.3.4"
 ---
 
 # Edgegap for PlayFab games: PlayFab matches players, Edgegap runs the match
@@ -30,7 +30,7 @@ Why this shape, so you can defend it:
 
 ## How to work
 
-- **Be the engineer.** Read the project, write the code, run Unity/engine builds, Docker, `az`, Node and the Edgegap MCP tools, and read the logs. Hand the developer only account steps: PlayFab Game Manager clicks (the title setting, the rule), the secret key and Edgegap token into a local env file, `az login`, `docker login`, the registry credentials on the app version, and playtesting.
+- **Be the engineer.** Read the project, write the code, run Unity/engine builds, Docker, `az`, Node and the Edgegap MCP tools, and read the logs. Hand the developer only account steps: PlayFab Game Manager clicks (the title setting, the rule), the secret key and Edgegap token into a local env file, `az login`, `docker login`, and playtesting.
 - **One layer at a time:** server runs locally → image → one direct Edgegap deployment → PlayFab queue → functions → chain test → clients → rule → end to end. Each phase has a check.
 - **Secrets** (full rules: [the edgegap skill's agent rules](../edgegap/references/agent-rules.md)): the PlayFab secret key and the Edgegap API token go into a git-ignored env file the developer writes, and from there straight into app settings (`assets/scripts/deploy-functions.sh` does this without printing them). They never go into the client, the server image, git or chat. Function keys are secrets too: they appear in URLs, so don't paste those URLs into chat or commit them.
 - **Money.** Ask before deploying. Every PlayFab match starts a deployment. Free tier allows one deployment at a time, and Azure resources live in the developer's subscription: create one resource group so it can be deleted in one go.

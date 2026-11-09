@@ -39,7 +39,7 @@ Create the application once (e.g. `my-game`), then one version per server build 
 | Field | Value |
 |---|---|
 | Image | `registry.edgegap.com` / `<project>/<image>` / `<tag>` |
-| Registry credentials | the registry username and token (Edgegap pulls with them) |
+| Registry login | none for registry.edgegap.com: leave it out and `edgegap_create_app_version` sends `registry_profile: "Edgegap"` (MCP 0.17.0+); check `registry_credentials_set: true`. The registry username and token are only for the push (GitHub secrets) |
 | vCPU / memory | 0.25 vCPU (256 units) / 512 MB to start; raise if the tick loop lags |
 | Port | `7777`, name `gameport`, protocol **WS**, **TLS Upgrade on** |
 | Env | `JOIN_TOKEN_PUBLIC_KEY` = the public key (not secret) |

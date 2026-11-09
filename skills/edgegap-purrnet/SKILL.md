@@ -2,7 +2,7 @@
 name: edgegap-purrnet
 description: 'PurrNet + Edgegap: take a Unity game built on PurrNet to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a PurrNet project (dev.purrnet.purrnet, NetworkManager start flags, UDPTransport, WebTransport, ParrelSync clones). It has PurrNet-ready C# templates verified on Edgegap that add themselves at runtime without editing scenes (server start and self-stop, connect panel with direct and matchmaker modes, settings asset), port 7777 UDP app version, Dockerfile, matchmaker config, and fixes for PurrNet pitfalls: auto start flags, the async StartClient, ObserversRpc that never runs on a dedicated server. Use when a PurrNet dev wants online play: "host my PurrNet game", "nobody should host", "works with a host but not online", "Find Match button", or is debugging PurrNet deployments, ports or matchmaking on Edgegap. Other Unity netcodes: edgegap-unity (NGO, Mirror) or edgegap-fishnet.'
 metadata:
-  version: "0.3.3"
+  version: "0.3.4"
 ---
 
 # Edgegap for PurrNet: dedicated servers + matchmaking
@@ -57,7 +57,7 @@ Edgegap account, Docker running, Unity **Linux Build Support (Mono)** + **Linux 
 Copy `assets/docker/.dockerignore` to the project root (the plugin's Docker context is the project root; without it Docker sends the whole project). Then the developer opens **Tools → Edgegap Server Hosting** and goes top to bottom:
 1. **Sign in with Edgegap** → **Build server** → **Containerize with Docker** (Image Name; empty tag = UTC timestamp).
 2. **Test Your Server Locally**: Optional Docker Run Parameters `-p 7777:7777/udp` → **Deploy local container**; connect a client to `127.0.0.1:7777`; **Terminate**.
-3. **Upload image and Create app version** (Application Name). It pushes and opens the dashboard version form: replace the default port with `gameport` / `7777` / **UDP**, add registry credentials if asked, save.
+3. **Upload image and Create app version** (Application Name). It pushes and opens the dashboard version form: replace the default port with `gameport` / `7777` / **UDP**, make sure the registry login is set (a Registry Profile, or the Container Registry username and token), save.
 
 No Editor (CI, or you run it): the same steps from the command line in `references/deploy.md` §2-4.
 

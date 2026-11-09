@@ -66,4 +66,4 @@ In order:
 | First batch import seems stuck at `Package Manager log level set to [2]` | Resolving git packages and importing: wait (10+ minutes on large projects), read the log for `error CS` |
 | `COPY failed ... Builds/EdgegapServer` | Build the server first (plugin **Build server**); run `docker build` from the project root |
 | `exec format error` on Edgegap | Rebuild with `--platform linux/amd64` |
-| `Unable to pull image from registry` | No registry credentials on the app version |
+| `Unable to pull image from registry` | No registry credentials on the app version. For registry.edgegap.com, create a new version without a login so `edgegap_create_app_version` sends `registry_profile: "Edgegap"` (MCP 0.17.0+); an update can't add it |
