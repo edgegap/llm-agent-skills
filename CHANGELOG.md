@@ -11,9 +11,10 @@ Leftovers from 0.34.0 that still had the developer add the registry login to a v
 - `edgegap-unity` §7 said the tool warns in `notes` when a version has no registry login. It doesn't: registry.edgegap.com gets `registry_profile: "Edgegap"`, and another private registry gets no login and no warning.
 - The hand-off lists in `edgegap-threejs`, `edgegap-colyseus`, `edgegap-cocos`, `edgegap-nakama`, `edgegap-playfab`, `edgegap-ugs-matchmaker` and `edgegap-fusion` no longer give the developer "registry credentials on the app version"; `docker login` for the push stays.
 - Unity plugin form (`edgegap-unity`, `edgegap-ngo`, `edgegap-fishnet`, `edgegap-purrnet`): "add registry credentials if asked" becomes "make sure the registry login is set (a Registry Profile, or the Container Registry username and token)". A stale login is fixed with a new version created by the tool without a login.
+- The `Unable to pull image from registry` rows in the fishnet, godot, ngo and purrnet troubleshooting tables now give the fix: a new version created without a login.
 - `evals/nakama-evals.json` expected outputs match.
 - Not changed: `edgegap-launch`, since `edgegap/deploy-action` v0.1.0 still needs `registry-username`/`registry-token` as inputs.
-- Versions: `edgegap` 0.34.1, `edgegap-unity` 0.2.4, `edgegap-ngo` 0.2.4, `edgegap-fishnet` 0.3.4, `edgegap-purrnet` 0.3.4, `edgegap-playfab` 0.3.4, `edgegap-manus` 0.1.8, `edgegap-threejs` 0.3.5, `edgegap-colyseus` 0.4.3, `edgegap-cocos` 0.1.2, `edgegap-nakama` 0.2.2, `edgegap-ugs-matchmaker` 0.1.1, `edgegap-fusion` 0.1.6.
+- Versions: `edgegap` 0.34.1, `edgegap-unity` 0.2.4, `edgegap-ngo` 0.2.4, `edgegap-fishnet` 0.3.4, `edgegap-purrnet` 0.3.4, `edgegap-playfab` 0.3.4, `edgegap-manus` 0.1.8, `edgegap-threejs` 0.3.5, `edgegap-colyseus` 0.4.3, `edgegap-cocos` 0.1.2, `edgegap-nakama` 0.2.2, `edgegap-ugs-matchmaker` 0.1.1, `edgegap-fusion` 0.1.6, `edgegap-godot` 0.2.3.
 
 ## 0.34.0 (unreleased)
 

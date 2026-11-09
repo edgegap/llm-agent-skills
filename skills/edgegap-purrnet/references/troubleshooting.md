@@ -60,4 +60,4 @@ In order:
 | Batch build refuses to start | Project open in the Editor: close it or build from the menu |
 | `COPY failed ... Builds/EdgegapServer` | Build the server first; run `docker build` from the project root |
 | `exec format error` on Edgegap | Rebuild with `--platform linux/amd64` |
-| `Unable to pull image from registry` | No registry credentials on the app version |
+| `Unable to pull image from registry` | No registry credentials on the app version. For registry.edgegap.com, create a new version without a login so `edgegap_create_app_version` sends `registry_profile: "Edgegap"` (MCP 0.17.0+); an update can't add it |
