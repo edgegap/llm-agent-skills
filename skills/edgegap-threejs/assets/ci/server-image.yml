@@ -59,6 +59,9 @@ jobs:
           file: server/Dockerfile
           platforms: linux/amd64
           push: true
+          # A plain image manifest: with the default attestations Edgegap failed to pull the image.
+          provenance: false
+          sbom: false
           tags: registry.edgegap.com/${{ vars.EDGEGAP_REGISTRY_PROJECT }}/${{ env.IMAGE }}:${{ steps.tag.outputs.tag }}
 
       - name: Summary
