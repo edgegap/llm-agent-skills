@@ -53,7 +53,7 @@ Last commit on each repo's default branch, checked 2026-11-04. **Current** = upd
 
 | Repo | Stack | Last commit | Status | Skill |
 |---|---|---|---|---|
-| [server-sample-lightnet-relay](https://github.com/edgegap/server-sample-lightnet-relay) | A relay you host on Edgegap, for Mirror, FishNet, PurrNet and NGO | 2026-11-02 | Current | `edgegap-relays`, `edgegap-unity` |
+| [server-sample-lightnet-relay](https://github.com/edgegap/server-sample-lightnet-relay) | A relay you host on Edgegap, for Mirror, FishNet, PurrNet and NGO, desktop and Unity WebGL (`wss://`) | 2026-11-09 | Current | `edgegap-relays`, `edgegap-unity` |
 | [relay-sample-unity-mirror-](https://github.com/edgegap/relay-sample-unity-mirror-) | Edgegap managed relays, Mirror | 2024-05-16 | Legacy | `edgegap-relays` |
 | [relay-sample-unity-fishnet-](https://github.com/edgegap/relay-sample-unity-fishnet-) | Edgegap managed relays, FishNet | 2024-05-16 | Legacy | `edgegap-relays` |
 | [relay-sample-unity-ngo-helloworld](https://github.com/edgegap/relay-sample-unity-ngo-helloworld) | Edgegap managed relays, NGO | 2024-04-25 | Legacy | `edgegap-relays` |

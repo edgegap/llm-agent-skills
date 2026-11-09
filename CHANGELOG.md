@@ -2,6 +2,15 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.34.2 (unreleased)
+
+The LightNet relay sample ([edgegap/server-sample-lightnet-relay](https://github.com/edgegap/server-sample-lightnet-relay), PR #5, main `57bbd7b`) now runs in Unity WebGL builds: `LightNet/Runtime/Relay/RelayWebSocket.jslib` bridges `RelayWebSocket` to the browser's WebSocket, so the Mirror, FishNet, PurrNet and NGO relay transports connect over `wss://` to the relay version's `relay-ws` port (7778, TLS Upgrade). Passed on Edgegap 2026-11-09 for all four netcodes: desktop host + browser client, browser host + desktop client, browser + browser.
+
+- `edgegap-relays`: the LightNet paragraph documents the WebGL build (URL options, Tanks > Build WebGL client), its limits (reliable/ordered only, a hidden browser host tab freezes, no `beacons` rule with the matchmaker) and what wasn't run (matchmaker from a browser, real mobile browsers). The "WebGL can't open UDP sockets" note now applies to the managed relays only, and the transport table and troubleshooting row send WebGL host/client games to the LightNet sample.
+- `edgegap-unity`, `edgegap-fishnet`, `edgegap-purrnet`, `edgegap-ngo`: the host/client pointer to the sample says it works for desktop and WebGL.
+- `edgegap-samples` catalog: the sample row lists Unity WebGL and its new last-commit date.
+- Versions: `edgegap` 0.34.2, `edgegap-relays` 0.1.1, `edgegap-unity` 0.2.5, `edgegap-fishnet` 0.3.5, `edgegap-purrnet` 0.3.5, `edgegap-ngo` 0.2.5, `edgegap-samples` 0.1.3.
+
 ## 0.34.1 (unreleased)
 
 Leftovers from 0.34.0 that still had the developer add the registry login to a version for `registry.edgegap.com`.

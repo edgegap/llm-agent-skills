@@ -15,4 +15,4 @@
 | Lobby creation fails with a timeout after 30 s | The session never became `ready` | Read `error` from `GET /v1/relays/sessions/{id}`; check the IPs are public |
 | Relay chosen far from the players | The session was created with a wrong IP (a private address, the server's own IP) or players from different continents | Authorize real public IPs; group players by region first |
 | Sessions left open after testing | Host crashed or the lobby was killed with SIGKILL | `edgegap_list_relay_sessions`, then delete yours by exact `session_id`; keep `LOBBY_TTL_MINUTES` |
-| WebGL build can't connect | Browsers have no raw UDP | Not supported by this protocol; use a dedicated server with WebSockets |
+| WebGL build can't connect | Browsers have no raw UDP | Not supported by the managed relay protocol. For Mirror, FishNet, PurrNet or NGO use the LightNet relay sample's WebGL build over `wss://` (`relay-ws` port 7778, TLS Upgrade); otherwise a dedicated server with WebSockets |
