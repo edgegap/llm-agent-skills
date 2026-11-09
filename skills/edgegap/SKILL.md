@@ -1,13 +1,13 @@
 ---
 name: edgegap
-description: 'Start here for hosting a game on Edgegap (dedicated servers + matchmaking) when the engine is not Unity, Unreal or Godot, is unknown, or the question is about the platform itself. Use when someone wants to host or deploy a game server, wants a single-player or co-op game always online or harder to crack, asks how players will connect to matches, wants servers for a custom-engine game, compares hosting options, or asks what Edgegap apps, versions, deployments, fleets or matchmakers are, even if they never say "hosting". It picks the server shape, explains the vocabulary and safety rules, and routes to the right skill. For a Unity project, load edgegap-unity instead (NGO: edgegap-ngo, FishNet: edgegap-fishnet, PurrNet: edgegap-purrnet, Fusion: edgegap-fusion); Unreal: edgegap-unreal; Godot 4: edgegap-godot; Colyseus: edgegap-colyseus; Cocos: edgegap-cocos; Nakama: edgegap-nakama; Manus: edgegap-manus; Three.js/web: edgegap-threejs; vibe-coded: edgegap-vibe-coded; matchmaking design: edgegap-matchmaking.'
+description: 'Start here for hosting a game on Edgegap (dedicated servers + matchmaking) when the engine is not Unity, Unreal or Godot, is unknown, or the question is about the platform itself. Use when someone wants to host or deploy a game server, wants a single-player or co-op game always online or harder to crack, asks how players connect to matches, wants custom-engine game servers, compares hosting options, or asks what Edgegap apps, versions, deployments, fleets or matchmakers are, even if they never say "hosting". It picks the server shape, explains the vocabulary and safety rules, routes to the right skill. For a Unity project, load edgegap-unity instead (NGO: edgegap-ngo, FishNet: edgegap-fishnet, PurrNet: edgegap-purrnet, Fusion: edgegap-fusion); Unreal: edgegap-unreal; Godot 4: edgegap-godot; Colyseus: edgegap-colyseus; Cocos: edgegap-cocos; Nakama: edgegap-nakama; Manus: edgegap-manus; Three.js/web: edgegap-threejs; vibe-coded: edgegap-vibe-coded; fal.ai: edgegap-fal; matchmaking design: edgegap-matchmaking.'
 metadata:
-  version: "0.34.0"
+  version: "0.35.0"
 ---
 
 # Edgegap
 
-Pack version: 0.34.0
+Pack version: 0.35.0
 
 Edgegap runs dedicated game servers. You push a **Linux container image** of your game server, register it as an **app version**, and ask for a **deployment** near a group of players. Edgegap picks the location with the best ping for that group, starts the container in seconds, and returns a URL (`<id>.pr.edgegap.net`), a public IP, and an external port per internal port. Players connect. The match ends, the server stops, billing stops.
 
@@ -32,7 +32,7 @@ Work through these in order and skip what is already done:
 | Step | Skill | Done when |
 |---|---|---|
 | 1 | `edgegap-server-design` | The server is authoritative, match-scoped, configured by env vars, and stops itself at match end |
-| 2 | Engine build (Unity: `edgegap-unity`, `edgegap-ngo` for Netcode for GameObjects games, `edgegap-fishnet` for FishNet games, or `edgegap-purrnet` for PurrNet games, or `edgegap-fusion` for Photon Fusion games; Unreal Engine: `edgegap-unreal`; Godot 4: `edgegap-godot`; Colyseus (Node.js): `edgegap-colyseus`; a Cocos Creator game with its own (non-Colyseus) server: `edgegap-cocos`; a Three.js or other browser game with its own Node.js WebSocket server: `edgegap-threejs` (a single-player game made with an AI tool: `edgegap-vibe-coded` first); a Nakama backend with any engine: `edgegap-nakama`; each covers every step for its engine) | A headless **linux/amd64** server build exists |
+| 2 | Engine build (Unity: `edgegap-unity`, `edgegap-ngo` for Netcode for GameObjects games, `edgegap-fishnet` for FishNet games, or `edgegap-purrnet` for PurrNet games, or `edgegap-fusion` for Photon Fusion games; Unreal Engine: `edgegap-unreal`; Godot 4: `edgegap-godot`; Colyseus (Node.js): `edgegap-colyseus`; a Cocos Creator game with its own (non-Colyseus) server: `edgegap-cocos`; a Three.js or other browser game with its own Node.js WebSocket server: `edgegap-threejs` (a single-player game made with an AI tool: `edgegap-vibe-coded` first; with fal Agent: `edgegap-fal`); a Nakama backend with any engine: `edgegap-nakama`; each covers every step for its engine) | A headless **linux/amd64** server build exists |
 | 3 | `edgegap-containerize` | `docker run` starts a working server locally, and the image is in a registry Edgegap can pull |
 | 4 | `edgegap-local-testing` | Parity tests pass locally, then one test deployment on Edgegap accepts a real client |
 | 5 | Matchmaking: `edgegap-matchmaking` decides who owns it (Edgegap's hosted matchmaker, your own allocator with `edgegap-deployments-api`, or a matchmaker you keep) and designs the profile, region selection and backfill; the engine skill writes the client | Players clicking Play land on the same server |
@@ -60,6 +60,7 @@ For a Godot 4 game whose server is Godot itself (high-level multiplayer with ENe
 | A browser game built with Manus (manus.im): Steam sign-in, backend matchmaking, WebSocket server | `edgegap-manus` |
 | A Three.js (or Babylon.js, PlayCanvas, Phaser, canvas) browser game with its own Node.js WebSocket server: authoritative server per match, Find Match from the page | `edgegap-threejs` |
 | A vibe-coded game (made with Claude, Cursor, Lovable, Bolt, v0...) that is single-player in the browser and should get online matches, keeping solo play; or which game ideas hold up online; or a public demo with an always-on matchmaker | `edgegap-vibe-coded` |
+| A game made, or to be made, with fal Agent (fal.ai) that should get online matches: the fal prompt that keeps the rules server-ready, then the same path | `edgegap-fal` |
 | A game with a Supabase backend (Supabase Auth, profiles, leaderboards, Edge Functions): only signed-in players find a match, the game server records results in Supabase | `edgegap-supabase` |
 | Design matchmaking: queues, parties, skill, modes, region selection, join in progress (backfill), or pick a matchmaker | `edgegap-matchmaking` |
 | Write backend code that starts, finds or stops servers, or receives webhooks | `edgegap-deployments-api` |
