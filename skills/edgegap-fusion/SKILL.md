@@ -2,7 +2,7 @@
 name: edgegap-fusion
 description: 'Photon Fusion 2 + Edgegap: run a Unity game built on Photon Fusion as a dedicated server on Edgegap, verified end to end with Photon''s BR200 Battle Royale sample. Load this before using any Edgegap MCP tool on a Fusion project (Assets/Photon/Fusion, NetworkRunner, StartGameArgs, GameMode.Server, PhotonAppSettings, NetworkProjectConfig, TPSBR, BR200). It has a drop-in BR200 kit that changes no sample code (server build with preflight checks, Dockerfile, start script mapping Edgegap variables to BR200''s command-line options, Photon region, self-stop), headless test clients logging the connection type, and fixes for pitfalls: Loader IP 127.0.0.1 forcing Photon relays, public IP failing to bind, IL2CPP required on the server, Linux toolchain packages and App ID/AppVersion/region mismatches. Use when a Fusion dev wants dedicated servers, "host BR200", "CT shows Relayed", GameNotFound. Simple FPS sample: edgegap-fusion-simplefps. Other Unity netcodes: edgegap-unity, edgegap-ngo, edgegap-fishnet, edgegap-purrnet.'
 metadata:
-  version: "0.1.5"
+  version: "0.1.6"
 ---
 
 # Edgegap for Photon Fusion 2: dedicated servers
@@ -15,7 +15,7 @@ Fusion is different from the other Unity netcodes in this pack: **matchmaking st
 
 ## How to work
 
-- **Be the engineer.** Inspect the project, run Unity batch builds, Docker and the Edgegap MCP tools, read logs, and run the two-client tests yourself with headless clients (`references/deploy.md` §5). Hand the developer only what needs their accounts: the Asset Store download, the Photon App ID, registry credentials in the dashboard.
+- **Be the engineer.** Inspect the project, run Unity batch builds, Docker and the Edgegap MCP tools, read logs, and run the two-client tests yourself with headless clients (`references/deploy.md` §5). Hand the developer only what needs their accounts: the Asset Store download, the Photon App ID, and `docker login` to the Edgegap registry.
 - **Don't change the sample's code** when a command-line option or an environment variable can do it. BR200 already parses `-dedicatedServer`, `-sessionName`, `-region`, `-ip`, `-port` and more (`references/br200.md` §2). That keeps upgrades to new BR200 versions clean.
 - **One layer at a time:** build → local container → Edgegap deployment → CT check, each with a check.
 - **Secrets.** The Edgegap API token and registry token never go into files, git, the client or chat. The Fusion App ID goes only into the developer's own project (`PhotonAppSettings.asset`), never into the kit or a public repo.

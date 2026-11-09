@@ -2,7 +2,7 @@
 name: edgegap-unity
 description: 'Unity + Edgegap: get a Unity multiplayer game online with dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a Unity project: it has the Unity workflow, tested C# templates (matchmaker client, server self-stop), Linux server build, Dockerfile, matchmaker config and fixes for known pitfalls. Use when a Unity dev wants online play: "put my game online", "play with people over the internet", "works on LAN/same wifi but not online", "nobody should have to host", "click Play and get matched", how Fall Guys/Among Us match players, servers for a playtest, "where do I start with servers". Also for Mirror host/client games moving to dedicated servers, WebGL multiplayer, or debugging Edgegap deployments, ports or matchmaking for a Unity game. Use even for beginners who never say Edgegap, servers or Docker. Not for NGO (edgegap-ngo), FishNet (edgegap-fishnet), PurrNet (edgegap-purrnet) or Fusion (edgegap-fusion) projects, Unreal (edgegap-unreal), Godot or non-game backends.'
 metadata:
-  version: "0.2.3"
+  version: "0.2.4"
 ---
 
 # Edgegap for Unity: dedicated servers + matchmaking
@@ -59,7 +59,7 @@ Read `references/deploy.md` §1-2. Make sure the developer has an account, Docke
 Copy `assets/docker/.dockerignore` to the project root (the plugin's Docker context is the project root; without it Docker sends the whole project). Then the developer opens **Tools → Edgegap Server Hosting** and goes top to bottom:
 1. **Sign in with Edgegap** → **Build server** → **Containerize with Docker** (Image Name; empty tag = UTC timestamp).
 2. **Test Your Server Locally**: Optional Docker Run Parameters `-p <port>:<port>/udp (WebSocket: -p <port>:<port>)` → **Deploy local container**; connect a client to `127.0.0.1:<listen port>`; **Terminate**.
-3. **Upload image and Create app version** (Application Name). It pushes and opens the dashboard version form: replace the default port with `gameport` / `<listen port>` / the transport's protocol (`WS` with TLS Upgrade on for WebGL), add registry credentials if asked, save.
+3. **Upload image and Create app version** (Application Name). It pushes and opens the dashboard version form: replace the default port with `gameport` / `<listen port>` / the transport's protocol (`WS` with TLS Upgrade on for WebGL), make sure the registry login is set (a Registry Profile, or the Container Registry username and token), save.
 
 No Editor (CI, or you run it): the same steps from the command line in `references/deploy.md` §2-4.
 

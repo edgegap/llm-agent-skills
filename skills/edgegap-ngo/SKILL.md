@@ -2,7 +2,7 @@
 name: edgegap-ngo
 description: 'Netcode for GameObjects (NGO) + Edgegap: take a Unity game built on NGO to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on an NGO project (com.unity.netcode.gameobjects, NetworkManager, UnityTransport, StartHost, ConnectionManager, Boss Room). It has NGO C# templates verified on Edgegap, no scene edits (server start and self-stop, Find Match panel, settings asset), a Boss Room adapter, the Edgegap Unity plugin for build, image, push and deploy, port 7777 UDP app version, matchmaker config, and fixes for NGO pitfalls: host-only logic, connection payloads and approval, UnityTransport needing an IP, client-only code on the server, Relay leftovers. Use when an NGO dev wants online play: "host my NGO game", "nobody should host", "replace Unity Relay or Multiplay", "Boss Room on Edgegap", "Find Match button", or debugs NGO deployments, ports or matchmaking. Mirror or WebGL-first games: edgegap-unity. FishNet: edgegap-fishnet. PurrNet: edgegap-purrnet.'
 metadata:
-  version: "0.2.3"
+  version: "0.2.4"
 ---
 
 # Edgegap for Netcode for GameObjects: dedicated servers + matchmaking
@@ -55,7 +55,7 @@ Edgegap account, Docker running, Unity **Linux Build Support (Mono)** + **Linux 
 Copy `assets/docker/.dockerignore` to the project root (the plugin's Docker context is the project root; without it Docker sends the whole project). Then the developer opens **Tools → Edgegap Server Hosting** and goes top to bottom:
 1. **Sign in with Edgegap** → **Build server** → **Containerize with Docker** (Image Name; empty tag = UTC timestamp).
 2. **Test Your Server Locally**: Optional Docker Run Parameters `-p 7777:7777/udp` → **Deploy local container**; two clients on `127.0.0.1:7777`; **Terminate**.
-3. **Upload image and Create app version** (Application Name). It pushes and opens the dashboard version form: replace the default port with `gameport` / `7777` / **UDP**, add registry credentials if asked, save.
+3. **Upload image and Create app version** (Application Name). It pushes and opens the dashboard version form: replace the default port with `gameport` / `7777` / **UDP**, make sure the registry login is set (a Registry Profile, or the Container Registry username and token), save.
 
 No Editor (CI, or you run it): the same steps from the command line in `references/deploy.md` §2-4.
 
