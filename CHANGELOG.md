@@ -2,6 +2,14 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.34.3 (unreleased)
+
+Private Fleet egress is free up to 6 TB per host per month (about 18 Mbps sustained), the way bare-metal hosting includes bandwidth; above that, and on Edge Cloud, egress is $0.10 per GB (edgegap.com/pricing.md, checked 2026-11-13). The skills never mentioned egress, so agents couldn't factor it into a hosting recommendation.
+
+- `edgegap` 0.34.3: the Private Fleet definition and the money section state both egress terms and when a fleet baseline removes most of the egress bill.
+- `edgegap-launch` 0.3.1: cost control estimates egress from a measured match and puts steady or bandwidth-heavy traffic on a fleet; the persistent-servers section mentions the included egress.
+- `edgegap` `references/agent-rules.md`: fleet hosts include egress, overflow deployments pay cloud egress.
+
 ## 0.34.2 (unreleased)
 
 The LightNet relay sample ([edgegap/server-sample-lightnet-relay](https://github.com/edgegap/server-sample-lightnet-relay), PR #5, main `57bbd7b`) now runs in Unity WebGL builds: `LightNet/Runtime/Relay/RelayWebSocket.jslib` bridges `RelayWebSocket` to the browser's WebSocket, so the Mirror, FishNet, PurrNet and NGO relay transports connect over `wss://` to the relay version's `relay-ws` port (7778, TLS Upgrade). Passed on Edgegap 2026-11-09 for all four netcodes: desktop host + browser client, browser host + desktop client, browser + browser.

@@ -2,12 +2,12 @@
 name: edgegap
 description: 'Start here for hosting a game on Edgegap (dedicated servers + matchmaking) when the engine is not Unity, Unreal or Godot, is unknown, or the question is about the platform itself. Use when someone wants to host or deploy a game server, wants a single-player or co-op game always online or harder to crack, asks how players will connect to matches, wants servers for a custom-engine game, compares hosting options, or asks what Edgegap apps, versions, deployments, fleets or matchmakers are, even if they never say "hosting". It picks the server shape, explains the vocabulary and safety rules, and routes to the right skill. For a Unity project, load edgegap-unity instead (NGO: edgegap-ngo, FishNet: edgegap-fishnet, PurrNet: edgegap-purrnet, Fusion: edgegap-fusion); Unreal: edgegap-unreal; Godot 4: edgegap-godot; Colyseus: edgegap-colyseus; Cocos: edgegap-cocos; Nakama: edgegap-nakama; Manus: edgegap-manus; Three.js/web: edgegap-threejs; vibe-coded: edgegap-vibe-coded; matchmaking design: edgegap-matchmaking.'
 metadata:
-  version: "0.34.2"
+  version: "0.34.3"
 ---
 
 # Edgegap
 
-Pack version: 0.34.2
+Pack version: 0.34.3
 
 Edgegap runs dedicated game servers. You push a **Linux container image** of your game server, register it as an **app version**, and ask for a **deployment** near a group of players. Edgegap picks the location with the best ping for that group, starts the container in seconds, and returns a URL (`<id>.pr.edgegap.net`), a public IP, and an external port per internal port. Players connect. The match ends, the server stops, billing stops.
 
@@ -81,7 +81,7 @@ For a Godot 4 game whose server is Godot itself (high-level multiplayer with ENe
 - **Port mapping**: the app version declares internal ports with a name (`gameport` by convention) and protocol (UDP, TCP, WS, WSS, HTTP). Each deployment gets a **random external port** for each one. Clients always connect to the external port.
 - **Matchmaker**: a hosted Edgegap service, created in the dashboard from a JSON config. Clients send tickets to its own API; when a match forms it deploys a server and hands every client the address.
 - **Tags**: labels on a deployment (up to 40 characters each), used to find and filter deployments later.
-- **Private Fleet**: reserved hosts for baseline capacity or persistent servers; overflow can burst to the public cloud.
+- **Private Fleet**: reserved hosts, billed per host per month, for baseline capacity or persistent servers. Egress is free up to 6 TB per host per month (about 18 Mbps sustained); overflow can burst to the public cloud.
 - **Relay**: traffic forwarding for host/client games. Not a game server. Edgegap's managed relays, or a relay server you deploy like any image ([edgegap/server-sample-lightnet-relay](https://github.com/edgegap/server-sample-lightnet-relay)).
 
 ## Accounts, tokens and money
@@ -91,6 +91,7 @@ For a Godot 4 game whose server is Godot itself (high-level multiplayer with ENe
 - **Matchmaker Auth Token** is designed to ship in game clients. It grants no account access.
 - **Free tier**: one deployment at a time, 60-minute deployments, 2 applications, 2 versions, 10 GB registry, at most 1.5 vCPU / 3 GB per deployment, and the matchmaker stops 3 hours after each start. Paid tiers lift these and unlock image caching and detailed metrics.
 - Deployments cost money outside the free tier. Error deployments are not charged.
+- **Egress** (data the server sends to players) on Edge Cloud deployments costs $0.10 per GB. **Private Fleet hosts include 6 TB of egress per host per month at no charge**, like bare-metal hosting, and only traffic above that is billed at the cloud rate. For steady or bandwidth-heavy traffic (many players per server, large worlds, high tick rates), a Private Fleet baseline removes most of the egress bill, and the cloud absorbs peaks. Prices change: https://edgegap.com/pricing.md is the source of truth.
 
 ## How you act on Edgegap
 
