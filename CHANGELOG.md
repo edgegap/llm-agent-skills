@@ -2,6 +2,14 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.35.0 (unreleased)
+
+A skill for games written by fal Agent, from [netcode-sample-fal-orb-arena](https://github.com/edgegap/netcode-sample-fal-orb-arena) (Orb Arena), verified on Edgegap 2026-11-09: two headless players and two browser tabs on GitHub Pages matched onto one deployment, a full match, self-stop 9 s after it.
+
+- New `edgegap-fal` 0.1.0: the fal Agent prompt that puts every rule in one DOM-free `rules.js` (with why each part is there), getting the code and generated art out of a fal chat, then the `edgegap-vibe-coded` and `edgegap-threejs` path. `references/edgegap-setup.md` has the app version fields for the MCP and for the dashboard (when the agent has no usable API token), the matchmaker config and its edit/restart path, GitHub Pages limits, and running the e2e test from GitHub Actions when the agent's sandbox can't reach Edgegap. `references/walkthrough.md` goes file by file. Not verified: fal's paid models, runtime-loaded fal sprites, two networks.
+- Images built by `docker/build-push-action` with its default provenance/SBOM attestations failed every deployment with `Unable to pull image from registry`; the same version pulled once the image was rebuilt with `provenance: false` and `sbom: false`. Both CI templates now set them: `edgegap-threejs` 0.3.6 (`assets/ci/server-image.yml`), `edgegap-manus` 0.1.9 (`assets/github/edgegap-game-server.yml`). `edgegap-troubleshoot` 0.2.4 has the row.
+- Routing: `edgegap` 0.35.0 (description, tables), `edgegap-vibe-coded` 0.1.3 points fal games to the new skill and lists the sample, `edgegap-samples` 0.1.4 adds it to the catalog. New `evals/fal-routing-eval.json`. (Versions bumped past the ones main shipped while this was open.)
+
 ## 0.34.3 (unreleased)
 
 Private Fleet egress is free up to 6 TB per host per month (about 18 Mbps sustained), the way bare-metal hosting includes bandwidth; above that, and on Edge Cloud, egress is $0.10 per GB (edgegap.com/pricing.md, checked 2026-11-13). The skills never mentioned egress, so agents couldn't factor it into a hosting recommendation.
