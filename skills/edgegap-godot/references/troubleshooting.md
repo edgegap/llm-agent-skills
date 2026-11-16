@@ -64,4 +64,4 @@ In order:
 | `Prepare Template: The given export path doesn't exist` (command-line export) | Create `build/` first; the dock does it itself |
 | `Error: Couldn't load project data at path ".". Is the .pck file missing?` | `embed_pck` off and the `.pck` not copied, or renamed apart from the binary |
 | `exec format error` on Edgegap | Rebuild with `--platform linux/amd64` (and the `x86_64` export, not `arm64`) |
-| `Unable to pull image from registry` | No registry credentials on the app version |
+| `Unable to pull image from registry` | No registry credentials on the app version. For registry.edgegap.com, create a new version without a login so `edgegap_create_app_version` sends `registry_profile: "Edgegap"` (MCP 0.17.0+); an update can't add it |

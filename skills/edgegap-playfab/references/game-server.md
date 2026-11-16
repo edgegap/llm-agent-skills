@@ -22,7 +22,7 @@ Logs it writes, useful in `edgegap_get_deployment_logs`: `Edgegap Server | Start
 
 - Port: name **`gameport`** (or set `EDGEGAP_PORT_NAME` on the function app), the internal port the server listens on, and its protocol (UDP for Tugboat, NGO UnityTransport, Mirror KCP, ENet; WS + TLS upgrade for WebGL transports).
 - 0.5 vCPU / 1 GB for a small Unity server; max duration 60 minutes as a safety net.
-- Registry credentials on the version (the developer pastes them from the dashboard's Container Registry page). Without them, deployments fail to pull.
+- No registry login for registry.edgegap.com: `edgegap_create_app_version` without `registry_username`/`registry_token` sends `registry_profile: "Edgegap"` (MCP 0.17.0+); check `registry_credentials_set: true`. A version with no login fails to pull: create a new one, since an update can't add the profile.
 - New build: push a new tag and `edgegap_update_app_version` → `docker_tag`. Running deployments keep the old image.
 
 ## 4. Only let matched players in

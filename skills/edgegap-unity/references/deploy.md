@@ -86,7 +86,7 @@ The developer runs `docker login registry.edgegap.com -u '<username>'` (Containe
 
 ## 5. App and app version
 
-**Plugin (preferred):** **Upload image and Create app version** creates the application if needed and opens the dashboard's version form with the version name, image and tag filled in. The developer replaces the default port with `gameport` and the game's port and protocol, adds the registry credentials if the form asks, and saves. **Rebuild from Source** later does build, image, push and opens the form again. Registry tokens get rotated: if saving or `verify_image` fails with `Unable to login with the given credentials`, the stored login is stale; re-enter it from the Container Registry page.
+**Plugin (preferred):** **Upload image and Create app version** creates the application if needed and opens the dashboard's version form with the version name, image and tag filled in. The developer replaces the default port with `gameport` and the game's port and protocol, makes sure the registry login is set (a Registry Profile, or the Container Registry username and token), and saves. **Rebuild from Source** later does build, image, push and opens the form again. Registry tokens get rotated: if saving or `verify_image` fails with `Unable to login with the given credentials`, the stored login is stale; create a new version through `edgegap_create_app_version` without a login (it sends `registry_profile: "Edgegap"`), or re-enter it from the Container Registry page.
 
 **MCP:** `edgegap_list_apps` first (avoid duplicates; free tier allows 2 apps and 2 versions). Then `edgegap_create_app` (`name`, e.g. the game name in kebab-case) if needed.
 
@@ -126,7 +126,7 @@ With `FirstPlayerTimeoutSeconds = 120`, the lifecycle script stops a direct depl
 
 - `edgegap_get_registry_credentials`: `status: "manual_steps_required"` with normal API tokens (only plugin quick-start tokens get credentials). Use the dashboard Container Registry page, or Docker Hub/GHCR with that registry's pull login on the version.
 - `edgegap_list_registry_tags`: image name only.
-- `edgegap_create_app_version`: accepts `tls_upgrade` per WS/HTTP port; still creates a version without registry credentials if you omit them, but says so in `notes`.
+- `edgegap_create_app_version`: accepts `tls_upgrade` per WS/HTTP port. Without a registry login it sends `registry_profile: "Edgegap"` for registry.edgegap.com (0.17.0+); for any other private registry it creates the version without a login and gives no warning, so pass that registry's pull login.
 - `edgegap_list_app_versions`: shows `registry_credentials_set` and per-port `tls_upgrade`. Use it to verify the version before deploying.
 - `edgegap_build_matchmaker_config`: accepts `allowed_cors_origins` (origins only, no path or trailing slash).
 - Error texts carry per-tool hints (404/400/429). An unknown `request_id` is a 400 on the live API.

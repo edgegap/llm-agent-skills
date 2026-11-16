@@ -57,9 +57,9 @@ To push without the plugin, the developer runs `docker login` once (above). Buil
 
 ## 4. App and app version
 
-**Plugin (preferred):** after the push, **Upload image and Create app version** creates the application if needed and opens the dashboard's version form with the version name, image and tag filled in. The developer replaces the default port with `gameport` / `7777` / **UDP**, adds the registry credentials if the form asks, and saves. Later builds: **Rebuild from Source** does build, image, push and opens the form again.
+**Plugin (preferred):** after the push, **Upload image and Create app version** creates the application if needed and opens the dashboard's version form with the version name, image and tag filled in. The developer replaces the default port with `gameport` / `7777` / **UDP**, makes sure the registry login is set (a Registry Profile, or the Container Registry username and token), and saves. Later builds: **Rebuild from Source** does build, image, push and opens the form again.
 
-**MCP:** `edgegap_list_apps` first (free tier: 2 apps, 2 versions). `edgegap_create_app` if needed, then `edgegap_create_app_version`. It needs the registry username and token in the call, which only the developer has; if they won't paste them, use the plugin's form:
+**MCP:** `edgegap_list_apps` first (free tier: 2 apps, 2 versions). `edgegap_create_app` if needed, then `edgegap_create_app_version`. For registry.edgegap.com it needs no registry login from the developer (see the table); only another private registry needs its pull login in the call:
 
 | Field | Value |
 |---|---|

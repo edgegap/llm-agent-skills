@@ -2,7 +2,7 @@
 name: edgegap-nakama
 description: 'Nakama + Edgegap: keep Nakama for accounts, matchmaking and leaderboards, and run every match on its own Edgegap dedicated server near the players through the Edgegap Fleet Manager for Nakama (nakama-edgegap), end to end. Load this before using any Edgegap MCP tool on a project with a Nakama backend (a Go, TypeScript or Lua Nakama module, heroiclabs/nakama images, a Nakama client SDK: nakama-godot, nakama-unity, nakama-js). Engine-agnostic templates verified on Edgegap with Fish Game (Godot 4.7, Nakama 3.39): the Go module (Fleet Manager, AfterAuthenticate hook for the real sign-in method, MatchmakerMatched hook, notifications 111/112/113, a leaderboard only the server writes), game server code for READY, connection events, STOP and player checks, Dockerfile, compose. Use for "host my Nakama game on Edgegap", "Nakama matchmaker should start a dedicated server", "replace Nakama relayed matches", "Heroic Cloud plus Edgegap", or debugging nakama-edgegap. Unity servers: edgegap-server-nakama-plugin-unity.'
 metadata:
-  version: "0.2.1"
+  version: "0.2.2"
 ---
 
 # Edgegap for Nakama games: Nakama matches players, Edgegap runs the match
@@ -28,7 +28,7 @@ Why this shape, so you can defend it:
 
 ## How to work
 
-- **Be the engineer.** Read the Nakama module, the client's Nakama code and the game server; write the changes; run Docker, Nakama, the game and the Edgegap MCP tools; read logs. Hand the developer only account steps: the Edgegap API token into `.env`, `docker login`, registry credentials on the app version, starting a tunnel or giving a public Nakama URL, playtesting.
+- **Be the engineer.** Read the Nakama module, the client's Nakama code and the game server; write the changes; run Docker, Nakama, the game and the Edgegap MCP tools; read logs. Hand the developer only account steps: the Edgegap API token into `.env`, `docker login`, starting a tunnel or giving a public Nakama URL, playtesting.
 - **One layer at a time**: game server runs locally → image → one direct Edgegap deployment → Nakama module → client → end to end. Each phase has a check.
 - **Secrets** (full rules: [the edgegap skill's agent rules](../edgegap/references/agent-rules.md)): the Edgegap API token lives only in Nakama's runtime env (`.env`, Heroic Cloud settings), never in a client, the game server image, git or chat. The Nakama `http_key` is also server-only: the game server gets it inside the injected URLs, never set it on the app version. Never run the compose entrypoint with `sh -x`: it prints both.
 - **Money.** Ask before deploying. Each Nakama match starts a deployment. Tag your direct test deployments, stop only what you started. Free tier: one deployment at a time.

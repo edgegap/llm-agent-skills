@@ -2,7 +2,7 @@
 name: edgegap-colyseus
 description: 'Colyseus + Edgegap: host a Colyseus (Node.js) multiplayer game on Edgegap with one dedicated server per match, near its players, that stops itself, end to end. Load this before using any Edgegap MCP tool on a Colyseus project (colyseus or @colyseus/* in package.json, Room classes with onJoin/onLeave, defineServer, app.config.ts, colyseus.js, @colyseus/sdk, the Colyseus Unity, Godot, Cocos Creator, Defold, GameMaker or Haxe SDKs). It has templates verified on Edgegap: a lifecycle module (self-stop on no join, empty server or match end), a Dockerfile, the WS + TLS Upgrade app version, a direct deploy script, a matchmaker config, and matchmaker clients for browser JS/TS, Cocos Creator, Unity and Godot, plus the pitfalls: 502 on a fresh server, wss by FQDN, CORS origins, exposed playground. Use for "host my Colyseus server", "Colyseus on Edgegap", "replace Colyseus Cloud", "one server per match", "Find Match with Colyseus", or debugging Colyseus deployments. Manus games: edgegap-manus.'
 metadata:
-  version: "0.4.2"
+  version: "0.4.3"
 ---
 
 # Edgegap for Colyseus games: one server per match
@@ -24,7 +24,7 @@ Why this shape, so you can defend it:
 
 ## How to work
 
-- **Be the engineer.** Read the server and clients, write the changes, run `npm run dev`, Docker and the Edgegap MCP tools, read logs. Hand the developer only account steps: `docker login`, registry credentials on the app version, creating the matchmaker in the dashboard, playtesting.
+- **Be the engineer.** Read the server and clients, write the changes, run `npm run dev`, Docker and the Edgegap MCP tools, read logs. Hand the developer only account steps: `docker login`, creating the matchmaker in the dashboard, playtesting.
 - **One layer at a time**: server changes locally → container → one direct deployment → matchmaker → clients. Each phase has a check.
 - **Secrets** (full rules: [the edgegap skill's agent rules](../edgegap/references/agent-rules.md)): the Edgegap API token never goes into a client, the server image, a deployment env var, git or chat. The matchmaker Auth Token may ship in clients.
 - **Money.** Ask before deploying. Tag test deployments and stop only the ones you started. Free tier: one deployment at a time.

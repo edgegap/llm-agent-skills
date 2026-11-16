@@ -2,7 +2,7 @@
 name: edgegap-launch
 description: 'Take an Edgegap-hosted game from "the test deployment works" to live players: the launch checklist (token hygiene, app version settings, restart policy, max duration, self-stop, image caching, log storage), version naming and blue/green rollouts with zero matchmaking downtime, cost and leak control, rate limits, free-tier limits to lift before launch, observability (logs, metrics, deployment IDs), capacity planning with Edgegap, Private Fleets and persistent servers, and incident basics. Use when preparing a launch, beta or playtest on Edgegap, reviewing production readiness, rolling out a new server build, deploying builds from CI or GitHub Actions (edgegap/deploy-action), or when someone mentions going live, launch day, rollout, scaling, hosting costs or operating game servers with real players.'
 metadata:
-  version: "0.3.0"
+  version: "0.3.1"
 ---
 
 # Launching and operating on Edgegap
@@ -51,6 +51,7 @@ This assumes a test deployment already accepted a real client (`edgegap-local-te
 - Self-stop + restart policy Never + max duration on every version.
 - Reconciliation in your backend (or a daily check) that stops deployments your backend created (its own tag, older than a few minutes) that no live match owns (`edgegap-deployments-api`). Never reconcile across a whole application: matchmaker and test deployments live there too.
 - Error deployments are not charged, but watch their rate: rising errors usually mean a broken build or missing registry credentials.
+- Egress: estimate it from a measured match (bytes sent per player per second × players × match length). Edge Cloud egress is $0.10 per GB; Private Fleet hosts include 6 TB per host per month for free (about 18 Mbps sustained per host). Put steady or bandwidth-heavy traffic on a fleet and let cloud overflow absorb peaks: overflow deployments pay the cloud rate, and so does fleet traffic above 6 TB per host.
 
 ## Launch-day behavior
 
@@ -68,7 +69,7 @@ This assumes a test deployment already accepted a real client (`edgegap-local-te
 
 ## Long-running and persistent servers
 
-Cloud deployments stop after 24 hours. For MMO shards, survival worlds or baseline capacity, use **Private Fleets** (reserved hosts, with overflow to the public cloud) and persistence (max duration `-1`, restart policy On Crash, state in external storage). For player-chosen servers, the **Server Browser** lists running servers with seats. Guides: https://docs.edgegap.com/learn/orchestration/private-fleets, https://docs.edgegap.com/learn/orchestration/persistence, https://docs.edgegap.com/learn/server-browser.
+Cloud deployments stop after 24 hours. For MMO shards, survival worlds or baseline capacity, use **Private Fleets** (reserved hosts with 6 TB of free egress per host per month, with overflow to the public cloud) and persistence (max duration `-1`, restart policy On Crash, state in external storage). For player-chosen servers, the **Server Browser** lists running servers with seats. Guides: https://docs.edgegap.com/learn/orchestration/private-fleets, https://docs.edgegap.com/learn/orchestration/persistence, https://docs.edgegap.com/learn/server-browser.
 
 ## When something breaks
 

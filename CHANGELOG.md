@@ -7,8 +7,39 @@ Each skill also carries its own `metadata.version` in its frontmatter, and the `
 A skill for games written by fal Agent, from [netcode-sample-fal-orb-arena](https://github.com/edgegap/netcode-sample-fal-orb-arena) (Orb Arena), verified on Edgegap 2026-11-09: two headless players and two browser tabs on GitHub Pages matched onto one deployment, a full match, self-stop 9 s after it.
 
 - New `edgegap-fal` 0.1.0: the fal Agent prompt that puts every rule in one DOM-free `rules.js` (with why each part is there), getting the code and generated art out of a fal chat, then the `edgegap-vibe-coded` and `edgegap-threejs` path. `references/edgegap-setup.md` has the app version fields for the MCP and for the dashboard (when the agent has no usable API token), the matchmaker config and its edit/restart path, GitHub Pages limits, and running the e2e test from GitHub Actions when the agent's sandbox can't reach Edgegap. `references/walkthrough.md` goes file by file. Not verified: fal's paid models, runtime-loaded fal sprites, two networks.
-- Images built by `docker/build-push-action` with its default provenance/SBOM attestations failed every deployment with `Unable to pull image from registry`; the same version pulled once the image was rebuilt with `provenance: false` and `sbom: false`. Both CI templates now set them: `edgegap-threejs` 0.3.5 (`assets/ci/server-image.yml`), `edgegap-manus` 0.1.8 (`assets/github/edgegap-game-server.yml`). `edgegap-troubleshoot` 0.2.4 has the row.
-- Routing: `edgegap` 0.35.0 (description, tables), `edgegap-vibe-coded` 0.1.3 points fal games to the new skill and lists the sample, `edgegap-samples` 0.1.3 adds it to the catalog. New `evals/fal-routing-eval.json`.
+- Images built by `docker/build-push-action` with its default provenance/SBOM attestations failed every deployment with `Unable to pull image from registry`; the same version pulled once the image was rebuilt with `provenance: false` and `sbom: false`. Both CI templates now set them: `edgegap-threejs` 0.3.6 (`assets/ci/server-image.yml`), `edgegap-manus` 0.1.9 (`assets/github/edgegap-game-server.yml`). `edgegap-troubleshoot` 0.2.4 has the row.
+- Routing: `edgegap` 0.35.0 (description, tables), `edgegap-vibe-coded` 0.1.3 points fal games to the new skill and lists the sample, `edgegap-samples` 0.1.4 adds it to the catalog. New `evals/fal-routing-eval.json`. (Versions bumped past the ones main shipped while this was open.)
+
+## 0.34.3 (unreleased)
+
+Private Fleet egress is free up to 6 TB per host per month (about 18 Mbps sustained), the way bare-metal hosting includes bandwidth; above that, and on Edge Cloud, egress is $0.10 per GB (edgegap.com/pricing.md, checked 2026-11-13). The skills never mentioned egress, so agents couldn't factor it into a hosting recommendation.
+
+- `edgegap` 0.34.3: the Private Fleet definition and the money section state both egress terms and when a fleet baseline removes most of the egress bill.
+- `edgegap-launch` 0.3.1: cost control estimates egress from a measured match and puts steady or bandwidth-heavy traffic on a fleet; the persistent-servers section mentions the included egress.
+- `edgegap` `references/agent-rules.md`: fleet hosts include egress, overflow deployments pay cloud egress.
+
+## 0.34.2 (unreleased)
+
+The LightNet relay sample ([edgegap/server-sample-lightnet-relay](https://github.com/edgegap/server-sample-lightnet-relay), PR #5, main `57bbd7b`) now runs in Unity WebGL builds: `LightNet/Runtime/Relay/RelayWebSocket.jslib` bridges `RelayWebSocket` to the browser's WebSocket, so the Mirror, FishNet, PurrNet and NGO relay transports connect over `wss://` to the relay version's `relay-ws` port (7778, TLS Upgrade). Passed on Edgegap 2026-11-09 for all four netcodes: desktop host + browser client, browser host + desktop client, browser + browser.
+
+- `edgegap-relays`: the LightNet paragraph documents the WebGL build (URL options, Tanks > Build WebGL client), its limits (reliable/ordered only, a hidden browser host tab freezes, no `beacons` rule with the matchmaker) and what wasn't run (matchmaker from a browser, real mobile browsers). The "WebGL can't open UDP sockets" note now applies to the managed relays only, and the transport table and troubleshooting row send WebGL host/client games to the LightNet sample.
+- `edgegap-unity`, `edgegap-fishnet`, `edgegap-purrnet`, `edgegap-ngo`: the host/client pointer to the sample says it works for desktop and WebGL.
+- `edgegap-samples` catalog: the sample row lists Unity WebGL and its new last-commit date.
+- Versions: `edgegap` 0.34.2, `edgegap-relays` 0.1.1, `edgegap-unity` 0.2.5, `edgegap-fishnet` 0.3.5, `edgegap-purrnet` 0.3.5, `edgegap-ngo` 0.2.5, `edgegap-samples` 0.1.3.
+
+## 0.34.1 (unreleased)
+
+Leftovers from 0.34.0 that still had the developer add the registry login to a version for `registry.edgegap.com`.
+
+- `edgegap-ngo` §4 said `edgegap_create_app_version` needs the registry username and token in the call; it doesn't for registry.edgegap.com.
+- `edgegap-playfab` (`references/game-server.md`) and `edgegap-manus` (`references/deploy.md`) still had the developer paste the Container Registry login onto the version.
+- `edgegap-unity` §7 said the tool warns in `notes` when a version has no registry login. It doesn't: registry.edgegap.com gets `registry_profile: "Edgegap"`, and another private registry gets no login and no warning.
+- The hand-off lists in `edgegap-threejs`, `edgegap-colyseus`, `edgegap-cocos`, `edgegap-nakama`, `edgegap-playfab`, `edgegap-ugs-matchmaker` and `edgegap-fusion` no longer give the developer "registry credentials on the app version"; `docker login` for the push stays.
+- Unity plugin form (`edgegap-unity`, `edgegap-ngo`, `edgegap-fishnet`, `edgegap-purrnet`): "add registry credentials if asked" becomes "make sure the registry login is set (a Registry Profile, or the Container Registry username and token)". A stale login is fixed with a new version created by the tool without a login.
+- The `Unable to pull image from registry` rows in the fishnet, godot, ngo and purrnet troubleshooting tables now give the fix: a new version created without a login.
+- `evals/nakama-evals.json` expected outputs match.
+- Not changed: `edgegap-launch`, since `edgegap/deploy-action` v0.1.0 still needs `registry-username`/`registry-token` as inputs.
+- Versions: `edgegap` 0.34.1, `edgegap-unity` 0.2.4, `edgegap-ngo` 0.2.4, `edgegap-fishnet` 0.3.4, `edgegap-purrnet` 0.3.4, `edgegap-playfab` 0.3.4, `edgegap-manus` 0.1.8, `edgegap-threejs` 0.3.5, `edgegap-colyseus` 0.4.3, `edgegap-cocos` 0.1.2, `edgegap-nakama` 0.2.2, `edgegap-ugs-matchmaker` 0.1.1, `edgegap-fusion` 0.1.6, `edgegap-godot` 0.2.3.
 
 ## 0.34.0 (unreleased)
 
