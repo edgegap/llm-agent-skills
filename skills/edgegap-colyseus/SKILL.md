@@ -52,7 +52,7 @@ Read `references/server.md`.
 
 ## Phase 2: Image, app version, one direct deployment
 
-Read `references/deploy.md` §1 to §3. **Cocos Creator project** (if its server is not Colyseus, load `edgegap-cocos` instead): the developer does steps 1 to 3 in the [Edgegap Cocos extension](https://github.com/edgegap/edgegap-cocos-plugin) panel instead (install, settings and the headless run in `references/clients.md`, Cocos section); you set it up and check the result with the MCP tools.
+Read `references/deploy.md` §1 to §3. **Cocos Creator project** (if its server is not Colyseus, load `edgegap-cocos` instead): the developer does steps 1 to 3 in the [Edgegap Cocos extension](https://github.com/edgegap/buildtool-cocos-plugin) panel instead (install, settings and the headless run in `references/clients.md`, Cocos section); you set it up and check the result with the MCP tools.
 1. `docker build --platform linux/amd64`, the developer runs `docker login registry.edgegap.com`, push a new tag (UTC timestamp `YYYYMMDD-HHMM`, also the app version name), never `latest`.
 2. `edgegap_create_app` and `edgegap_create_app_version`: port `2567`, protocol **WS**, name `gameport`, `tls_upgrade: true`; 256 CPU units / 512 MB; max duration 60 for tests. No registry login: the tool sends `registry_profile: "Edgegap"`; check `registry_credentials_set: true`.
 3. Ask, then `edgegap_deploy` with the players' IPs and a test tag → `edgegap_wait_for_deployment` (or the developer runs `npm run edgegap:deploy -- <app> <version>`). The URL is `wss://<fqdn>:<external gameport>`.

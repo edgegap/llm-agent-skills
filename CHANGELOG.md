@@ -2,6 +2,15 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.35.1 (unreleased)
+
+From a sweep of the public repos against the skills (2026-11-16).
+
+- `edgegap-godot` 0.2.4: new `references/godotsteam.md` for Steam games built on GodotSteam Server, from [server-sample-godotsteam-dedicated-server](https://github.com/edgegap/server-sample-godotsteam-dedicated-server) (verified on Edgegap 2026-11-09). It covers the shape, the Dockerfile (the plugin's default drops the GDExtension `.so` files), `run_callbacks()` on a headless server, and bringing players in through the matchmaker or Steam lobbies. SKILL.md points to it.
+- The Cocos extension repo was renamed to [edgegap/buildtool-cocos-plugin](https://github.com/edgegap/buildtool-cocos-plugin); `edgegap-cocos`, `edgegap-colyseus`, the catalog and the README link the new name.
+- `edgegap-samples` 0.1.5: the catalog lists the GodotSteam sample, and its last-commit dates were rechecked on 2026-11-16.
+- Versions: `edgegap` 0.35.1, `edgegap-godot` 0.2.4, `edgegap-samples` 0.1.5.
+
 ## 0.35.0 (unreleased)
 
 A skill for games written by fal Agent, from [netcode-sample-fal-orb-arena](https://github.com/edgegap/netcode-sample-fal-orb-arena) (Orb Arena), verified on Edgegap 2026-11-09: two headless players and two browser tabs on GitHub Pages matched onto one deployment, a full match, self-stop 9 s after it.
