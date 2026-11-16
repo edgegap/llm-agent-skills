@@ -14,7 +14,7 @@ Contents
 
 Both end with the same thing: an image in `registry.edgegap.com`, an application, a version (port WS + TLS Upgrade, named `gameport`), and one test deployment whose `wss://` URL a client can join.
 
-- **The extension** ([edgegap/edgegap-cocos-plugin](https://github.com/edgegap/edgegap-cocos-plugin) 2.0.0, Cocos Creator 3.8+, Windows and macOS, needs Docker Desktop): for developers who want buttons in the editor. It does sign-in, build, local run, push + version, deploy near me, stop.
+- **The extension** ([edgegap/buildtool-cocos-plugin](https://github.com/edgegap/buildtool-cocos-plugin) 2.0.0, Cocos Creator 3.8+, Windows and macOS, needs Docker Desktop): for developers who want buttons in the editor. It does sign-in, build, local run, push + version, deploy near me, stop.
 - **MCP tools or the dashboard**: when you (the agent) do the work, in CI, or when the developer prefers no editor extension. Same API calls.
 
 Ask which the developer prefers when it isn't obvious; default to setting up the extension for them (install + preset) and checking the result with the MCP tools, because the developer then owns a repeatable button flow.
