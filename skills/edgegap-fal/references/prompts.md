@@ -1,6 +1,22 @@
 # Prompts
 
-## 1. fal Agent: the game
+## 1. A coding agent builds the game (path A)
+
+For Claude Code, Codex, Cursor or ChatGPT writing the game, with fal for the assets. Replace the first paragraph with the developer's game; keep the rest. If you are that agent, this is your own brief.
+
+> Build a 3D browser game called "[NAME]" with Three.js from a CDN (ES modules, import map, no build step). Gameplay: [the game in a few sentences: who the players are, how they move (a bit of slide: acceleration + friction), what they do (push, carry, collect, slow projectiles), how a point is scored, first to N wins]. The human plays against 3 bots.
+>
+> Architecture, important: put ALL game rules in `client/rules.js`, an ES module with NO window, document, WebGL, audio or timers: export createWorld(), addPlayer(world, id, name, isBot), removePlayer(world, id), setInput(world, id, input) with plain numbers and booleans, step(world, dt) that returns an array of events, and botInput(world, id) that reads only positions. Characters collide as circles and obstacles as boxes, never as meshes. `client/render.js` draws a plain view object ({players, items, ...}); `client/main.js` handles input, runs step() at a fixed 60 Hz for solo play and builds that view.
+>
+> Assets: start as a graybox (capsules, boxes, flat colours). List every model, texture and sound in `client/assets.js`, all optional: an empty entry or a failed load keeps the plain shape. Scale each model to a size in world units in the renderer; no rule may depend on a model's size.
+
+Then, once the graybox plays and the server tests pass, the asset pass ([assets.md](assets.md)):
+
+> Generate the game's assets with fal and list them in client/assets.js. For each of the 4 characters: one concept image (same style paragraph, A-pose, separated limbs, empty hands, white background), show it to me, then image-to-3D with rigging and the walk and run clips. Props the same way without rigging. One seamless floor texture, one short sound per rules event. Tell me the cost before you start, keep every prompt in PROMPTS.md, shrink the models for the web, and don't put any asset in the server image.
+
+The exact brief and prompts used for Relic Rumble are in its [README](https://github.com/edgegap/netcode-sample-fal-relic-rumble#step-1-build-the-game-as-a-graybox-rules-in-their-own-file) and [PROMPTS.md](https://github.com/edgegap/netcode-sample-fal-relic-rumble/blob/main/PROMPTS.md) (verified 2026-11-17).
+
+## 2. fal Agent: the game (path B)
 
 Paste into a new fal Agent chat (fal.ai/agent). Replace the first paragraph with the developer's game; keep the second and third paragraphs as they are.
 
@@ -28,7 +44,7 @@ Why each part is there:
 | `botInput(world, id)` from positions only | Server bots and headless test players reuse it. |
 | Drift, slow projectiles | Holds up with network delay without client prediction. |
 
-## 2. fal Agent: follow-ups
+## 3. fal Agent: follow-ups
 
 Short prompts that keep the shape intact:
 
@@ -36,6 +52,6 @@ Short prompts that keep the shape intact:
 - "Add a dash on Shift with a 2 s cooldown. It's a rule, so it goes in rules.js and setInput gets a dash field."
 - "Output only the files that changed, in full."
 
-## 3. The coding agent (Claude Code, Cursor...) with the Edgegap MCP
+## 4. Going online: the coding agent with the Edgegap MCP
 
-> Here is a game fal Agent made (client/). Make it online multiplayer on Edgegap. Use the Edgegap MCP and its edgegap-fal skill. Keep the solo mode, add a Find match button, 2 to 4 players per match, bots fill empty seats. Build the server image with GitHub Actions. Ask me before you create anything in my Edgegap account, and make sure nothing is left running at the end.
+> Here is a game made with fal (client/): [a coding agent wrote it and fal generated the assets / fal Agent wrote it]. Make it online multiplayer on Edgegap. Use the Edgegap MCP and its edgegap-fal skill. Keep the solo mode, add a Find match button, 2 to 4 players per match, bots fill empty seats. Build the server image with GitHub Actions. Ask me before you create anything in my Edgegap account, and make sure nothing is left running at the end.

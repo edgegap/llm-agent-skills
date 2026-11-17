@@ -4,7 +4,7 @@ Repo: [edgegap/netcode-sample-fal-orb-arena](https://github.com/edgegap/netcode-
 
 ## The fal Agent answer
 
-One prompt (`prompts.md` §1), one answer in about a minute, free models, three code blocks:
+One prompt (`prompts.md` §2), one answer in about a minute, free models, three code blocks:
 
 | File | Lines | What fal wrote |
 |---|---|---|

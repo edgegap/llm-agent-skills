@@ -2,6 +2,13 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.36.0 (unreleased)
+
+Most people who make games with fal.ai use a coding agent for the code and fal for the assets (the fal MCP, the `genmedia` CLI, fal's own game tutorials and skills), not fal Agent. `edgegap-fal` now leads with that path, from [netcode-sample-fal-relic-rumble](https://github.com/edgegap/netcode-sample-fal-relic-rumble) (Relic Rumble, a 3D Three.js game for 4), verified on Edgegap 2026-11-17: two headless players and two browser tabs matched through the matchmaker onto one deployment, a full match, self-stop 20 s after it; four rigged characters, three props, a floor texture and five sounds from fal for about $6.30 at list prices.
+
+- `edgegap-fal` 0.2.0: two paths (A: coding agent + fal assets, B: fal Agent writes the code) that meet at the server phase. New `references/assets.md`: connecting the agent to fal (CLI key or MCP OAuth, the exhausted-balance 403), the models and prices used, concept prompts that auto-rig, Meshy's result shape (rigged GLB plus armature-only walk and run clips), shrinking for the web, and the Three.js loader pitfalls (a rigged GLB's plain bounding box is about 100 times off; clips in separate files; `SkeletonUtils.clone`). New `references/relic-rumble.md`: order of work (graybox and all Edgegap tests before any asset), files, settings, measurements, pitfalls. `references/prompts.md` gains the game brief for a coding agent and the asset-pass prompt. SKILL.md adds: every asset optional, no asset in the server image, art changes need no server build, a direct-deployment test before the matchmaker exists, a Docker login for another registry project (401), world models are out of scope. Not verified: the fal MCP server itself (assets were generated with the CLI), runtime sprite sheets, two networks, phones.
+- Routing: `edgegap` 0.36.0 (tables), `edgegap-vibe-coded` 0.1.4 lists the sample, `edgegap-samples` 0.1.6 adds it to the catalog, five more queries in `evals/fal-routing-eval.json`.
+
 ## 0.35.1 (unreleased)
 
 From a sweep of the public repos against the skills (2026-11-16).
