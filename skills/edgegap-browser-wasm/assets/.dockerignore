@@ -1,0 +1,13 @@
+# Allowlist: the build context holds only what the server image needs.
+# Everything else (client sources, client/dist, node_modules, docs, .git) never reaches Docker.
+*
+!package.json
+!package-lock.json
+!tsconfig.base.json
+!shared/package.json
+!shared/tsconfig.json
+!shared/src
+!server/package.json
+!server/tsconfig.json
+!server/src
+!client/package.json
