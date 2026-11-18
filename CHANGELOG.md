@@ -2,6 +2,13 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.36.1 (unreleased)
+
+[server-sample-godotsteam-dedicated-server](https://github.com/edgegap/server-sample-godotsteam-dedicated-server) now builds with the Edgegap Godot plugin (1.0.10, vendored), checked on 2026-11-18: the dock exported the server, built the image from the sample's Dockerfile and ran it locally, where the server logged on to Steam and a client's auth ticket was validated.
+
+- `edgegap-godot` 0.2.5: `references/godotsteam.md` replaces the manual export and Docker commands with the plugin's dock and three Steam-specific settings: the preset's exclude filter, the dock's **Dockerfile path** set to the project's Dockerfile (the field resets when the editor restarts), and a `.dockerignore` that sends only `build/`. SKILL.md's Steam note says the same. Not verified: the dock's upload and deploy buttons with this sample, and an Edgegap deployment of the plugin-built image.
+- Versions: `edgegap` 0.36.1, `edgegap-godot` 0.2.5.
+
 ## 0.36.0 (unreleased)
 
 Most people who make games with fal.ai use a coding agent for the code and fal for the assets (the fal MCP, the `genmedia` CLI, fal's own game tutorials and skills), not fal Agent. `edgegap-fal` now leads with that path, from [netcode-sample-fal-relic-rumble](https://github.com/edgegap/netcode-sample-fal-relic-rumble) (Relic Rumble, a 3D Three.js game for 4), verified on Edgegap 2026-11-17: two headless players and two browser tabs matched through the matchmaker onto one deployment, a full match, self-stop 20 s after it; four rigged characters, three props, a floor texture and five sounds from fal for about $6.30 at list prices.
