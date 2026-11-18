@@ -2,7 +2,7 @@
 name: edgegap-godot
 description: 'Godot 4 + Edgegap: take a Godot multiplayer game (MultiplayerAPI, @rpc, ENetMultiplayerPeer, WebSocketMultiplayerPeer, MultiplayerSpawner, netfox) to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a Godot project (project.godot, .gd, .tscn, export_presets.cfg). It has tested GDScript templates (a server lifecycle autoload that waits for the matched players and stops its own deployment, a matchmaker client and Find Match button), the Edgegap Godot plugin build (export, image, push from the editor), app version ports (UDP for ENet, WS + TLS Upgrade for web and wss), matchmaker config, and fixes for Godot pitfalls: empty server logs, export allowlists that drop new scripts, join validation that silently blocks matched players. Use when a Godot dev wants online play: "host my Godot game", "nobody should host", "Find Match button", "Godot web multiplayer", or is debugging Godot deployments, ports or matchmaking on Edgegap.'
 metadata:
-  version: "0.2.4"
+  version: "0.2.5"
 ---
 
 # Edgegap for Godot 4: dedicated servers + matchmaking
@@ -84,7 +84,7 @@ Read `references/deploy.md` §4-§5.
 
 Read `references/matchmaker.md`.
 
-**Steam games (GodotSteam):** a GodotSteam Server build that logs on to Steam and checks players' auth tickets needs its own Dockerfile (the plugin's default drops the GDExtension `.so` files) and `run_callbacks()` on the headless server. Read `references/godotsteam.md`; sample: [server-sample-godotsteam-dedicated-server](https://github.com/edgegap/server-sample-godotsteam-dedicated-server).
+**Steam games (GodotSteam):** a GodotSteam Server build that logs on to Steam and checks players' auth tickets still builds from the plugin's dock, with the dock's **Dockerfile path** set to the project's own Dockerfile (the plugin's default drops the GDExtension `.so` files and has no `steamclient.so`), and needs `run_callbacks()` on the headless server. Read `references/godotsteam.md`; sample: [server-sample-godotsteam-dedicated-server](https://github.com/edgegap/server-sample-godotsteam-dedicated-server).
 1. `assets/matchmaker/casual.json` (2-4 players, no expansion stage, tickets expire after 30 s) with the app name and version, or `edgegap_build_matchmaker_config`. Web clients: add `allowed_cors_origins`. Save as `matchmaker-config.json` in the project root and give the developer its full path.
 2. Dashboard: Create Matchmaker → upload → Create and Start → copy **API URL** and **Auth Token**.
 3. `GET <API URL>/monitor` with the token answers.
