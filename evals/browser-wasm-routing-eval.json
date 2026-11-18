@@ -1,0 +1,16 @@
+[
+  {"query": "I have a three.js game using Rapier for physics. How do I make it multiplayer with an authoritative server so players can't cheat?", "expected_skill": "edgegap-browser-wasm"},
+  {"query": "My WebAssembly browser game needs online multiplayer. Server should run the same Rapier physics and the client should predict movement.", "expected_skill": "edgegap-browser-wasm"},
+  {"query": "client side prediction and reconciliation with rapier3d in the browser, server in node, how do I host it", "expected_skill": "edgegap-browser-wasm"},
+  {"query": "Our page is on https and the game socket fails with net::ERR_CERT_COMMON_NAME_INVALID when we connect to the deployment's IP", "expected_skill": "edgegap-browser-wasm"},
+  {"query": "Mixed Content error: my itch.io page can't open ws:// to my game server. What do I change on Edgegap?", "expected_skill": "edgegap-browser-wasm"},
+  {"query": "Our server Docker image contains the whole web client bundle and the container scanner complains. How should a browser game split client and server?", "expected_skill": "edgegap-browser-wasm"},
+  {"query": "Rapier WASM init fails inside our Node Docker container, works on my machine", "expected_skill": "edgegap-browser-wasm"},
+  {"query": "My three.js party game has a node ws server; I want a Find Match button and one server per match", "expected_skill": "edgegap-threejs"},
+  {"query": "Five small web minigames, one matchmaker with a profile each, Three.js clients", "expected_skill": "edgegap-threejs"},
+  {"query": "I vibe coded a single-player browser game in Cursor, how do I make it online with friends?", "expected_skill": "edgegap-vibe-coded"},
+  {"query": "Unity WebGL build with Mirror, players connect over websockets from the browser to Edgegap", "expected_skill": "edgegap-unity"},
+  {"query": "Godot 4 web export multiplayer: WebSocketMultiplayerPeer server on Edgegap", "expected_skill": "edgegap-godot"},
+  {"query": "How do I compile my Rust physics code to WebAssembly with wasm-pack?", "expected_skill": null},
+  {"query": "Rapier rigid bodies jitter when stacked, how do I tune the solver iterations?", "expected_skill": null}
+]

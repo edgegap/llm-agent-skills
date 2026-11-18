@@ -2,6 +2,13 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.37.0 (unreleased)
+
+A skill for browser and WebAssembly games, from [netcode-sample-threejs-rapier](https://github.com/edgegap/netcode-sample-threejs-rapier) (three.js 0.187 + Rapier 0.21 WASM physics, authoritative Node.js 22 server, client-side prediction, client on GitHub Pages), and the docs page "Make Your Browser (WebAssembly) Game Multiplayer". Verified locally on 2026-11-18: two headless players and two browser windows on one server, the image (63.5 MB compressed) started with `docker run --network none`, SIGTERM exit 0, the empty-server stop; the browser messages for mixed content, `ERR_CERT_COMMON_NAME_INVALID`, `ERR_SSL_PROTOCOL_ERROR`, `ERR_CONNECTION_REFUSED` and `ERR_BLOCKED_BY_LOCAL_NETWORK_ACCESS_CHECKS` copied from Chrome 157 and Edge 157. Not run on Edgegap for this sample; Firefox messages not captured.
+
+- `edgegap-browser-wasm` 0.1.0: SKILL.md (shared physics module → authoritative server → prediction client → slim image → WS + TLS Upgrade deployment → static client), `references/architecture.md`, `prediction.md`, `wasm-in-containers.md` (embedded vs separate `.wasm`, other WASM physics engines, pruning Rapier's unused files, scanners, `--provenance=false --sbom=false`), `troubleshooting.md`; templates in `assets/` copied from the sample.
+- Routing: `edgegap` 0.37.0 (description and tables), `edgegap-threejs` 0.3.7 (related skills), `edgegap-samples` 0.1.7 (catalog), new `evals/browser-wasm-routing-eval.json` (not run yet).
+
 ## 0.36.1 (unreleased)
 
 [server-sample-godotsteam-dedicated-server](https://github.com/edgegap/server-sample-godotsteam-dedicated-server) now builds with the Edgegap Godot plugin (1.0.10, vendored), checked on 2026-11-18: the dock exported the server, built the image from the sample's Dockerfile and ran it locally, where the server logged on to Steam and a client's auth ticket was validated.
