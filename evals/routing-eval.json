@@ -206,5 +206,17 @@
   {
     "query": "How should we roll out a new server build to live players on Edgegap without breaking matches in progress?",
     "expected_skill": "edgegap-launch"
+  },
+  {
+    "query": "Manus says my multiplayer game needs a cloud computer before it can build it. I'm on the free plan. Is there another way to host the server?",
+    "expected_skill": "edgegap-manus"
+  },
+  {
+    "query": "Manus built me a self-hostable Node.js server binary for my drone arena game. How do I put it online so friends can join without port forwarding or ngrok?",
+    "expected_skill": "edgegap-manus"
+  },
+  {
+    "query": "I asked Manus Game Dev for an online game and it wants me to start a Cloud Computer in Settings. Can I run the game server somewhere else instead?",
+    "expected_skill": "edgegap-manus"
   }
 ]

@@ -2,6 +2,22 @@
 
 Paste these in Manus one at a time, in the project chat of the game, with the `edgegap-manus` skill added to the workspace (Skills → + Add → upload the skill folder or zip, or import it from GitHub). Type `/edgegap-manus` first so Manus loads the skill. Each prompt is one phase that ends in something you can check before going on: an online game is easier to debug one layer at a time.
 
+## 0. Manus asks for a Cloud Computer (Game Dev)
+
+If Manus answers a multiplayer game prompt with "Online multiplayer requires a ready cloud computer...", reply in the chat with this (verified 2026-11-20):
+
+```
+can you build the game server binary so i can host it locally on my machine instead
+```
+
+then:
+
+```
+can you also build the browser client so i can test it against my server? Let me set the server address in the page (a ?server= URL parameter like ws://localhost:8787/ws or wss://myhost:port/ws), so the same client works with my local server or a server I host somewhere else.
+```
+
+Then host that server on Edgegap: `references/self-host.md`. No `/edgegap-manus` skill is needed in Manus for these two.
+
 ## 1. Plan (nothing changes yet)
 
 ```

@@ -2,12 +2,12 @@
 name: edgegap
 description: 'Start here for hosting a game on Edgegap (dedicated servers + matchmaking) when the engine is not Unity, Unreal or Godot, is unknown, or the question is about the platform itself. Use when someone wants to host or deploy a game server, wants a solo or co-op game always online or harder to crack, asks how players join matches, wants custom-engine servers, compares hosting, or asks what Edgegap apps, versions, deployments, fleets or matchmakers are, even if they never say "hosting". It picks the server shape, explains vocabulary and safety rules, routes to the right skill. For a Unity project, load edgegap-unity instead (NGO: edgegap-ngo, FishNet: edgegap-fishnet, PurrNet: edgegap-purrnet, Fusion: edgegap-fusion); Unreal: edgegap-unreal; Godot 4: edgegap-godot; Colyseus: edgegap-colyseus; Cocos: edgegap-cocos; Nakama: edgegap-nakama; Manus: edgegap-manus; Three.js/web: edgegap-threejs; WASM physics: edgegap-browser-wasm; vibe-coded: edgegap-vibe-coded; fal.ai: edgegap-fal; matchmaking: edgegap-matchmaking.'
 metadata:
-  version: "0.37.0"
+  version: "0.38.0"
 ---
 
 # Edgegap
 
-Pack version: 0.37.0
+Pack version: 0.38.0
 
 Edgegap runs dedicated game servers. You push a **Linux container image** of your game server, register it as an **app version**, and ask for a **deployment** near a group of players. Edgegap picks the location with the best ping for that group, starts the container in seconds, and returns a URL (`<id>.pr.edgegap.net`), a public IP, and an external port per internal port. Players connect. The match ends, the server stops, billing stops.
 
@@ -38,7 +38,7 @@ Work through these in order and skip what is already done:
 | 5 | Matchmaking: `edgegap-matchmaking` decides who owns it (Edgegap's hosted matchmaker, your own allocator with `edgegap-deployments-api`, or a matchmaker you keep) and designs the profile, region selection and backfill; the engine skill writes the client | Players clicking Play land on the same server |
 | 6 | `edgegap-launch` | The launch checklist is green |
 
-For a Godot 4 game whose server is Godot itself (high-level multiplayer with ENet or WebSocket), load `edgegap-godot`: GDScript templates for the server lifecycle and the matchmaker client, the dedicated server export and Dockerfile. If the game's server is Colyseus (any client, Godot included), use `edgegap-colyseus`. If the game uses Nakama for accounts and matchmaking, use `edgegap-nakama` (verified with a Godot 4 game; it has Godot and Node server templates). For a Three.js (or other JavaScript) browser game with its own Node.js WebSocket server, load `edgegap-threejs`: an authoritative room with phases and bots, self-stop, a no-build Three.js client with Find Match, one image for several games, verified with five games. When players must sign in through a backend first (Steam), `edgegap-manus` has the backend-owned matchmaking design, which works outside Manus too. Otherwise, use `edgegap-server-design` and `edgegap-containerize`, which are engine-agnostic and cover everything Edgegap actually requires, for other engines. The Edgegap MCP tool `edgegap_generate_dockerfile` knows the headless flags for Unity, Unreal and Godot.
+For a Godot 4 game whose server is Godot itself (high-level multiplayer with ENet or WebSocket), load `edgegap-godot`: GDScript templates for the server lifecycle and the matchmaker client, the dedicated server export and Dockerfile. If the game's server is Colyseus (any client, Godot included), use `edgegap-colyseus`. If the game uses Nakama for accounts and matchmaking, use `edgegap-nakama` (verified with a Godot 4 game; it has Godot and Node server templates). For a Three.js (or other JavaScript) browser game with its own Node.js WebSocket server, load `edgegap-threejs`: an authoritative room with phases and bots, self-stop, a no-build Three.js client with Find Match, one image for several games, verified with five games. For a game made with Manus, including when Manus says online multiplayer needs a Cloud Computer, load `edgegap-manus`: Manus can build a self-hostable server instead, and that runs on Edgegap. When players must sign in through a backend first (Steam), `edgegap-manus` has the backend-owned matchmaking design, which works outside Manus too. Otherwise, use `edgegap-server-design` and `edgegap-containerize`, which are engine-agnostic and cover everything Edgegap actually requires, for other engines. The Edgegap MCP tool `edgegap_generate_dockerfile` knows the headless flags for Unity, Unreal and Godot.
 
 ## Jump straight to a task
 
@@ -57,7 +57,7 @@ For a Godot 4 game whose server is Godot itself (high-level multiplayer with ENe
 | A Cocos Creator 3.8 game whose server is not Colyseus (Node.js with ws or socket.io, or any language), and the Edgegap Cocos extension | `edgegap-cocos` |
 | A game with a Nakama backend (any engine): Nakama's matchmaker starts one Edgegap server per match through the Edgegap Fleet Manager for Nakama | `edgegap-nakama` |
 | A game that keeps PlayFab for players and Matchmaking (or leaves PlayFab Multiplayer Servers): PlayFab Azure Functions start one Edgegap server per match | `edgegap-playfab` |
-| A browser game built with Manus (manus.im): Steam sign-in, backend matchmaking, WebSocket server | `edgegap-manus` |
+| A game built with Manus (manus.im), including Manus Game Dev asking for a Cloud Computer, or Steam sign-in with backend matchmaking | `edgegap-manus` |
 | A Three.js (or Babylon.js, PlayCanvas, Phaser, canvas) browser game with its own Node.js WebSocket server: authoritative server per match, Find Match from the page | `edgegap-threejs` |
 | A browser / WebAssembly game (three.js + Rapier or other WASM physics) made authoritative multiplayer over `wss://`: shared physics on the server and client prediction, client on a CDN, slim server image, browser connection errors (mixed content, certificate, TLS) | `edgegap-browser-wasm` |
 | A vibe-coded game (made with Claude, Cursor, Lovable, Bolt, v0...) that is single-player in the browser and should get online matches, keeping solo play; or which game ideas hold up online; or a public demo with an always-on matchmaker | `edgegap-vibe-coded` |

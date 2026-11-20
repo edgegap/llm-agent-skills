@@ -2,6 +2,13 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.38.0 (unreleased)
+
+Manus Game Dev stops before writing a multiplayer game until the user buys or starts a Manus Cloud Computer (checked 2026-11-20 on Manus 2.0 Lite, free plan). Asking Manus instead for "the game server binary so i can host it locally" gets a self-hostable Node.js WebSocket server, and that server runs on Edgegap. Verified end to end on 2026-11-20: Manus built the server and a browser client; with one bug fix and a drop-in self-stop it ran on Edgegap (app `manus-orb-arena`, WS + TLS Upgrade), two scripted players got 15 snapshots/s over wss, two browser tabs of the Manus client played one match, and the deployment stopped itself about 36 s after both left.
+
+- `edgegap-manus` 0.2.0: two paths. New path A, `references/self-host.md`: the Cloud Computer message, the two verified Manus prompts (plus an untested one-shot prompt), getting the code out, the check that caught Manus's bug (snapshots stopped after the first one; its own test only checked joins), the self-stop hooks, image, app version, a two-tab test, next steps (Find Match via `edgegap-threejs`), and the answer to Manus's own "port forwarding or ngrok" follow-up. New `assets/self-host/`: `edgegap.js` (self-stop on no join / empty / match over, inert off Edgegap, no dependencies), `Dockerfile`, `ws-check.cjs` (message counts per client). `assets/manus-prompts.md` gains prompt 0. The Steam/backend flow is path B, unchanged and still not run end to end. Description rewritten to trigger on the Cloud Computer request, self-hosting and port forwarding.
+- Routing: `edgegap` 0.38.0 (table row and Manus paragraph), three more Manus queries in `evals/routing-eval.json` (not run yet).
+
 ## 0.37.0 (unreleased)
 
 A skill for browser and WebAssembly games, from [netcode-sample-threejs-rapier](https://github.com/edgegap/netcode-sample-threejs-rapier) (three.js 0.187 + Rapier 0.21 WASM physics, authoritative Node.js 22 server, client-side prediction, client on GitHub Pages), and the docs page "Make Your Browser (WebAssembly) Game Multiplayer". Verified locally on 2026-11-18: two headless players and two browser windows on one server, the image (63.5 MB compressed) started with `docker run --network none`, SIGTERM exit 0, the empty-server stop; the browser messages for mixed content, `ERR_CERT_COMMON_NAME_INVALID`, `ERR_SSL_PROTOCOL_ERROR`, `ERR_CONNECTION_REFUSED` and `ERR_BLOCKED_BY_LOCAL_NETWORK_ACCESS_CHECKS` copied from Chrome 157 and Edge 157. Not run on Edgegap for this sample; Firefox messages not captured.
