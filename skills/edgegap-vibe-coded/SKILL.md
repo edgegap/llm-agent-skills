@@ -2,7 +2,7 @@
 name: edgegap-vibe-coded
 description: 'Make a vibe-coded game online multiplayer on Edgegap: a single-player browser game made with an AI tool (Claude, Cursor, Codex, ChatGPT, Lovable, Bolt, v0, Replit, Websim...) that plays against bots in the page, turned into online matches with one authoritative server per match, Find Match and a matchmaker, while solo play keeps working. Load this first for "make my vibe-coded game multiplayer", "add online play to the game I made with AI", "play this with friends online", "my Lovable/Bolt game needs multiplayer", or which game ideas work online. It checks whether the game holds up with network delay, gets the code out of the AI tool into a repo, moves the rules into one file shared by page and server, and runs a public demo cheaply (matchmaker always on, servers stop fast, free-tier limits). Verified with Thin Ice Tussle. fal.ai: edgegap-fal; server and client templates: edgegap-threejs; games on Supabase: edgegap-supabase; Manus: edgegap-manus.'
 metadata:
-  version: "0.1.4"
+  version: "0.1.5"
 ---
 
 # Edgegap for vibe-coded games: from single-player to online matches
@@ -26,7 +26,7 @@ after:  page = rendering + input + Find Match ──> Edgegap matchmaker (always
 - [netcode-sample-fal-orb-arena](https://github.com/edgegap/netcode-sample-fal-orb-arena) (2026-11-09): Orb Arena, written by fal Agent from one prompt, Canvas 2D; `edgegap-fal` covers the fal side.
 - [netcode-sample-fal-relic-rumble](https://github.com/edgegap/netcode-sample-fal-relic-rumble) (2026-11-17): Relic Rumble, 3D, written by a coding agent with rigged characters, props and sounds generated on fal.ai; built and tested online as a graybox before any asset existed. `edgegap-fal` covers the asset side.
 
-Not verified: two players on different networks or devices (each developer's own test), games whose source is React + Vite from Lovable, Bolt or v0 (the pattern is the same, the files move), Phaser or Babylon.js clients.
+Two players on different networks or devices is each developer's own test. Games whose source is React + Vite from Lovable, Bolt or v0 follow the same pattern; the files move.
 
 ## Who you are talking to
 
@@ -92,7 +92,7 @@ When the game will sit on a public page with the matchmaker on all the time, rea
 
 ## Phase 5: Hand-off
 
-Tell the developer: what changed (the `before`/`after` diff if they tagged it), how to play solo and online, the app, version and matchmaker names, how to ship a new server build, what wasn't tested, and what keeps costing money (the matchmaker, and any deployment that didn't stop). Before finishing, stop every deployment you started and check with `edgegap_list_deployments` `only_agent_deployments: true`.
+Tell the developer: what changed (the `before`/`after` diff if they tagged it), how to play solo and online, the app, version and matchmaker names, how to ship a new server build, what was tested, and what keeps costing money (the matchmaker, and any deployment that didn't stop). Before finishing, stop every deployment you started and check with `edgegap_list_deployments` `only_agent_deployments: true`.
 
 ## Reference files
 

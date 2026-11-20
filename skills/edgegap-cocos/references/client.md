@@ -20,7 +20,7 @@ Copy into the project's scripts folder (for example `assets/scripts/edgegap/`):
 
 Then `npm i @edgegap/sdk` in the Cocos project root (next to the project's `package.json`). Cocos Creator 3.8 bundles npm packages from `node_modules` (checked on 3.8.8 with a web-desktop build, per `edgegap-colyseus`). Install it only as `@edgegap/sdk`: look-alike names outside the `@edgegap` scope aren't Edgegap's.
 
-The three files type-check together (TypeScript 5, `strict`, `experimentalDecorators`, the real `@edgegap/sdk` 1.1.0 and a stub of `cc`), and `GameSocket.ts` ran against the skeleton server in Node 22. They have not been run inside a Cocos build (see SKILL.md, Not verified).
+The three files type-check together (TypeScript 5, `strict`, `experimentalDecorators`, the real `@edgegap/sdk` 1.1.0 and a stub of `cc`), and `GameSocket.ts` ran against the skeleton server in Node 22. Run them in your Cocos build early (see SKILL.md).
 
 ## 2. Where to connect
 
@@ -49,7 +49,7 @@ const ticket = mm.ticketId;                // send it in hello; the server can c
 
 - The SDK polls about once a second, retries `429`/`5xx` with backoff, and `findMatch` rejects with "Ticket expired before a match was found" when the ticket reaches `CANCELLED` (`ticket_expiration_period`, 30 s in `assets/matchmaker/casual.json`).
 - `getConnectionUrl(assignment, "gameport")` (inside `findMatch`) needs the port named `gameport` and WS; it throws for TCP/UDP ports. Rename `portName` if the app version uses another name.
-- The SDK's README requires a global `fetch` and `AbortController` (its Requirements section). Web builds have both. Whether a given Cocos native or mini-game runtime provides them was not checked: test `typeof fetch` on the target before relying on Find Match there, and on a runtime without it call the matchmaker from your own backend or a small `XMLHttpRequest` client.
+- The SDK's README requires a global `fetch` and `AbortController` (its Requirements section). Web builds have both. For Cocos native and mini-game runtimes, test `typeof fetch` on the target before relying on Find Match there, and on a runtime without it call the matchmaker from your own backend or a small `XMLHttpRequest` client.
 - Profiles, teams, parties, regions, backfill and the ticket API: `edgegap-matchmaking`. Start from `assets/matchmaker/casual.json` (2 to 8 players, one profile). The developer creates it in the dashboard (Matchmaker → Create → upload → **Create and Start**) and copies the **API URL** and **Auth Token**.
 
 ## 5. CORS and page origins

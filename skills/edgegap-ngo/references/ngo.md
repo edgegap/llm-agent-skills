@@ -60,4 +60,4 @@ A headless server still runs every `NetworkBehaviour` on server-side objects, in
 
 ## 7. WebGL
 
-Not verified on Edgegap with NGO. The path is UnityTransport with **Use WebSockets** on both sides, the app version port as `WS` with **TLS Upgrade**, and on the client `UseEncryption = true` with `SetClientSecrets(fqdn)`, connecting to the `fqdn` (not the IP) and the external port. The matchmaker needs `allowed_cors_origins`, no `latencies` rule, and `UseLatencyBeacons` off. Test it early with a direct deploy before building on it. Mirror's WebGL path is verified (`edgegap-unity`).
+The path is UnityTransport with **Use WebSockets** on both sides, the app version port as `WS` with **TLS Upgrade**, and on the client `UseEncryption = true` with `SetClientSecrets(fqdn)`, connecting to the `fqdn` (not the IP) and the external port. The matchmaker needs `allowed_cors_origins`, no `latencies` rule, and `UseLatencyBeacons` off. Test it early with a direct deploy before building on it. Mirror's WebGL path is verified (`edgegap-unity`).

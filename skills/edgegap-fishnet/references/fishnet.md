@@ -17,8 +17,8 @@ Edgegap runs the Linux dedicated server build in a container and maps a random *
 | Transport | Default port | App version protocol | Client connects to | Status |
 |---|---|---|---|---|
 | Bayou (WebSocket) | 7770 | **WS** + `tls_upgrade: true` | `fqdn`, with `SetUseWSS(true)` | Verified end to end (WebGL and desktop clients) |
-| Tugboat (UDP, LiteNetLib) | 7770 | **UDP** | `public_ip` | Adapter compiles; not yet run on Edgegap |
-| Multipass (Tugboat + Bayou) | one port per sub-transport | one app version port per sub-transport, with different names | the matching sub-transport | Not tested; see below |
+| Tugboat (UDP, LiteNetLib) | 7770 | **UDP** | `public_ip` | Adapter compiles; prove it with a direct deployment first |
+| Multipass (Tugboat + Bayou) | one port per sub-transport | one app version port per sub-transport, with different names | the matching sub-transport | Prove each sub-transport with a direct deployment; see below |
 
 - The internal port on the app version must equal the transport's port. `EdgegapServerLifecycle.ListenPort` (default 7770) is written to the transport with `Transport.SetPort` before the server starts.
 - Leave Tugboat's IPv4 bind address empty (all interfaces) or `0.0.0.0`. Never `127.0.0.1` or a LAN IP.

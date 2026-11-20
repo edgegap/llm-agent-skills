@@ -72,6 +72,6 @@ The server log shows `[Player:2] connected.` and `[Player:3] connected.` from `S
 
 Then `edgegap_stop_deployment` and `edgegap_list_deployments` with `only_agent_deployments: true`.
 
-## 6. Not tested yet
+## 6. Checks before launch
 
-The `PHOTON_REGION` override, more than two players, a match played to its end, whether the server process exits after a match (if it does, the start script stops the deployment), the CPU and memory a full match needs, macOS hosts, and the Edgegap Unity plugin's build button. The kit builds with `BuildPipeline` and its own Dockerfile.
+Check the `PHOTON_REGION` override if you use it, a match with your real player count played to its end, that the server process exits after a match (the start script then stops the deployment), and the CPU and memory a full match needs (`edgegap_get_deployment_metrics`). The kit builds with `BuildPipeline` and its own Dockerfile.

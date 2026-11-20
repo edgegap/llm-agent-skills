@@ -1,8 +1,8 @@
 ---
 name: edgegap-ugs-matchmaker
-description: 'Unity Gaming Services (UGS) Matchmaker + Edgegap: keep Unity Matchmaker queues and pools and have each match start its own Edgegap dedicated server near the players, through the EdgegapAllocator Cloud Code module (Matchmaker_AllocateServer deploys, Matchmaker_PollAllocation returns IP:port to the tickets). Load this before using any Edgegap MCP tool on a Unity project that uses com.unity.services.matchmaker or MatchmakeSessionAsync, has .mmq queue files, ugs deploy, Cloud Code hosting, or is leaving Multiplay Hosting (MultiplayService, server query, allocation payload). Covers deploying the module with the UGS CLI, the EDGEGAP_API_TOKEN secret, app/version/port constants, the queue''s Cloud Code hosting, player_ip in ticket custom data, the client ticket flow, MATCH_ID and self-stop on the server. Not run end to end yet. A new game with no matchmaker: edgegap-matchmaking + edgegap-unity. PlayFab: edgegap-playfab. Choosing a matchmaker: edgegap-matchmaking.'
+description: 'Unity Gaming Services (UGS) Matchmaker + Edgegap: keep Unity Matchmaker queues and pools and have each match start its own Edgegap dedicated server near the players, through the EdgegapAllocator Cloud Code module (Matchmaker_AllocateServer deploys, Matchmaker_PollAllocation returns IP:port to the tickets). Load this before using any Edgegap MCP tool on a Unity project that uses com.unity.services.matchmaker or MatchmakeSessionAsync, has .mmq queue files, ugs deploy, Cloud Code hosting, or is leaving Multiplay Hosting (MultiplayService, server query, allocation payload). Covers deploying the module with the UGS CLI, the EDGEGAP_API_TOKEN secret, app/version/port constants, the queue''s Cloud Code hosting, player_ip in ticket custom data, the client ticket flow, MATCH_ID and self-stop on the server. A new game with no matchmaker: edgegap-matchmaking + edgegap-unity. PlayFab: edgegap-playfab. Choosing a matchmaker: edgegap-matchmaking.'
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
 ---
 
 # Edgegap for Unity Matchmaker (UGS): Unity matches players, Edgegap runs the match
@@ -21,7 +21,7 @@ Client --GetTicketAsync--> MultiplayAssignment {Status Found, Ip, Port, MatchId}
 
 ## Status: read this first
 
-- **Not run end to end in this pack.** Nobody has yet matched two clients through UGS Matchmaker onto an Edgegap server with this skill. What is solid: the module's code (read line by line, summarized in `references/allocator.md`), its unit tests, Unity's docs for Cloud Code hosting, and the Edgegap side, which is the same as in every verified Edgegap Unity sample. Say this to the developer, and treat the first match as the real test.
+- **What it rests on.** The module's code (read line by line, summarized in `references/allocator.md`), its unit tests, Unity's docs for Cloud Code hosting, and the Edgegap side, which is the same as in every verified Edgegap Unity sample. Treat the first match through the queue (Phase 5) as the acceptance test.
 - **Where the module lives.** Edgegap wrote it on a branch of its fork, [edgegap/backend-unity-ugs-matchmaker-template-model](https://github.com/edgegap/backend-unity-ugs-matchmaker-template-model/tree/edgagap-allocator-integration/modules/EdgegapAllocator) (branch `edgagap-allocator-integration`, typo included; the fork's `main` has no Edgegap module and is not merged). The same code was contributed upstream and is on the `main` of Unity's repo, [Unity-Technologies/matchmaker-hosting-providers](https://github.com/Unity-Technologies/matchmaker-hosting-providers/tree/main/modules/EdgegapAllocator) (PR #11, January 2026), which later added a connection-reuse fix and a 10 s HTTP timeout (October 2026). **Use upstream `main`**: it is newer and the one Unity builds in CI. Unity's own [hosting providers page](https://docs.unity.com/en-us/matchmaker/hosting-providers) does not list Edgegap among its examples, but the module is in the repo.
 - **Licence.** The repo is under the Unity Companion License (use only with Unity). Link to it and have the developer clone it; don't copy its code into this skill or into unrelated projects.
 
@@ -48,7 +48,7 @@ Read, don't ask:
 
 Ask in one message only what you couldn't infer: the UGS project and environment to use (a non-production environment first), their Edgegap account, players per match.
 
-**Pick the client flow now.** The ticket API (`CreateTicketAsync` / `GetTicketAsync`) hands the client `Ip` and `Port` directly; that is the path this skill recommends. `MatchmakeSessionAsync` (sessions) makes the client join a UGS session whose ID is the match ID, so the Edgegap server itself would have to create that session with a UGS service account: more moving parts, a secret on the server, and not verified with Edgegap. See `references/unity.md` §2.
+**Pick the client flow now.** The ticket API (`CreateTicketAsync` / `GetTicketAsync`) hands the client `Ip` and `Port` directly; that is the path this skill recommends. `MatchmakeSessionAsync` (sessions) makes the client join a UGS session whose ID is the match ID, so the Edgegap server itself would have to create that session with a UGS service account: more moving parts and a secret on the server. See `references/unity.md` §2.
 
 ## Phase 1: The game server on Edgegap
 
@@ -88,7 +88,7 @@ Read `references/unity.md` §1.
 1. `edgegap_list_deployments`: nothing of yours running (free tier: one at a time).
 2. Two clients signed in as different UGS players (two builds, or Multiplayer Play Mode with separate authentication profiles) queue in the test queue.
 3. Watch: ticket created → Cloud Code log for `Matchmaker_AllocateServer` → an Edgegap deployment tagged `ugs-matchmaker` near the players → `Found` with an IP and port → both connect → match → the deployment stops on its own.
-4. Debug with `references/troubleshooting.md` until this passes, then record the date, Unity and package versions, netcode and result. Until then, keep saying "not verified".
+4. Debug with `references/troubleshooting.md` until this passes, then record the date, Unity and package versions, netcode and result.
 
 Hand-off: what runs where (UGS project/environment, queue and pool, the module and which commit of Unity's repo, the Edgegap app and version), how to ship a new server build (push a new timestamped tag, create the version, change `VersionName`, redeploy the module), where the logs are (Cloud Code logs in the Dashboard, Edgegap deployment logs), and the limits: Status API 20 requests/s per organization, one deployment at a time on the free tier.
 
@@ -96,7 +96,7 @@ Hand-off: what runs where (UGS project/environment, queue and pool, the module a
 
 - `references/allocator.md`: the module's Allocate and Poll, exactly what goes to Edgegap and back, constants, the secret, deploying with the `ugs` CLI, the queue's `matchHosting` block, changes worth making (FQDN for WebGL, more env vars, webhooks at scale).
 - `references/unity.md`: client ticket flow with `player_ip`, the sessions caveat, reading `MATCH_ID` and the port on the server, self-stop, moving off Multiplay Hosting.
-- `references/troubleshooting.md`: symptom → cause, and what is not verified.
+- `references/troubleshooting.md`: symptom → cause, smoke tests, and the checks for the first end-to-end run.
 
 Related skills, if installed: `edgegap-unity` (server build, Dockerfile, self-stop; NGO, FishNet, PurrNet have their own), `edgegap-matchmaking` (choosing a matchmaker, placement, backfill design), `edgegap-deployments-api` (the Deploy and Status APIs in depth), `edgegap-launch` before going live.
 

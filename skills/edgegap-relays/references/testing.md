@@ -36,7 +36,7 @@ What to look for:
 - Host: `Client joined through the relay (connection N, handle 1)` per client, then `All clients left, closing the lobby` and `Closed lobby <code>`.
 - Clients: `E2E PASS`, with the round trip through the real relay.
 
-Not yet run against a live Edgegap relay (see the verification status in `SKILL.md`). Record the first real run's round-trip time, resend count and player count here.
+Record the first live relay run's round-trip time, resend count and player count here.
 
 ## 3. Without a lobby (MCP sessions)
 

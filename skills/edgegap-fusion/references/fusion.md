@@ -43,7 +43,7 @@ Edgegap places the deployment near the players, so the kit's start script picks 
 
 ## 5. Other Fusion games
 
-The same rules apply without the BR200 kit. Untested beyond BR200:
+The same rules apply without the BR200 kit; prove each with a direct deployment before adding the matchmaker:
 - Start the server in batch mode with `GameMode.Server`, `Address = NetAddress.Any(<internal port>)`, `SessionName` from `ARBITRIUM_REQUEST_ID`, and a fixed region the clients will use.
 - Bind the port from `ARBITRIUM_PORT_GAMEPORT_INTERNAL` (7777), declared UDP in the app version.
 - IL2CPP on the server (§3). Headless: build the Server subtarget so `UNITY_SERVER` is defined.

@@ -2,7 +2,7 @@
 name: edgegap-fusion
 description: 'Photon Fusion 2 + Edgegap: run a Unity game built on Photon Fusion as a dedicated server on Edgegap, verified end to end with Photon''s BR200 Battle Royale sample. Load this before using any Edgegap MCP tool on a Fusion project (Assets/Photon/Fusion, NetworkRunner, StartGameArgs, GameMode.Server, PhotonAppSettings, NetworkProjectConfig, TPSBR, BR200). It has a drop-in BR200 kit that changes no sample code (server build with preflight checks, Dockerfile, start script mapping Edgegap variables to BR200''s command-line options, Photon region, self-stop), headless test clients logging the connection type, and fixes for pitfalls: Loader IP 127.0.0.1 forcing Photon relays, public IP failing to bind, IL2CPP required on the server, Linux toolchain packages and App ID/AppVersion/region mismatches. Use when a Fusion dev wants dedicated servers, "host BR200", "CT shows Relayed", GameNotFound. Simple FPS sample: edgegap-fusion-simplefps. Other Unity netcodes: edgegap-unity, edgegap-ngo, edgegap-fishnet, edgegap-purrnet.'
 metadata:
-  version: "0.1.6"
+  version: "0.1.7"
 ---
 
 # Edgegap for Photon Fusion 2: dedicated servers
@@ -69,7 +69,7 @@ Read `references/deploy.md` §6.
 
 ## Phase 5: Hand-off
 
-What was built and where, the app/version names, the tested versions, how to ship a new build (rebuild → new tag → new app version), and what wasn't tested (200 players, CPU sizing, other maps, the Menu UI join). Delete the test-only probe and client build script, and the test app versions if the developer agrees.
+What was built and where, the app/version names, the tested versions, how to ship a new build (rebuild → new tag → new app version), and what was tested (players, maps and join path used in the run). Delete the test-only probe and client build script, and the test app versions if the developer agrees.
 
 If the developer is writing a guide for Photon's docs, the measured facts are in `references/fusion.md` §2 and §3: the Loader's **IP must be `0.0.0.0` or empty**.
 

@@ -27,7 +27,7 @@ The pattern is the same for any engine that runs in both Node.js and the browser
 - **ammo.js** (Bullet): older Emscripten builds load `ammo.wasm.wasm` by path; ship the asm.js build or the file.
 - **cannon-es**: plain JavaScript, no WASM; the same architecture applies, without the init step.
 
-Not verified on Edgegap with this skill: anything but Rapier. Check that the engine runs under Node.js 22 without DOM globals (`window`, `document`, `self`) before planning on it.
+The worked example uses Rapier. For another engine, check that it runs under Node.js 22 without DOM globals (`window`, `document`, `self`) before planning on it.
 
 ## 3. Keeping the image small
 

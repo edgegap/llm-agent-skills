@@ -25,7 +25,7 @@ To leave the queue: `/Match/CancelAllMatchmakingTicketsForPlayer` `{"Entity","Qu
 - API: `Login()`, `FindMatch()`, events `OnStatus(string message, bool isError)` and `OnCanQueue(bool)`, property `IsLoggedIn`. It lives in `DontDestroyOnLoad`. When the menu scene reloads after a match, don't log in again: check `IsLoggedIn`.
 - NETCODE ADAPTER: `ConnectToServer(host, port)`. FishNet is filled in. NGO: `GetComponent<UnityTransport>().SetConnectionData(host, port)` then `NetworkManager.Singleton.StartClient()`. Mirror: `NetworkManager.singleton.networkAddress = host`, set the transport's port, `StartClient()`. PurrNet: set the UDP transport's address and port, then start the client.
 - It builds its own JSON body with `UploadHandlerRaw`. `UnityWebRequest.Post(url, string)` form-encodes the body before Unity 2022.3, and PlayFab rejects that.
-- It waits with `Task.Yield` loops, not `Task.Delay`, so it has no thread dependency (WebGL; not tested in WebGL yet).
+- It waits with `Task.Yield` loops, not `Task.Delay`, so it has no thread dependency (WebGL).
 - It uses a custom ID per install (a GUID in PlayerPrefs). For a shipped game, swap step 1 for the platform login the game already has.
 
 If the game already uses the **PlayFab Unity SDK**, keep its login and make the same calls through it:

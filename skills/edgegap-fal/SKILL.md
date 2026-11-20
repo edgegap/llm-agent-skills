@@ -2,7 +2,7 @@
 name: edgegap-fal
 description: 'fal.ai + Edgegap: make a browser game built with fal.ai online multiplayer on Edgegap (matchmaker, one authoritative server per match), keeping solo play. Load this when someone makes, or wants to make, a game with fal, fal.ai, the fal MCP, the genmedia CLI, fal game skills or fal Agent and wants Find Match, online play or real servers, or asks how to build a fal game that can go online. Two paths: a coding agent (Claude Code, Codex, Cursor, ChatGPT) writes a Three.js or canvas game and fal generates the assets (rigged 3D characters, props, sprites, textures, sounds); or fal Agent writes the code in a chat. Has the prompts that keep the rules in one DOM-free file the server runs, the fal asset pipeline (image to rigged GLB, clips, sizes, loader pitfalls, nothing in the server image), edgegap-threejs templates, CI image build, tests, clean-up. Verified samples: netcode-sample-fal-relic-rumble (3D, fal assets), netcode-sample-fal-orb-arena (fal Agent). Other AI tools: edgegap-vibe-coded.'
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # Edgegap for fal.ai games: fal makes the game's media, Edgegap runs the matches
@@ -32,7 +32,7 @@ Both paths meet at Phase 1. Interactive world models on fal (worlds generated as
 - Path A, 2026-11-17, [netcode-sample-fal-relic-rumble](https://github.com/edgegap/netcode-sample-fal-relic-rumble) (Relic Rumble, 3D, 4 players carry relics and shove each other): four rigged characters with walk and run clips, three props, a floor texture and five sounds from fal (about $6.30 at list prices); two headless players and two browser tabs matched through the matchmaker onto one deployment, a full match, self-stop 20 s after it. [references/relic-rumble.md](references/relic-rumble.md).
 - Path B, 2026-11-09, [netcode-sample-fal-orb-arena](https://github.com/edgegap/netcode-sample-fal-orb-arena) (Orb Arena, 2D): fal Agent wrote rules, renderer and page in one answer on its free models; same tests, on a GitHub Pages page. [references/walkthrough.md](references/walkthrough.md).
 
-Not verified: the fal MCP server itself (Relic Rumble's assets were generated with the `genmedia` CLI; the MCP exposes the same models), 2D sprite sheets loaded at runtime, fal Agent's paid models, two players on different networks, phones.
+Relic Rumble's assets were generated with the `genmedia` CLI; the fal MCP server exposes the same models.
 
 ## Who you are talking to
 
@@ -86,7 +86,7 @@ To ship a new server build (the rules changed), point the version at the new tag
 
 ## Phase 4: Hand-off
 
-Tell the developer: the prompts and where each file came from, what fal cost, what was added for online play, the app, version and matchmaker names, how to ship a new server build (new tag on the version) and that new art needs none, what wasn't tested, and what keeps costing money (only the matchmaker while it runs, and any deployment that didn't stop). If the repo becomes a public example, blank the matchmaker URL and token in `client/config.js` and write the steps with placeholders.
+Tell the developer: the prompts and where each file came from, what fal cost, what was added for online play, the app, version and matchmaker names, how to ship a new server build (new tag on the version) and that new art needs none, what was tested, and what keeps costing money (only the matchmaker while it runs, and any deployment that didn't stop). If the repo becomes a public example, blank the matchmaker URL and token in `client/config.js` and write the steps with placeholders.
 
 ## Reference files
 

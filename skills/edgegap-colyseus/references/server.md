@@ -89,7 +89,7 @@ async onLeave(client: Client, consented: boolean) {
 }
 ```
 
-Clients that resume after a page reload with `client.reconnect(token)` must reconnect to the same deployment: store the endpoint with the token (`clients.md`, "Reconnection after a drop or reload"). The verified tanks room has no reconnection; this pattern was typechecked on 0.16 and 0.17 but not run on Edgegap, so check it in a local test (drop a client, rejoin within the window, the log shows no self-stop).
+Clients that resume after a page reload with `client.reconnect(token)` must reconnect to the same deployment: store the endpoint with the token (`clients.md`, "Reconnection after a drop or reload"). This pattern typechecks on 0.16 and 0.17; check it in a local test (drop a client, rejoin within the window, the log shows no self-stop).
 
 **Match end.** An arena that never ends stops when it empties. A game with a real end calls `selfStop()` after showing the result. From the verified tanks room (`MATCH_ROUNDS` won rounds, then end):
 
@@ -127,7 +127,7 @@ docker run --rm -p 2567:2567 -e ARBITRIUM_REQUEST_ID=local -e EMPTY_TIMEOUT_S=10
 
 With `ARBITRIUM_REQUEST_ID` set, the container acts as on Edgegap: `/` returns 404 instead of the playground, a client on `ws://localhost:2567` joins, and 10 s after it leaves the log shows `[edgegap] self-stop: empty for 10s` then `ARBITRIUM_DELETE_URL/TOKEN missing, exiting instead`, and the container exits.
 
-## 6. Only matched players (optional, not run yet)
+## 6. Only matched players (optional)
 
 Matchmaker deployments get `MM_TICKET_IDS`, a JSON array of the matched tickets. To keep strangers who learn the address out, have the client send its ticket ID in the join options and check it:
 

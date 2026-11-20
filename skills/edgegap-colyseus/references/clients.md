@@ -33,7 +33,7 @@ const room = await joinWithRetry(new Client(url), "battle", {}, attempts);
 room.onLeave(() => (status.textContent = "Disconnected. Reload to play again."));
 ```
 
-`Matchmaker` leaves the queue on `pagehide` and exposes `mm.ticketId` (send it in the join options if the room checks `MM_TICKET_IDS`, see `server.md`). Parties, page-reload resume and backfill are in the SDK too (`joinGroup`/`setReady`, `resumeMatchmaking`, `ServerAgent`); see its README, not run in this skill. The page's origin must be in the matchmaker's `allowed_cors_origins`, or the browser blocks the `POST` (a CORS error in the console, no HTTP status). Vite env vars must start with `VITE_`. A game embedded on itch.io runs in an iframe whose origin is the itch CDN host (usually `https://html-classic.itch.zone`), not `https://<you>.itch.io`: confirm it with `location.origin` in the embedded game's console and list that.
+`Matchmaker` leaves the queue on `pagehide` and exposes `mm.ticketId` (send it in the join options if the room checks `MM_TICKET_IDS`, see `server.md`). Parties, page-reload resume and backfill are in the SDK too (`joinGroup`/`setReady`, `resumeMatchmaking`, `ServerAgent`); see its README. The page's origin must be in the matchmaker's `allowed_cors_origins`, or the browser blocks the `POST` (a CORS error in the console, no HTTP status). Vite env vars must start with `VITE_`. A game embedded on itch.io runs in an iframe whose origin is the itch CDN host (usually `https://html-classic.itch.zone`), not `https://<you>.itch.io`: confirm it with `location.origin` in the embedded game's console and list that.
 
 **Reconnection after a drop or reload.** With one deployment per match there is no fixed server URL any more, so a client that saves `room.reconnectionToken` must save the endpoint with it and call `reconnect` on a `Client` for that endpoint:
 
@@ -44,7 +44,7 @@ const saved = JSON.parse(sessionStorage.getItem("reconnect") ?? "null");
 if (saved) room = await new Client(saved.url).reconnect(saved.token);   // fails once the window or the deployment is gone: clear it, back to Find Match
 ```
 
-Not run on Edgegap in the verified test (the tanks room has no reconnection).
+Check it in a local test: drop a client, rejoin within the window.
 
 PlayCanvas, Phaser, PixiJS, Construct 3 scripts and other web engines can use the same two files; only the "read a page parameter" part differs.
 
@@ -92,7 +92,7 @@ Porting a 0.14/0.15 Cocos client to 0.17:
 
 Opening a 3.1 project in 3.8 migrates every `.meta` and the scenes; commit that churn on its own or with the upgrade. Headless build: `CocosCreator --project <path> --build "platform=web-desktop;debug=true"`; exit code **36 means success**. A Cocos web build in a background browser tab renders no frames, so it never loads its scene: test with the tab in front. Add the build's origin (Cocos preview is `http://localhost:7456`) to `allowed_cors_origins`.
 
-Cocos mini-game targets (WeChat, Douyin...) need the platform's domain allowlist for every `wss://` and `https://` host, which per-match Edgegap hostnames (`<id>.pr.edgegap.net`) and the matchmaker host would have to satisfy. Not run; check the platform's rules before promising it.
+Cocos mini-game targets (WeChat, Douyin...) need the platform's domain allowlist for every `wss://` and `https://` host, which per-match Edgegap hostnames (`<id>.pr.edgegap.net`) and the matchmaker host must satisfy: check the platform's rules first.
 
 ## Unity (Colyseus Unity SDK)
 
@@ -119,7 +119,7 @@ for (int attempt = 1; ; attempt++)
 }
 ```
 
-Call `matchmaker?.Cancel()` in `OnDestroy`. Launch settings: `--server=wss://...` or `--mm=<url> --mm-token=<token>` from `System.Environment.GetCommandLineArgs()`; on WebGL read `?server=` / `?mm=` / `?mmToken=` from `Application.absoluteURL`. Inspector fields for the matchmaker URL and token are fine too: the Auth Token is client-safe. Unity WebGL was not run in the verified test.
+Call `matchmaker?.Cancel()` in `OnDestroy`. Launch settings: `--server=wss://...` or `--mm=<url> --mm-token=<token>` from `System.Environment.GetCommandLineArgs()`; on WebGL read `?server=` / `?mm=` / `?mmToken=` from `Application.absoluteURL`. Inspector fields for the matchmaker URL and token are fine too: the Auth Token is client-safe.
 
 ## Godot 4 (Colyseus Godot SDK)
 
@@ -141,11 +141,11 @@ _join(attempts)
 
 `find_match()` returns `""` on failure instead of throwing. The Godot SDK reports join failures through the room's error signal, so retry there: if not joined yet and attempts are left, wait 2 s (`get_tree().create_timer(2.0).timeout`) and call `_join(attempts - 1)`.
 
-Launch arguments: read both `OS.get_cmdline_args()` and `OS.get_cmdline_user_args()` (arguments after `--` land in the second; from the editor, put them after `--` in the main run args). Web export: `JavaScriptBridge.eval("new URLSearchParams(window.location.search).get('server') || ''")`. The web export was not run in the verified test.
+Launch arguments: read both `OS.get_cmdline_args()` and `OS.get_cmdline_user_args()` (arguments after `--` land in the second; from the editor, put them after `--` in the main run args). Web export: `JavaScriptBridge.eval("new URLSearchParams(window.location.search).get('server') || ''")`.
 
 ## Other Colyseus clients: direct mode
 
-The tanks fork added a `server` override to every client; the same patterns work for any game. These were written but not run on Edgegap:
+The tanks fork added a `server` override to every client; the same patterns work for any game:
 
 | Client | Override |
 |---|---|

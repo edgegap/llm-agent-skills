@@ -8,7 +8,7 @@ Contents
 5. Shutdown
 6. Edge cases
 
-Verified end to end on Edgegap with the Megacity Metro sample (Unity Netcode for Entities, `EdgegapBackfillSystem.cs` in https://github.com/edgegap/netcode-game-sample-unity-dots-ecs-mobile-megacity-metro, Edgegap Unity SDK 3.5.5, 2026-10-21): two clients matched, a third queued later went from `SEARCHING` straight to `HOST_ASSIGNED` on the same deployment and joined, and the server closed its backfills before stopping. Unity projects can use that file or the SDK's `MatchmakingBackfill` sample. The TypeScript loop below follows the same logic for other engines and was not run as written.
+Verified end to end on Edgegap with the Megacity Metro sample (Unity Netcode for Entities, `EdgegapBackfillSystem.cs` in https://github.com/edgegap/netcode-game-sample-unity-dots-ecs-mobile-megacity-metro, Edgegap Unity SDK 3.5.5, 2026-10-21): two clients matched, a third queued later went from `SEARCHING` straight to `HOST_ASSIGNED` on the same deployment and joined, and the server closed its backfills before stopping. Unity projects can use that file or the SDK's `MatchmakingBackfill` sample. The TypeScript loop below follows the same logic for other engines; check it with a test matchmaker.
 
 ## 1. When to use it
 
@@ -71,10 +71,10 @@ Responses (`POST` and `GET /backfills/{id}`) return `id`, `profile`, `tickets`, 
 
 ## 4. The server loop
 
-Node.js, Bun and Deno servers don't need to write this loop: `ServerAgent` from Edgegap's official JS SDK ([`@edgegap/sdk`](https://github.com/edgegap/sdk-js-sessions-matchmaker-server-browser), `@edgegap/sdk/matchmaking`) creates backfills up to `targetTeamSize`, polls them, seats players (`playerConnected(ticketId)` returns `null` for a ticket not assigned to this server), frees seats on `abandonPlayer`, abandons players who don't connect within 60 s, and `abandonAllBackfills()` closes them before shutdown. Build its `assignment` from `DeploymentEnvironment.fromEnv(process.env)` and its tickets from `MatchEnvironment.fromEnv(process.env).tickets`, as in the SDK README. Not run by this pack. Unity games use the Unity SDK's equivalent (the Megacity Metro path above). Unreal games on the [Edgegap SDK for Unreal](https://github.com/edgegap/sdk-unreal-engine) get the backfill calls as generated nodes and `FEdgegapMMApi` functions (`Create Backfill (<profile>)`, get, delete) and the `MM_*` readers in `UEdgegapServerLibrary`, but no ready-made loop: write the loop below with them, and call the ticket gate's `Allow Ticket` (or `Allow Backfill Tickets`) for each seated ticket, or the server refuses the backfilled player. Not run by this pack; steps in `edgegap-unreal`.
+Node.js, Bun and Deno servers don't need to write this loop: `ServerAgent` from Edgegap's official JS SDK ([`@edgegap/sdk`](https://github.com/edgegap/sdk-js-sessions-matchmaker-server-browser), `@edgegap/sdk/matchmaking`) creates backfills up to `targetTeamSize`, polls them, seats players (`playerConnected(ticketId)` returns `null` for a ticket not assigned to this server), frees seats on `abandonPlayer`, abandons players who don't connect within 60 s, and `abandonAllBackfills()` closes them before shutdown. Build its `assignment` from `DeploymentEnvironment.fromEnv(process.env)` and its tickets from `MatchEnvironment.fromEnv(process.env).tickets`, as in the SDK README. Unity games use the Unity SDK's equivalent (the Megacity Metro path above). Unreal games on the [Edgegap SDK for Unreal](https://github.com/edgegap/sdk-unreal-engine) get the backfill calls as generated nodes and `FEdgegapMMApi` functions (`Create Backfill (<profile>)`, get, delete) and the `MM_*` readers in `UEdgegapServerLibrary`, but no ready-made loop: write the loop below with them, and call the ticket gate's `Allow Ticket` (or `Allow Backfill Tickets`) for each seated ticket, or the server refuses the backfilled player. Steps in `edgegap-unreal`.
 
 ```typescript
-// Runs only on matchmaker deployments (MM_MATCH_PROFILE set). Engine-agnostic sketch, not run as written.
+// Runs only on matchmaker deployments (MM_MATCH_PROFILE set). Engine-agnostic sketch.
 const MM = process.env.MATCHMAKER_URL!, AUTH = process.env.MATCHMAKER_TOKEN!;
 const MAX_PLAYERS = 16, MAX_OPEN = 3, GRACE_MS = 60_000;
 
