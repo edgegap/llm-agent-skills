@@ -2,6 +2,14 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.39.0 (unreleased)
+
+The Manus sample is public, with the Edgegap matchmaker as an option: [netcode-sample-manus-orb-arena](https://github.com/edgegap/netcode-sample-manus-orb-arena). Verified on Edgegap 2026-11-20: two browser tabs clicked FIND MATCH, were matched onto one deployment and played; a client without a ticket was refused; the deployment stopped itself within 40 s of both leaving (about 2.5 min before the client closed its socket on `pagehide`).
+
+- `edgegap-manus` 0.2.1: `references/self-host.md` §8 is the optional Find Match (server ticket check and start rule, client config, import map, GroupAgent flow, retries, `pagehide` close, matchmaker config and dashboard steps, the free-tier matchmaker limit). `assets/self-host/edgegap.js` gains `matchTickets`, `expectedPlayers`, `ticketAllowed()` and logs the match on boot.
+- `edgegap-samples` 0.1.8: the catalog lists the sample.
+- Versions: `edgegap` 0.39.0.
+
 ## 0.38.0 (unreleased)
 
 Manus Game Dev stops before writing a multiplayer game until the user buys or starts a Manus Cloud Computer (checked 2026-11-20 on Manus 2.0 Lite, free plan). Asking Manus instead for "the game server binary so i can host it locally" gets a self-hostable Node.js WebSocket server, and that server runs on Edgegap. Verified end to end on 2026-11-20: Manus built the server and a browser client; with one bug fix and a drop-in self-stop it ran on Edgegap (app `manus-orb-arena`, WS + TLS Upgrade), two scripted players got 15 snapshots/s over wss, two browser tabs of the Manus client played one match, and the deployment stopped itself about 36 s after both left.

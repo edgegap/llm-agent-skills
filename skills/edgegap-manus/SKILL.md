@@ -2,14 +2,14 @@
 name: edgegap-manus
 description: 'Manus + Edgegap: take a game built with Manus (manus.im, Manus Game Dev, a Manus web app or its code on GitHub) online with authoritative dedicated servers on Edgegap. Load this before any Edgegap MCP tool on a Manus project. Two paths. A, no Cloud Computer: when Manus says online multiplayer needs a Cloud Computer, have it build a self-hostable Node.js server instead and run that on Edgegap, one server per match that stops itself (verified on Edgegap). B, a full-stack Manus site: Steam sign-in, backend-owned matchmaking (join/status/cancel/leave, signed join tokens) and the Edgegap matchmaker. Has the Manus prompts, a drop-in self-stop adapter, Dockerfiles, a GitHub Actions build, a matchmaker config and tests. Use for "make my Manus game multiplayer", "Manus asks for a Cloud Computer", "host my Manus game server myself", "port forwarding or ngrok for my Manus game", "Find Match", "Steam login for my web game", or debugging wss, tickets or deployments of a Manus game. Other web games: edgegap-threejs.'
 metadata:
-  version: "0.2.0"
+  version: "0.2.1"
 ---
 
 # Edgegap for Manus games: dedicated servers + matchmaking
 
 ## Pick the path
 
-- **A. Manus Game Dev asked for a Cloud Computer** (or the developer has no backend and wants servers now): Manus will build a self-hostable Node.js server instead; host that on Edgegap. Follow `references/self-host.md`, verified end to end on Edgegap on 2026-11-20: the prompt to give Manus at the Cloud Computer question, getting the code out, the bug to check for (snapshots that stop), the drop-in self-stop (`assets/self-host/edgegap.js`), the Dockerfile, app version, and a two-tab test with the Manus client. Then add Find Match with `edgegap-threejs`, or move to path B.
+- **A. Manus Game Dev asked for a Cloud Computer** (or the developer has no backend and wants servers now): Manus will build a self-hostable Node.js server instead; host that on Edgegap. Follow `references/self-host.md`, verified end to end on Edgegap on 2026-11-20: the prompt to give Manus at the Cloud Computer question, getting the code out, the bug to check for (snapshots that stop), the drop-in self-stop (`assets/self-host/edgegap.js`), the Dockerfile, app version, a two-tab test with the Manus client, and the optional Find Match through the Edgegap matchmaker (verified; public sample https://github.com/edgegap/netcode-sample-manus-orb-arena). Or move to path B.
 - **B. A Manus web app with a backend and sign-in**: the rest of this file, Phases 0-5.
 
 Tell the developer which path you're on. The Cloud Computer is Manus's own option and works; present Edgegap as one server per match near the players that stops when the match ends, not as a criticism of Manus.
@@ -108,7 +108,7 @@ Hand-off: what was built and where, secrets and where each lives, app/version/ma
 - `references/server.md`: moving rules to the server, the WebSocket protocol, lifecycle and self-stop, local testing, porting tips for common browser engines.
 - `references/deploy.md`: registry, GitHub Actions, app version with TLS Upgrade, test deployment, matchmaker config and dashboard, shipping updates, the Edgegap MCP in Manus.
 - `references/troubleshooting.md`: symptom → fix.
-- `assets/`: `self-host/` (path A: `edgegap.js` self-stop, `Dockerfile`, `ws-check.cjs`), `backend/`, `server/`, `client/`, `matchmaker/`, `github/`, `scripts/`, and `manus-prompts.md` (phase-by-phase prompts for Manus users).
+- `assets/`: `self-host/` (path A: `edgegap.js` self-stop and matchmaker ticket check, `Dockerfile`, `ws-check.cjs`), `backend/`, `server/`, `client/`, `matchmaker/`, `github/`, `scripts/`, and `manus-prompts.md` (phase-by-phase prompts for Manus users).
 
 Related skills in this pack, if installed: `edgegap` (platform and safety rules), `edgegap-server-design`, `edgegap-containerize`, `edgegap-troubleshoot`, `edgegap-launch` before going live. Edgegap's Server Browser (open beta, https://docs.edgegap.com/learn/server-browser) fits games where players pick a room or a persistent world instead of being matched; this skill uses the matchmaker.
 

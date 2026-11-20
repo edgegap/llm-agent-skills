@@ -10,7 +10,7 @@ Contents
 5. Add the Edgegap self-stop
 6. Image and app version
 7. Test deployment with the Manus client
-8. Next: players finding each other
+8. Optional: Find Match through the Edgegap matchmaker
 9. What Manus suggests next, and the answer
 
 ## 1. Why this path exists
@@ -101,15 +101,27 @@ App version (MCP `edgegap_create_app_version`, or the dashboard):
 
 Always `wss://` with the fqdn and the **external** port, plus the server's path. A Manus page is served over https, so plain `ws://` is blocked there.
 
-## 8. Next: players finding each other
+## 8. Optional: Find Match through the Edgegap matchmaker
 
-Section 7 is one server per manual deploy, joined by URL. For real players:
-- **Find Match** (matchmaker starts a server per match, near the players): the browser client calls the Edgegap matchmaker with the JS SDK, exactly as in `edgegap-threejs` (its client templates and matchmaker config). The Manus room code becomes unnecessary; one deployment is one match.
-- **Steam sign-in and a backend that owns the tickets**: Path B in SKILL.md (Phases 1-5).
-- **Friends join by link**: a small backend (or the matchmaker with a private-lobby profile) creates the deployment and puts its address in the link.
+Verified on Edgegap 2026-11-20 with the public sample [netcode-sample-manus-orb-arena](https://github.com/edgegap/netcode-sample-manus-orb-arena) (copy its files): two browser tabs clicked FIND MATCH, were matched onto one deployment (`HOST_ASSIGNED` in under 20 s with the image not cached) and played; a client without a ticket was refused; the deployment stopped itself within 40 s of both leaving. Keep it optional: with no matchmaker configured, the page and server behave exactly as Manus built them.
+
+**Server** (`assets/self-host/edgegap.js` already has it): `MM_TICKET_IDS` (a JSON array) exists only on matchmaker deployments.
+- `edgegap.ticketAllowed(message.ticket)` in the join handler, after the reconnect check: anyone else gets `NOT_MATCHED`. Off the matchmaker it always allows, so direct deploys and self-hosting keep working.
+- Start rule: when every matched player is in (`edgegap.expectedPlayers`), or 15 s after the second one; a solo match when the matchmaker sent one ticket (the config's 20 s expansion). Off the matchmaker, Manus's rule (2 players) stays.
+- A new server image means a new app version, then matchmaker Stop, edit `application.version`, Start.
+
+**Client** (the sample's `client/config.js` and `client/client.js`):
+- `config.js` with `matchmakerUrl` and `matchmakerToken` (empty by default), overridable by a git-ignored `config.local.js` or `?mm=&token=`. The token is the matchmaker's client token (made to ship in clients), never the Edgegap API token.
+- An import map for `@edgegap/sdk@1.1.0` (jsDelivr, with its integrity hash, as in `edgegap-threejs`), loaded with a dynamic `import()` only when a matchmaker is configured.
+- FIND MATCH: `matchmaking.GroupAgent` group of one, `profile: 'arena'`, `is_ready: true`; `await nextAssignment()`; keep `group.current.ticket_id`; `dispose()`; connect to `getConnectionUrl(assignment, 'gameport') + '/ws'` (add the server's path) with about 10 one-second retries, since a fresh server can refuse connections or answer 502 for a few seconds; send the ticket in the join message. Cancel calls `stopMatchmaking()`, as does `pagehide`.
+- Close the game socket on `pagehide`. Without it the server only noticed closed tabs at its 30 s ping, and the empty server ran longer (seen on Edgegap: about 2.5 min to stop instead of about 40 s).
+
+**Matchmaker** (`matchmaker/arena.json` in the sample): one profile, `player_count` 1 team of 2-4, expansion at 20 s to `min_team_size: 1`, `ticket_expiration_period` 30 s, `inspect` true for testing, `allowed_cors_origins` listing every page origin (`http://localhost:8091`, `http://127.0.0.1:8091`, the hosting origin). Dashboard: Matchmakers, Create Matchmaker, name, upload, **Create And Start**. A "Docker image ... is not cached" warning only means slower starts: Continue. The free tier allows a limited number of matchmakers per organization ("You've reached the free matchmaker limit": delete or reuse one) and stops each 3 hours after a start; `GET <API URL>/monitor` with the Auth Token answers 200 when it's up.
+
+Other ways in: Steam sign-in and a backend that owns the tickets (path B in SKILL.md), or friends joining by link (a small backend creates the deployment and puts its address in the link).
 
 ## 9. What Manus suggests next, and the answer
 
 After the server, Manus offered follow-ups such as "How do I configure port forwarding or use a tunneling tool like ngrok to let my friends connect remotely?" and "Create a Dockerfile and docker-compose.yml so I can easily containerize and deploy this server". Both are this path: the Dockerfile above, hosted on Edgegap, needs no port forwarding, tunnel or machine left on at home.
 
-Not verified: the one-shot prompt in §2, asking Manus to add `edgegap.js` itself, the matchmaker for this game, two different networks or devices, Manus paid plans.
+Not verified: the one-shot prompt in §2, asking Manus to add `edgegap.js` itself, two different networks or devices, parties, Manus paid plans.

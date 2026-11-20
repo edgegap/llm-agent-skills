@@ -34,11 +34,22 @@ function arm(ms, reason) {
   timer = setTimeout(() => stop(reason), ms);
 }
 
+// Matchmaker deployments get MM_TICKET_IDS (a JSON array of the matched tickets). Direct
+// deployments and local runs don't: then anyone with the address may join, as before.
+let matchTickets = null;
+try { matchTickets = process.env.MM_TICKET_IDS ? JSON.parse(process.env.MM_TICKET_IDS) : null; } catch { matchTickets = null; }
+
 module.exports = {
   onEdgegap,
+  /** The matched ticket IDs, or null when the matchmaker didn't start this server. */
+  matchTickets,
+  /** How many players the matchmaker sent, or null. */
+  expectedPlayers: matchTickets ? matchTickets.length : null,
+  /** Whether a joining player's ticket belongs to this match (always true off the matchmaker). */
+  ticketAllowed(ticket) { return !matchTickets || (typeof ticket === 'string' && matchTickets.includes(ticket)); },
   started() {
     if (!onEdgegap) return;
-    log(`deployment ${process.env.ARBITRIUM_REQUEST_ID}: waiting for players`);
+    log(`deployment ${process.env.ARBITRIUM_REQUEST_ID}: ${matchTickets ? `match ${process.env.MM_MATCH_ID || '?'}, ${matchTickets.length} ticket(s), profile ${process.env.MM_MATCH_PROFILE || '?'}` : 'direct deploy'}; waiting for players`);
     arm(NO_JOIN_MS, `no player joined in ${NO_JOIN_MS / 1000} s`);
   },
   // Call with the number of connected players whenever someone joins or leaves.
