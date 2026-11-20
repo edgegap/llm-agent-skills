@@ -230,5 +230,9 @@
   {
     "query": "I built a game in ChatGPT, it's a single HTML file vs bots. I want online matches on Edgegap.",
     "expected_skill": "edgegap-chat-canvas"
+  },
+  {
+    "query": "Gemini wrote my game in Canvas as one HTML file; I want Find Match and servers on Edgegap.",
+    "expected_skill": "edgegap-chat-canvas"
   }
 ]

@@ -2,6 +2,13 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.43.0 (unreleased)
+
+`edgegap-chat-canvas` covers Gemini Canvas, from [netcode-sample-gemini-bomb-tag](https://github.com/edgegap/netcode-sample-gemini-bomb-tag). Verified on Edgegap on 2026-11-20: Gemini (free account, Canvas tool, model on Auto) wrote Bomb Tag from the prompt that also asks for an empty `createWorld()`, a start spot per `addPlayer()`, `setInput()` for every player and bots in `step()`, and its first answer needed no fix; the split needed no edits to the block; two browser tabs played a match on a direct deployment (`?server=`), and on the matchmaker shared by all three chat samples two headless players and two browser tabs (Find match) were matched onto one deployment; every server stopped itself.
+
+- `edgegap-chat-canvas` 0.3.0: Gemini Canvas in the description, verified list and steps; `references/prompts.md` §1c is the recommended starting prompt; getting the file out of Gemini (Export > Download code); new `references/gemini.md`; page fixes for colors keyed by solo ids.
+- Routing: `edgegap` 0.43.0, `edgegap-vibe-coded` 0.1.8, `edgegap-samples` 0.1.12 (catalog), Gemini queries in `evals/chat-canvas-routing-eval.json` and `evals/routing-eval.json`.
+
 ## 0.42.0 (unreleased)
 
 `edgegap-chat-canvas` covers ChatGPT, from [netcode-sample-chatgpt-turf-painters](https://github.com/edgegap/netcode-sample-chatgpt-turf-painters). Verified on Edgegap on 2026-11-20: ChatGPT (chatgpt.com, Free plan, default model) wrote Turf Painters as one HTML file with the markers; its bots never moved and its `createWorld()` added the players itself, and one follow-up prompt fixed both; the split needed no edits to the block; two browser tabs played a round on a direct deployment (`?server=`), and through a matchmaker shared with the Claude sample two headless players and two browser tabs (Find match) were matched onto one deployment in about 15 s; every server stopped itself.
