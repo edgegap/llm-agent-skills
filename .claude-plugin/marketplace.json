@@ -9,8 +9,8 @@
     {
       "name": "edgegap",
       "source": "./",
-      "description": "Edgegap dedicated servers and matchmaking, end to end: an entry skill, Unity, NGO, FishNet, PurrNet, Photon Fusion, Unreal Engine, Godot, Colyseus, Nakama, PlayFab, Supabase, Three.js, vibe-coded, Claude artifact, fal.ai and Manus browser games skills, Edgegap relays for host/client games, engine-agnostic skills for server design, containers, testing, the Deploy API, launch and troubleshooting, plus the hosted Edgegap MCP server.",
-      "version": "0.41.0"
+      "description": "Edgegap dedicated servers and matchmaking, end to end: an entry skill, Unity, NGO, FishNet, PurrNet, Photon Fusion, Unreal Engine, Godot, Colyseus, Nakama, PlayFab, Supabase, Three.js, vibe-coded, Claude artifact, ChatGPT, fal.ai and Manus browser games skills, Edgegap relays for host/client games, engine-agnostic skills for server design, containers, testing, the Deploy API, launch and troubleshooting, plus the hosted Edgegap MCP server.",
+      "version": "0.42.0"
     }
   ]
 }

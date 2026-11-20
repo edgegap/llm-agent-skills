@@ -2,6 +2,13 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.42.0 (unreleased)
+
+`edgegap-chat-canvas` covers ChatGPT, from [netcode-sample-chatgpt-turf-painters](https://github.com/edgegap/netcode-sample-chatgpt-turf-painters). Verified on Edgegap on 2026-11-20: ChatGPT (chatgpt.com, Free plan, default model) wrote Turf Painters as one HTML file with the markers; its bots never moved and its `createWorld()` added the players itself, and one follow-up prompt fixed both; the split needed no edits to the block; two browser tabs played a round on a direct deployment (`?server=`), and through a matchmaker shared with the Claude sample two headless players and two browser tabs (Find match) were matched onto one deployment in about 15 s; every server stopped itself.
+
+- `edgegap-chat-canvas` 0.2.0: ChatGPT in the description, verified list and steps; a check before saving the file (bots move, empty `createWorld()`, a start spot per `addPlayer()`, who drives the bots) with the fix prompt (`references/prompts.md` §3); how to get the exact file out of ChatGPT (ask for one code block, Copy code); new `references/chatgpt.md` and `assets/server-game-chatgpt.js` (bots fed before `step()`, tile scores, a round timer in the rules); the page fixes cover ChatGPT's (YOU label, solo loop online); one matchmaker profile per game, shared.
+- Routing: `edgegap` 0.42.0, `edgegap-vibe-coded` 0.1.7, `edgegap-samples` 0.1.11 (catalog), ChatGPT queries in `evals/chat-canvas-routing-eval.json` and `evals/routing-eval.json`.
+
 ## 0.41.0 (unreleased)
 
 A skill for games written in a chat as one HTML file, starting with Claude artifacts, from [netcode-sample-claude-star-snatch](https://github.com/edgegap/netcode-sample-claude-star-snatch). Verified on Edgegap on 2026-11-20: Claude (claude.ai, Opus 5.5, default settings) wrote Star Snatch as an artifact from one prompt with its rules between marker lines; the split script produced the server's rules with no edits to the block; two browser tabs joined one deployment with `?server=` and played a match, and the server stopped itself after it; through the matchmaker, two headless players and two browser tabs (Find match) were matched onto one deployment in about 15 s, played, and the server stopped itself 11 s after the match.
