@@ -1,11 +1,50 @@
 [
-  {"query": "Claude made me a little arena game as an artifact on claude.ai. How do I make it online so my friends can join?", "expected_skill": "edgegap-chat-canvas"},
-  {"query": "What should I tell Claude in the chat so the HTML artifact game it writes can run on a multiplayer server later?", "expected_skill": "edgegap-chat-canvas"},
-  {"query": "I downloaded my Claude artifact, it's one game.html with canvas and bots. Add Find Match and real servers on Edgegap but keep it playable in the artifact preview.", "expected_skill": "edgegap-chat-canvas"},
-  {"query": "My claude.ai game has the rules between RULES:BEGIN and RULES:END. Split them out and host the server on Edgegap.", "expected_skill": "edgegap-chat-canvas"},
-  {"query": "I keep changing my game in the claude.ai chat; how do I keep the server rules in sync with the artifact?", "expected_skill": "edgegap-chat-canvas"},
-  {"query": "I vibe coded a game in Cursor, it's one index.html with a canvas. How do I add online multiplayer?", "expected_skill": "edgegap-vibe-coded"},
-  {"query": "fal Agent wrote rules.js, main.js and index.html for my canvas game; add matchmaking", "expected_skill": "edgegap-fal"},
-  {"query": "Manus Game Dev says I need a Cloud Computer for multiplayer", "expected_skill": "edgegap-manus"},
-  {"query": "Write me a Claude artifact of a calculator app", "expected_skill": null}
+  {
+    "query": "Claude made me a little arena game as an artifact on claude.ai. How do I make it online so my friends can join?",
+    "expected_skill": "edgegap-chat-canvas"
+  },
+  {
+    "query": "What should I tell Claude in the chat so the HTML artifact game it writes can run on a multiplayer server later?",
+    "expected_skill": "edgegap-chat-canvas"
+  },
+  {
+    "query": "I downloaded my Claude artifact, it's one game.html with canvas and bots. Add Find Match and real servers on Edgegap but keep it playable in the artifact preview.",
+    "expected_skill": "edgegap-chat-canvas"
+  },
+  {
+    "query": "My claude.ai game has the rules between RULES:BEGIN and RULES:END. Split them out and host the server on Edgegap.",
+    "expected_skill": "edgegap-chat-canvas"
+  },
+  {
+    "query": "I keep changing my game in the claude.ai chat; how do I keep the server rules in sync with the artifact?",
+    "expected_skill": "edgegap-chat-canvas"
+  },
+  {
+    "query": "ChatGPT made me a little paint arena game as one HTML file. How do I get my friends playing it online on real servers?",
+    "expected_skill": "edgegap-chat-canvas"
+  },
+  {
+    "query": "What should I ask ChatGPT so the canvas game it writes can run on a multiplayer server later?",
+    "expected_skill": "edgegap-chat-canvas"
+  },
+  {
+    "query": "The bots in the HTML game ChatGPT wrote don't move, and I want to add Find Match on Edgegap after fixing it.",
+    "expected_skill": "edgegap-chat-canvas"
+  },
+  {
+    "query": "I vibe coded a game in Cursor, it's one index.html with a canvas. How do I add online multiplayer?",
+    "expected_skill": "edgegap-vibe-coded"
+  },
+  {
+    "query": "fal Agent wrote rules.js, main.js and index.html for my canvas game; add matchmaking",
+    "expected_skill": "edgegap-fal"
+  },
+  {
+    "query": "Manus Game Dev says I need a Cloud Computer for multiplayer",
+    "expected_skill": "edgegap-manus"
+  },
+  {
+    "query": "Write me a Claude artifact of a calculator app",
+    "expected_skill": null
+  }
 ]
