@@ -61,3 +61,9 @@ it only affects test scores.
   `http://localhost:8080/?server=wss://<fqdn>:<port>`. Both joined, countdown, playing; the match
   ran to the 240 s cap (two idle players in corners and two bots), both tabs showed the results
   and went back to the menu, and the deployment stopped itself within about 15 s.
+- Matchmaker: one shared free-tier matchmaker with a `star-snatch` profile (2 to 4 players, a lone
+  player after 20 s). `tests/e2e.mjs star-snatch 2`: SEARCHING 3 s, MATCH_FOUND 11-12 s,
+  HOST_ASSIGNED 15 s, one deployment, a full match won by a bot at 10 stars, self-stop 11 s after
+  the match, PASS. Then two browser tabs with `?autoplay=1` (Find match on load) landed on one
+  deployment with two bots; closing both tabs stopped it within about 25 s (`EMPTY_TIMEOUT_S=15`
+  plus the stop).

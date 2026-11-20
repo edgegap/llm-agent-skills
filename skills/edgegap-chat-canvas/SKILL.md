@@ -18,9 +18,9 @@ page ──?server= or Find match──> Edgegap ──> one Node.js server per 
      <──────────── wss://<id>.pr.edgegap.net:<port> ── fills seats with bots, stops itself after the match
 ```
 
-**Verified on Edgegap** with [netcode-sample-claude-star-snatch](https://github.com/edgegap/netcode-sample-claude-star-snatch) (2026-11-20; tags `before` = Claude's artifact unchanged, then the online work on `main`): Claude (Opus 5.5, default settings) wrote Star Snatch from one prompt as a published artifact that played in the preview; the split script produced the server's rules with no hand edits to the block; two browser tabs joined one Edgegap deployment through `?server=` and played a match, and the server stopped itself. [references/star-snatch.md](references/star-snatch.md) has the run, file by file.
+**Verified on Edgegap** with [netcode-sample-claude-star-snatch](https://github.com/edgegap/netcode-sample-claude-star-snatch) (2026-11-20; tags `before` = Claude's artifact unchanged, then the online work on `main`): Claude (Opus 5.5, default settings) wrote Star Snatch from one prompt as a published artifact that played in the preview; the split script produced the server's rules with no hand edits to the block; two browser tabs joined one Edgegap deployment through `?server=` and played a match, and the server stopped itself; through the matchmaker, two headless players and then two browser tabs clicking Find match were put on one deployment in about 15 s, and it stopped itself 11 s after the match. [references/star-snatch.md](references/star-snatch.md) has the run, file by file.
 
-Covered today: Claude artifacts. The same marker approach is meant for other chat canvases, each verified on its own before it is listed here.
+This version covers Claude artifacts; the marker prompt and the split script work on any single HTML file.
 
 ## Who you are talking to
 
@@ -57,8 +57,8 @@ Often someone who made a game by chatting and has never run a server. Speak in o
 
 ## Phase 3: Optional matchmaker, end to end, clean-up
 
-1. **Matchmaker** (for Find match): `matchmaker/arena.json` from the sample (2 to 4 players, a lone player matched after 20 s with bots, `ticket_expiration_period` 30s) with the version name and every page origin in `allowed_cors_origins`. The developer creates and starts it in the dashboard; give them the file's full path. Its API URL and Auth Token go in `client/config.local.js` (git-ignored) or `client/config.js` (client-safe; never the Edgegap API token).
-2. `MM_URL=... MM_TOKEN=... node tests/e2e.mjs arena 2` (or the repo's **Matchmaker e2e** workflow), then two browser tabs click **Find match** within 20 s and land in one match.
+1. **Matchmaker** (for Find match): `matchmaker/star-snatch.json` from the sample (one profile named after the game, so several games can share one matchmaker: add a profile per game) (2 to 4 players, a lone player matched after 20 s with bots, `ticket_expiration_period` 30s) with the version name and every page origin in `allowed_cors_origins`. The developer creates and starts it in the dashboard; give them the file's full path. Its API URL and Auth Token go in `client/config.local.js` (git-ignored) or `client/config.js` (client-safe; never the Edgegap API token).
+2. `MM_URL=... MM_TOKEN=... node tests/e2e.mjs <profile> 2` (or the repo's **Matchmaker e2e** workflow), then two browser tabs click **Find match** within 20 s and land in one match.
 3. **Clean up**: stop any direct deployment nobody joined; stop or delete the matchmaker when testing is over (the free tier stops it about 3 hours after each start); list deployments and confirm none of yours are running. Nothing in a sample runs non-stop.
 
 ## Phase 4: Changing the game later
