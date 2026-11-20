@@ -218,5 +218,13 @@
   {
     "query": "I asked Manus Game Dev for an online game and it wants me to start a Cloud Computer in Settings. Can I run the game server somewhere else instead?",
     "expected_skill": "edgegap-manus"
+  },
+  {
+    "query": "Claude built my game as an artifact on claude.ai, one HTML file vs bots. I want online matches on Edgegap.",
+    "expected_skill": "edgegap-chat-canvas"
+  },
+  {
+    "query": "How do I prompt Claude so my artifact game's rules can run on a game server later?",
+    "expected_skill": "edgegap-chat-canvas"
   }
 ]

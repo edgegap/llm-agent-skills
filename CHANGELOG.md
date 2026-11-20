@@ -2,6 +2,13 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.41.0 (unreleased)
+
+A skill for games written in a chat as one HTML file, starting with Claude artifacts, from [netcode-sample-claude-star-snatch](https://github.com/edgegap/netcode-sample-claude-star-snatch). Verified on Edgegap on 2026-11-20: Claude (claude.ai, Opus 5.5, default settings) wrote Star Snatch as an artifact from one prompt with its rules between marker lines; the split script produced the server's rules with no edits to the block; two browser tabs joined one deployment with `?server=` and played a match, and the server stopped itself after it.
+
+- `edgegap-chat-canvas` 0.1.0: SKILL.md (marker prompt, getting the file out, split, server, online page, direct path, optional matchmaker, changing the game later in the chat), `references/prompts.md`, `references/star-snatch.md`, `assets/split-artifact.mjs`, `assets/server-game.js`, `assets/page-online.js`.
+- Routing: `edgegap` 0.41.0 (description and tables), `edgegap-vibe-coded` 0.1.6 (Claude artifacts go to the new skill; the sample listed), `edgegap-samples` 0.1.10 (catalog), new `evals/chat-canvas-routing-eval.json`, two queries in `evals/routing-eval.json`.
+
 ## 0.40.0 (unreleased)
 
 Wording: the skills, README and this changelog state what was verified, and give each check as a step to take (prove it with a direct deployment, check it in the first end-to-end run, a test match before launch). Hand-off lists report what was tested.
