@@ -1,8 +1,8 @@
 ---
 name: edgegap-vibe-coded
-description: 'Make a vibe-coded game online multiplayer on Edgegap: a single-player browser game made with an AI tool (Claude, Cursor, Codex, ChatGPT, Lovable, Bolt, v0, Replit, Websim...) that plays against bots in the page, turned into online matches with one authoritative server per match, Find Match and a matchmaker, while solo play keeps working. Load this first for "make my vibe-coded game multiplayer", "add online play to the game I made with AI", "play this with friends online", "my Lovable/Bolt game needs multiplayer", or which game ideas work online. It checks whether the game holds up with network delay, gets the code out of the AI tool into a repo, moves the rules into one file shared by page and server, and runs a public demo cheaply (matchmaker always on, servers stop fast, free-tier limits). Verified with Thin Ice Tussle. fal.ai: edgegap-fal; server and client templates: edgegap-threejs; games on Supabase: edgegap-supabase; Manus: edgegap-manus.'
+description: 'Make a vibe-coded game online multiplayer on Edgegap: a single-player browser game made with an AI tool (Claude, Cursor, Codex, ChatGPT, Lovable, Bolt, v0, Replit, Websim...) that plays against bots in the page, turned into online matches with one authoritative server per match, Find Match and a matchmaker, while solo play keeps working. Load this first for "make my vibe-coded game multiplayer", "add online play to the game I made with AI", "play this with friends online", "my Lovable/Bolt game needs multiplayer", or which game ideas work online. It checks whether the game holds up with network delay, gets the code out of the AI tool into a repo, moves the rules into one file shared by page and server, and runs a public demo cheaply (matchmaker always on, servers stop fast, free-tier limits). Verified with Thin Ice Tussle. Claude artifacts: edgegap-chat-canvas; fal.ai: edgegap-fal; server and client templates: edgegap-threejs; games on Supabase: edgegap-supabase; Manus: edgegap-manus.'
 metadata:
-  version: "0.1.5"
+  version: "0.1.6"
 ---
 
 # Edgegap for vibe-coded games: from single-player to online matches
@@ -24,6 +24,7 @@ after:  page = rendering + input + Find Match ──> Edgegap matchmaker (always
 - [netcode-sample-threejs-thin-ice-tussle](https://github.com/edgegap/netcode-sample-threejs-thin-ice-tussle) (2026-11-04): a Three.js ice brawler for 4, playable on [GitHub Pages](https://edgegap.github.io/netcode-sample-threejs-thin-ice-tussle/). End to end through the matchmaker, two browser tabs on the live page, a match both players left stopped about 12 s later, an abandoned match in two background tabs stopped at 48 s. The online diff is about 1,300 added lines across 25 files; the rules file did not change. [references/walkthrough.md](references/walkthrough.md) goes file by file.
 - [netcode-sample-threejs-vibe-coded](https://github.com/edgegap/netcode-sample-threejs-vibe-coded) (2026-11-03): Orb Herders, a hover-drone arena game, same shape.
 - [netcode-sample-fal-orb-arena](https://github.com/edgegap/netcode-sample-fal-orb-arena) (2026-11-09): Orb Arena, written by fal Agent from one prompt, Canvas 2D; `edgegap-fal` covers the fal side.
+- [netcode-sample-claude-star-snatch](https://github.com/edgegap/netcode-sample-claude-star-snatch) (2026-11-20): Star Snatch, a Claude artifact written on claude.ai from one prompt, Canvas 2D; `edgegap-chat-canvas` covers the artifact side.
 - [netcode-sample-fal-relic-rumble](https://github.com/edgegap/netcode-sample-fal-relic-rumble) (2026-11-17): Relic Rumble, 3D, written by a coding agent with rigged characters, props and sounds generated on fal.ai; built and tested online as a graybox before any asset existed. `edgegap-fal` covers the asset side.
 
 Two players on different networks or devices is each developer's own test. Games whose source is React + Vite from Lovable, Bolt or v0 follow the same pattern; the files move.
@@ -39,7 +40,8 @@ Read the game first, then tell the developer in a few lines.
 **Where the code lives.** Online play needs the code in a folder you can edit and a git repo:
 - Made in a coding agent (Claude Code, Cursor, Codex): it is already a folder.
 - Made in Lovable, Bolt, v0, Replit or similar: connect the project to GitHub or download it, and work on that copy. These projects are usually React + Vite + TypeScript: the server can't import the page's `.tsx`, so the shared rules file becomes a plain `.js` module (or the server gets its own build step), and the page keeps its build.
-- A single HTML file (a Claude or ChatGPT artifact, a Websim page): split it into `client/index.html`, `client/rules.js` and the rest first.
+- A Claude artifact (one HTML file from claude.ai): load `edgegap-chat-canvas`. It has the prompt that keeps the rules between marker lines, so the file still plays in the chat, and the script that copies them out for the server.
+- Another single HTML file (a ChatGPT canvas, a Websim page): split it into `client/index.html`, `client/rules.js` and the rest first; the `edgegap-chat-canvas` markers and split script work for any single file.
 - No local Docker? The image can be built by GitHub Actions instead ([`server-image.yml`](../edgegap-threejs/assets/ci/server-image.yml) in `edgegap-threejs`).
 
 **Does the game hold up with network delay?** The `edgegap-threejs` client draws what the server sends and eases toward it; there is no client-side prediction. A press reaches the server and comes back on screen in about one round trip plus up to 50 ms (20 snapshots a second). Tell the developer which kind their game is:
