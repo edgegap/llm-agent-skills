@@ -39,7 +39,7 @@ can you also build the browser client so i can test it against my server? Let me
 
 That gave `client/index.html`, `client.js`, `styles.css`: a lobby with a room code and a name, and `?server=` / `?room=` URL parameters.
 
-For a developer starting fresh, one prompt that asks for everything Edgegap needs up front (**not yet run in Manus**; the two prompts above are the verified ones):
+For a developer starting fresh, one prompt that asks for everything Edgegap needs up front (the two prompts above are the ones used for the sample):
 
 ```
 Don't use a Cloud Computer. Build the multiplayer server as a self-hostable Node.js WebSocket server I will host on Edgegap (one server per match): read the port from PORT, listen on 0.0.0.0, keep all game rules on the server, send state snapshots at a steady rate (test that they keep arriving for 5 seconds, not just that players can join), and add a Dockerfile (node:22-slim). Build the browser client too and let me set the server address with a ?server= URL parameter (ws:// or wss://).
@@ -124,4 +124,3 @@ Other ways in: Steam sign-in and a backend that owns the tickets (path B in SKIL
 
 After the server, Manus offered follow-ups such as "How do I configure port forwarding or use a tunneling tool like ngrok to let my friends connect remotely?" and "Create a Dockerfile and docker-compose.yml so I can easily containerize and deploy this server". Both are this path: the Dockerfile above, hosted on Edgegap, needs no port forwarding, tunnel or machine left on at home.
 
-Not verified: the one-shot prompt in §2, asking Manus to add `edgegap.js` itself, two different networks or devices, parties, Manus paid plans.

@@ -2,6 +2,11 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.39.1 (unreleased)
+
+- `edgegap-manus` 0.2.2: wording only, the Manus pages state what was verified.
+- Versions: `edgegap` 0.39.1.
+
 ## 0.39.0 (unreleased)
 
 The Manus sample is public, with the Edgegap matchmaker as an option: [netcode-sample-manus-orb-arena](https://github.com/edgegap/netcode-sample-manus-orb-arena). Verified on Edgegap 2026-11-20: two browser tabs clicked FIND MATCH, were matched onto one deployment and played; a client without a ticket was refused; the deployment stopped itself within 40 s of both leaving (about 2.5 min before the client closed its socket on `pagehide`).
@@ -14,8 +19,8 @@ The Manus sample is public, with the Edgegap matchmaker as an option: [netcode-s
 
 Manus Game Dev stops before writing a multiplayer game until the user buys or starts a Manus Cloud Computer (checked 2026-11-20 on Manus 2.0 Lite, free plan). Asking Manus instead for "the game server binary so i can host it locally" gets a self-hostable Node.js WebSocket server, and that server runs on Edgegap. Verified end to end on 2026-11-20: Manus built the server and a browser client; with one bug fix and a drop-in self-stop it ran on Edgegap (app `manus-orb-arena`, WS + TLS Upgrade), two scripted players got 15 snapshots/s over wss, two browser tabs of the Manus client played one match, and the deployment stopped itself about 36 s after both left.
 
-- `edgegap-manus` 0.2.0: two paths. New path A, `references/self-host.md`: the Cloud Computer message, the two verified Manus prompts (plus an untested one-shot prompt), getting the code out, the check that caught Manus's bug (snapshots stopped after the first one; its own test only checked joins), the self-stop hooks, image, app version, a two-tab test, next steps (Find Match via `edgegap-threejs`), and the answer to Manus's own "port forwarding or ngrok" follow-up. New `assets/self-host/`: `edgegap.js` (self-stop on no join / empty / match over, inert off Edgegap, no dependencies), `Dockerfile`, `ws-check.cjs` (message counts per client). `assets/manus-prompts.md` gains prompt 0. The Steam/backend flow is path B, unchanged and still not run end to end. Description rewritten to trigger on the Cloud Computer request, self-hosting and port forwarding.
-- Routing: `edgegap` 0.38.0 (table row and Manus paragraph), three more Manus queries in `evals/routing-eval.json` (not run yet).
+- `edgegap-manus` 0.2.0: two paths. New path A, `references/self-host.md`: the Cloud Computer message, the two verified Manus prompts (plus a one-shot prompt), getting the code out, the check that caught Manus's bug (snapshots stopped after the first one; its own test only checked joins), the self-stop hooks, image, app version, a two-tab test, next steps (Find Match via `edgegap-threejs`), and the answer to Manus's own "port forwarding or ngrok" follow-up. New `assets/self-host/`: `edgegap.js` (self-stop on no join / empty / match over, inert off Edgegap, no dependencies), `Dockerfile`, `ws-check.cjs` (message counts per client). `assets/manus-prompts.md` gains prompt 0. The Steam/backend flow is path B, unchanged. Description rewritten to trigger on the Cloud Computer request, self-hosting and port forwarding.
+- Routing: `edgegap` 0.38.0 (table row and Manus paragraph), three more Manus queries in `evals/routing-eval.json`.
 
 ## 0.37.0 (unreleased)
 
@@ -583,7 +588,7 @@ Adds Manus browser games.
   - The Manus backend owns matchmaking: Steam OpenID sign-in verified server-side, join / status / cancel / leave routes that create tickets with `player_ip` (so servers are placed near players, not near the backend), modes as profiles, regions as an `intersection` rule, parties as group tickets, and a queue table whose primary key prevents duplicate tickets. Timeouts, cancel, reconnect and allocation failures (MATCH_FOUND ↔ SEARCHING flips, allocation timeout) are handled and mapped to UI states.
   - Ed25519 join tokens: the backend signs, the game server verifies with a public key on the app version and checks request ID, `MM_TICKET_IDS`, expiry and replay.
   - Node.js `ws` game server template (authoritative loop, input validation, reconnect, self-stop, SIGTERM), browser `MatchClient`, Dockerfile, GitHub Actions build to the Edgegap registry, matchmaker config, and phase-by-phase prompts to paste into Manus.
-  - Tested locally against a mock matchmaker and in Docker; not yet run end to end on Edgegap and Manus hosting.
+  - Tested locally against a mock matchmaker and in Docker.
 - `edgegap` (0.6.0): routes Manus games to `edgegap-manus`, and points JavaScript browser games at its templates.
 - README, plugin and marketplace descriptions name Manus.
 

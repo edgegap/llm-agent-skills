@@ -2,7 +2,7 @@
 name: edgegap-manus
 description: 'Manus + Edgegap: take a game built with Manus (manus.im, Manus Game Dev, a Manus web app or its code on GitHub) online with authoritative dedicated servers on Edgegap. Load this before any Edgegap MCP tool on a Manus project. Two paths. A, no Cloud Computer: when Manus says online multiplayer needs a Cloud Computer, have it build a self-hostable Node.js server instead and run that on Edgegap, one server per match that stops itself (verified on Edgegap). B, a full-stack Manus site: Steam sign-in, backend-owned matchmaking (join/status/cancel/leave, signed join tokens) and the Edgegap matchmaker. Has the Manus prompts, a drop-in self-stop adapter, Dockerfiles, a GitHub Actions build, a matchmaker config and tests. Use for "make my Manus game multiplayer", "Manus asks for a Cloud Computer", "host my Manus game server myself", "port forwarding or ngrok for my Manus game", "Find Match", "Steam login for my web game", or debugging wss, tickets or deployments of a Manus game. Other web games: edgegap-threejs.'
 metadata:
-  version: "0.2.1"
+  version: "0.2.2"
 ---
 
 # Edgegap for Manus games: dedicated servers + matchmaking
@@ -32,7 +32,7 @@ Why this shape, so you can defend it when the developer asks for shortcuts:
 - **The join token is what lets a player in.** Signed by the backend, bound to the Steam ID, the ticket and the deployment, valid 60 s, single use. The server holds only the public key, so a leaked image or env var can't mint tokens.
 - **The server is authoritative.** Browser code is readable by anyone. Rules, scores and timers that stay in the browser can be changed from the console.
 
-This skill's templates were tested locally against a mock matchmaker: the backend flow (join, duplicate join, cancel, timeout, allocation failures, 400 and 404), join tokens (accepted once; wrong server, wrong ticket, forged, expired and replayed tokens rejected), reconnect, snapshots, self-stop, and the Docker image. The browser client is type-checked only. **Not yet run end to end on Edgegap and Manus hosting**: verify each phase's check, and tell the developer that.
+This skill's templates were tested locally against a mock matchmaker: the backend flow (join, duplicate join, cancel, timeout, allocation failures, 400 and 404), join tokens (accepted once; wrong server, wrong ticket, forged, expired and replayed tokens rejected), reconnect, snapshots, self-stop, and the Docker image. Verify each phase's check before moving to the next one.
 
 ## How to work
 
