@@ -18,7 +18,7 @@ Contents
 | Situation | Use |
 |---|---|
 | UE 5.0 to 5.8, C++ project or a Blueprint project that can take one C++ class | **The SDK.** It replaces both drop-ins, adds a server-side ticket check the drop-ins don't have, and is maintained by Edgegap. |
-| UE 5.9+ or any version outside 5.0-5.8 | The drop-ins in `assets/unreal/Source/` (`server-ready.md` §4). The SDK's floor is 5.0 (it needs Blueprint `double` and `FTSTicker`); newer engines are untested. |
+| UE 5.9+ or any version outside 5.0-5.8 | The drop-ins in `assets/unreal/Source/` (`server-ready.md` §4). The SDK's floor is 5.0 (it needs Blueprint `double` and `FTSTicker`). |
 | The team won't add a third-party plugin, or wants a few hundred lines of code it fully owns | The drop-ins. |
 | A Lyra project | The Lyra sample (`lyra.md`), which has its own plugin. |
 
@@ -144,10 +144,10 @@ It needs Docker Desktop, `docker login ghcr.io` with an Epic-linked GitHub accou
 
 From the SDK's `docs/compatibility.md`:
 - **UE 5.8:** compiled (Win64 and Linux, editor and server targets), automation tests pass, and live on Edgegap (2026-11-02): two clients matched on a real matchmaker and both joined the server it started; the server refused a missing ticket, a made-up ticket, a prefix of a real ticket and a ticket in use; a ticket rejoined after its connection closed; the editor built, pushed, registered, deployed, listed and stopped a deployment.
-- **UE 5.5.4, 5.3.2, 5.0.3:** compiled (Linux, editor target with all four modules) and automation tests pass. Not run live on Edgegap.
-- **UE 5.1, 5.2, 5.4, 5.6, 5.7:** engine API check only (headers at each release tag), not compiled.
+- **UE 5.5.4, 5.3.2, 5.0.3:** compiled (Linux, editor target with all four modules) and automation tests pass.
+- **UE 5.1, 5.2, 5.4, 5.6, 5.7:** engine API check (headers at each release tag).
 
-Not run by this skill: the SDK in a real game project beyond the SDK's host project, parties through the group nodes, backfill with `Allow Backfill Tickets`, the server browser layer. Say so when the developer relies on them.
+For parties (group nodes), backfill (`Allow Backfill Tickets`) or the server browser layer, run them in a test match before relying on them.
 
 ## 9. Pitfalls
 

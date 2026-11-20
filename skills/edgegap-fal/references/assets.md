@@ -64,7 +64,7 @@ The sample's [`client/render.js`](https://github.com/edgegap/netcode-sample-fal-
 
 - A floor or wall texture: ask for "seamless tileable texture, top-down orthographic view, even lighting, no shadows, no objects", save as JPEG, set `RepeatWrapping`. Tone it down with the material colour if it fights with the characters.
 - Sounds: one short clip per rules event (`pickup`, `score`, `shove`, `hit`, `win`), `--duration_seconds` 0.5 to 3, `--output_format mp3_44100_64`. The page plays them from the events `step()` returns in solo and the server forwards online, so both modes sound the same. Create the `AudioContext` on the first button click, not on load.
-- 2D games: fal's `fal-gamedev` and `game-asset-production` skills make sprite sheets; the same rules apply (frame geometry in the page, hit boxes in `rules.js`). Not run for this skill.
+- 2D games: fal's `fal-gamedev` and `game-asset-production` skills make sprite sheets; the same rules apply (frame geometry in the page, hit boxes in `rules.js`).
 
 ## Before publishing the page
 

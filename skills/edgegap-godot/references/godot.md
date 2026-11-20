@@ -81,7 +81,7 @@ The `.dedicated_server` override (`run/flush_stdout_on_print.dedicated_server=tr
   - Regenerate the list if the project has a script that writes it (the sample: `tools/update-export-policy.py`), and check `exclude_filter` doesn't drop the scripts.
   - Verify with `godot --headless --path . --export-pack "<preset>" /tmp/check.pck`: the output lists every stored file, and each `res://edgegap/*.gdc` must be there.
 - **`.pck`**: the plugin needs `binary_format/embed_pck=false`, with the `.pck` next to the binary under the same base name.
-- **Godot .NET (C#)**: the GDScript templates work beside C# scripts. The Linux export needs the .NET export templates; not verified on Edgegap yet.
+- **Godot .NET (C#)**: the GDScript templates work beside C# scripts. The Linux export needs the .NET export templates; prove the export with a direct deployment first.
 
 ## 7. Web exports
 

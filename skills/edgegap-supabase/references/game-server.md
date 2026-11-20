@@ -43,7 +43,7 @@ Verified locally against the hosted project: a real token → `welcome`; no toke
 
 ## 4. Other server languages and legacy projects
 
-- **Unity, Godot, Unreal, Go, C#**: the same check with the platform's JWT library: fetch the JWKS, verify ES256 (or RS256), issuer and audience, read `sub`. Not run on Edgegap with these; say so.
+- **Unity, Godot, Unreal, Go, C#**: the same check with the platform's JWT library: fetch the JWKS, verify ES256 (or RS256), issuer and audience, read `sub`. Test it locally with a real access token before deploying.
 - **Legacy HS256 projects** (an empty `keys` list in the JWKS): either migrate the project to asymmetric signing keys (dashboard → JWT signing keys; recommended), or have the server call `GET <SUPABASE_URL>/auth/v1/user` with `Authorization: Bearer <token>` and `apikey: <publishable key>` per join. Never put the legacy JWT secret on the game server: it can mint tokens for any user.
 
 ## 5. Reporting the result

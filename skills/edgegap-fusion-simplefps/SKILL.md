@@ -2,7 +2,7 @@
 name: edgegap-fusion-simplefps
 description: 'Photon''s Simple FPS (Fusion 2) sample + Edgegap: run it as a dedicated server on Edgegap and join through its Party menu, verified end to end. Load this before using any Edgegap MCP tool on a Simple FPS project (SimpleFPS namespace, Deathmatch and Startup scenes, FusionBootstrap, FusionMenuUIParty, MenuConnectionBehaviour, SceneObjects). It has a drop-in kit that edits no Simple FPS or Fusion file: a bootstrap subclass that starts the server and names the session after the deployment FQDN, a Party menu subclass that joins by FQDN and Photon region, an editor setup and IL2CPP build, a Dockerfile, and headless test clients. It fixes the two traps of the usual Simple FPS dedicated-server steps: a server built with only the Deathmatch scene, and a scene that is not active on load, which both make clients throw NullReferenceException in Player.FixedUpdateNetwork. Use for "Simple FPS on Edgegap", "join a deployment from the Party menu" or that error. Other Fusion games, BR200: edgegap-fusion.'
 metadata:
-  version: "0.1.4"
+  version: "0.1.5"
 ---
 
 # Photon Simple FPS on Edgegap
@@ -71,7 +71,7 @@ If a step fails, see `references/troubleshooting.md`.
 
 ## Phase 5: Hand-off
 
-What was built and where, the app and version names, the tested versions, how to ship a new build (build → new tag → new app version), and what wasn't tested: more than two players, a whole match to its end, whether the server exits after a match (the start script stops the deployment when it does), CPU sizing. Delete `Assets/EdgegapSimpleFPSTest` before shipping, and the test app versions if the developer agrees.
+What was built and where, the app and version names, the tested versions, how to ship a new build (build → new tag → new app version), and what was tested (player count and how far the match ran). The start script stops the deployment when the server exits after a match. Delete `Assets/EdgegapSimpleFPSTest` before shipping, and the test app versions if the developer agrees.
 
 ## Reference files
 

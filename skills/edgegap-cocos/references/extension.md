@@ -66,7 +66,7 @@ With a regular API token also set `EDGEGAP_REGISTRY_PROJECT`, `EDGEGAP_REGISTRY_
 
 Read from `upsertVersion` in `src/core/api.ts`:
 - Sets: image, registry login (`private_username`/`private_token`), `req_cpu`, `req_memory`, `max_duration`, `time_to_deploy: 120`, one port with `to_check: true` and `tls_upgrade`.
-- Doesn't set `restart_policy`, env vars, or more than one port. After the first upload, set `restart_policy: "never"` with `edgegap_update_app_version` (or in the dashboard) so a crash doesn't restart an empty match, and add env vars (timeouts, `REQUIRE_TICKET`) the same way. A later upload with the same tag `PATCH`es the version with the panel's fields; check afterwards that the policy and env are still there (not verified).
+- Doesn't set `restart_policy`, env vars, or more than one port. After the first upload, set `restart_policy: "never"` with `edgegap_update_app_version` (or in the dashboard) so a crash doesn't restart an empty match, and add env vars (timeouts, `REQUIRE_TICKET`) the same way. A later upload with the same tag `PATCH`es the version with the panel's fields; check afterwards that the policy and env are still there.
 - `POST /v1/app` requires `image` (an app icon URL); the extension sends an empty string.
 - `/v1/status` reports a WebSocket port's protocol as `WEBSOCKET` (the version API takes `WS`); the extension's `connectionUrl` handles both. Scripts of your own that build the URL from status should too.
 

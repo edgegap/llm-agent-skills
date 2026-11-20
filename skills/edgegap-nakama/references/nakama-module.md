@@ -86,7 +86,7 @@ Adapt the payload to the game: scores per player, a match summary, XP. Use the s
 
 ## 6. TypeScript or Lua modules
 
-The Fleet Manager is a Go package, so the project needs a Go module, but Nakama loads Go, JavaScript and Lua modules side by side. Add `main.go` with the Fleet Manager, auth hooks, matchmaker hook and result RPC; keep the rest of the TS/Lua code. Register a given hook (MatchmakerMatched, one AfterAuthenticate) in one runtime only: remove the TS/Lua version. Not run end to end; check Nakama's startup log for duplicate registrations.
+The Fleet Manager is a Go package, so the project needs a Go module, but Nakama loads Go, JavaScript and Lua modules side by side. Add `main.go` with the Fleet Manager, auth hooks, matchmaker hook and result RPC; keep the rest of the TS/Lua code. Register a given hook (MatchmakerMatched, one AfterAuthenticate) in one runtime only: remove the TS/Lua version, and check Nakama's startup log for duplicate registrations.
 
 The Docker image then needs both: the Go plugin from the builder stage and the `build/index.js` or `.lua` files in `/nakama/data/modules/` (comment in `assets/nakama/Dockerfile`).
 

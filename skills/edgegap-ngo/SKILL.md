@@ -2,7 +2,7 @@
 name: edgegap-ngo
 description: 'Netcode for GameObjects (NGO) + Edgegap: take a Unity game built on NGO to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on an NGO project (com.unity.netcode.gameobjects, NetworkManager, UnityTransport, StartHost, ConnectionManager, Boss Room). It has NGO C# templates verified on Edgegap, no scene edits (server start and self-stop, Find Match panel, settings asset), a Boss Room adapter, the Edgegap Unity plugin for build, image, push and deploy, port 7777 UDP app version, matchmaker config, and fixes for NGO pitfalls: host-only logic, connection payloads and approval, UnityTransport needing an IP, client-only code on the server, Relay leftovers. Use when an NGO dev wants online play: "host my NGO game", "nobody should host", "replace Unity Relay or Multiplay", "Boss Room on Edgegap", "Find Match button", or debugs NGO deployments, ports or matchmaking. Mirror or WebGL-first games: edgegap-unity. FishNet: edgegap-fishnet. PurrNet: edgegap-purrnet.'
 metadata:
-  version: "0.2.5"
+  version: "0.2.6"
 ---
 
 # Edgegap for Netcode for GameObjects: dedicated servers + matchmaking
@@ -25,11 +25,11 @@ Use **dedicated (authoritative) servers**, not a player host, unless the develop
 
 Read, don't ask:
 - `ProjectSettings/ProjectVersion.txt` (the SDK needs 2021.3+; use SDK 3.5.6+ before Unity 2022.3).
-- `Packages/manifest.json`: `com.unity.netcode.gameobjects` version, `com.unity.transport`, `com.unity.services.*` (Relay, Lobby, Matchmaker, Multiplay), any `com.edgegap.*`. Keeping **Unity Matchmaker** and moving off Multiplay: Unity's official `EdgegapAllocator` Cloud Code module ([matchmaker-hosting-providers](https://github.com/Unity-Technologies/matchmaker-hosting-providers/tree/main/modules/EdgegapAllocator)) starts the Edgegap server for each match (see `edgegap-matchmaking`, third-party matchmakers; not run by this pack); this skill still does the server build, image and app version.
+- `Packages/manifest.json`: `com.unity.netcode.gameobjects` version, `com.unity.transport`, `com.unity.services.*` (Relay, Lobby, Matchmaker, Multiplay), any `com.edgegap.*`. Keeping **Unity Matchmaker** and moving off Multiplay: Unity's official `EdgegapAllocator` Cloud Code module ([matchmaker-hosting-providers](https://github.com/Unity-Technologies/matchmaker-hosting-providers/tree/main/modules/EdgegapAllocator)) starts the Edgegap server for each match (see `edgegap-matchmaking`, third-party matchmakers); this skill still does the server build, image and app version.
 - The scene with the `NetworkManager`: transport (`UnityTransport`, its port and `ConnectTimeoutMS`/`MaxConnectAttempts`), Player Prefab, `ConnectionApproval`.
 - How the game connects: grep `StartHost`, `StartServer`, `StartClient`, `SetConnectionData`, `SetRelayServerData`, `ConnectionData`, `IsHost`. A `ConnectionManager` state machine (Boss Room and projects derived from it) changes the integration (`references/ngo.md` §4).
 - Code that won't compile or run without UGS: a UGS Matchmaker client without `com.unity.services.matchmaker`, Relay-only connect paths.
-- Targets: desktop clients use UDP. WebGL needs WebSockets (`references/ngo.md` §7, not verified).
+- Targets: desktop clients use UDP. WebGL needs WebSockets (`references/ngo.md` §7).
 
 Then ask, in one message, only what you couldn't infer: players per match, platforms, Edgegap account and Docker. Offer defaults. Building without the Editor (CI, or you) needs `docker login registry.edgegap.com` and the registry Username and Token (Container Registry page): ask now, not mid-deploy.
 

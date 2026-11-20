@@ -2,7 +2,7 @@
 name: edgegap-browser-wasm
 description: 'Browser / WebAssembly game multiplayer on Edgegap: a three.js (or other web) game with WASM physics (Rapier, Box2D, Jolt, ammo.js) taken to an authoritative Node.js server over secure WebSockets, with client-side prediction and the client on a CDN, not in the server image. Load this for "make my browser/WASM game multiplayer", "three.js + Rapier multiplayer", "authoritative physics server for my web game", "client prediction / reconciliation with Rapier", "wss:// from my https page fails", "mixed content", "ERR_CERT_COMMON_NAME_INVALID", "ERR_SSL_PROTOCOL_ERROR", "WASM init fails in Docker", or a server image bloated with the client bundle. Has the shared physics module, predictor, connection error messages, slim multi-stage Dockerfile and the WS + TLS Upgrade setup, from netcode-sample-threejs-rapier. Matchmaker and Find Match: edgegap-threejs; vibe-coded games: edgegap-vibe-coded; Unity WebGL: edgegap-unity; Godot web: edgegap-godot.'
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # Edgegap for browser and WebAssembly games: authoritative physics over wss://
@@ -18,7 +18,7 @@ Edgegap deployment (slim Node.js image)
   Node.js 22 LTS, ws, fixed tick (30 Hz), WASM physics = authoritative world
 ```
 
-Worked example: [netcode-sample-threejs-rapier](https://github.com/edgegap/netcode-sample-threejs-rapier) (three.js 0.187, Rapier `@dimforge/rapier3d-compat` 0.21, ws 8.22, Vite 8, Node 22.23 Alpine image of 63.5 MB compressed). The docs page "Make Your Browser (WebAssembly) Game Multiplayer" is the same guide for humans. Verified on 2026-11-18 on a laptop: two headless players and two browser windows on one server, the container started with `docker run --network none`, `SIGTERM` exit, the empty-server stop, and every browser error in `references/troubleshooting.md` reproduced in Chrome 157 and Edge 157. **Not run on Edgegap for this sample**: the WS + TLS Upgrade port, `wss://` to the deployment host and the self-stop are the steps verified on Edgegap with the `edgegap-threejs` samples, which use the same server shape. Firefox messages not captured. Say so when those matter.
+Worked example: [netcode-sample-threejs-rapier](https://github.com/edgegap/netcode-sample-threejs-rapier) (three.js 0.187, Rapier `@dimforge/rapier3d-compat` 0.21, ws 8.22, Vite 8, Node 22.23 Alpine image of 63.5 MB compressed). The docs page "Make Your Browser (WebAssembly) Game Multiplayer" is the same guide for humans. Verified on 2026-11-18 on a laptop: two headless players and two browser windows on one server, the container started with `docker run --network none`, `SIGTERM` exit, the empty-server stop, and every browser error in `references/troubleshooting.md` reproduced in Chrome 157 and Edge 157. The WS + TLS Upgrade port, `wss://` to the deployment host and the self-stop are verified on Edgegap with the `edgegap-threejs` samples, which use the same server shape.
 
 Why this shape, so you can defend it:
 - **Authoritative server.** Clients send inputs only. Positions decided in the browser can be edited in devtools.

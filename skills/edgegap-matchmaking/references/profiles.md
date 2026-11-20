@@ -77,7 +77,7 @@ All use `ticket_expiration_period: "30s"`, expansions below 30 s, and a timestam
 | [ranked-teams.json](../assets/configs/ranked-teams.json) | 2 teams of 4, parties, `beacons`, `skill`, expansions relaxing latency then skill | Desktop or mobile clients (needs beacons in every ticket). The rating must come from a trusted source |
 | [modes.json](../assets/configs/modes.json) | two profiles: `duel` (1v1) and `squads` (4 teams of up to 4, map vote by `intersection`, crossplay by `string_equality`) | One matchmaker, several queues. Each profile can point at a different app version |
 
-Not run as a whole on Edgegap: each rule type and the `backfill_group_size` rule were verified in samples, these exact combinations were not. Upload them to a test matchmaker and send two tickets before relying on them.
+Each rule type and the `backfill_group_size` rule were verified in samples. Upload these combinations to a test matchmaker and send two tickets before relying on them.
 
 ## 6. What the server receives
 

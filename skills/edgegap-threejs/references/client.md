@@ -90,7 +90,7 @@ connect(getConnectionUrl(assignment, "gameport"), { name, ticket: ticketId }); /
 - `getConnectionUrl` throws for TCP/UDP ports, which browsers can't open; the port must be WS with TLS Upgrade on.
 - A `stopMatchmaking()` on `pagehide` that doesn't get out before the tab closes leaves the ticket to expire after `ticket_expiration_period` (30 s in the templates).
 - The matchmaker answers **429** to bursts of calls (seen when 14 players queued in the same second). The SDK retries `429` and `5xx` with jittered backoff and honours `Retry-After`; after 10 polling errors in a row it gives up and `nextAssignment()` rejects.
-- Parties (friends in one match): `createGroup` with `is_ready: false`, share `group.current.group_id`, friends call `joinGroup(request, groupId, true)`, everyone calls `setReady(true)`. Not wired into `shell.js` and not run here; see the SDK README.
+- Parties (friends in one match): `createGroup` with `is_ready: false`, share `group.current.group_id`, friends call `joinGroup(request, groupId, true)`, everyone calls `setReady(true)`. Add it to `shell.js` following the SDK README.
 - **First connection**: a deployment can refuse connections for a few seconds after `HOST_ASSIGNED`. `net.js` retries 10 times, 1 s apart, until the server's `welcome`. An `error` message from the server (full, finished) is final and not retried.
 - **Direct**: `?server=wss://<fqdn>:<port>` connects straight to a deployment started by `edgegap_deploy` or `edgegap-deploy.mjs`.
 - **Local**: a "Local server" button connects to `ws://<page host>:<LOCAL_PORTS[game]>`. Plain `ws://` only works from an `http://` page (localhost); from `https` pages browsers block it.
@@ -104,4 +104,4 @@ The pages can live anywhere static: GitHub Pages, itch.io, a CDN. They never nee
 
 ## 7. Other renderers and bundlers
 
-Nothing above depends on Three.js except `shell.js`'s stage helpers. For Babylon.js, PlayCanvas engine, Phaser or a 2D canvas, keep the Find Match block (and the SDK import map entry) and `net.js`, keep the protocol and the easing, and draw with that engine. Not run on Edgegap with those engines.
+Nothing above depends on Three.js except `shell.js`'s stage helpers. For Babylon.js, PlayCanvas engine, Phaser or a 2D canvas, keep the Find Match block (and the SDK import map entry) and `net.js`, keep the protocol and the easing, and draw with that engine.

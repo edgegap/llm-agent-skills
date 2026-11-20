@@ -26,11 +26,11 @@ Where to look: Cloud Code logs in the Unity Dashboard (the module logs Edgegap's
 2. One deployment by hand with the same app, version and port name (`edgegap_deploy`, `edgegap_wait_for_deployment`): proves the version before Matchmaker is involved. Stop it.
 3. Two clients in a test queue. Watch Cloud Code logs, then the deployment, then both tickets reaching `Found` with the same IP and port.
 
-## Not verified in this pack (say so when it matters)
+## Checks for the first end-to-end run
 
-- The full chain (UGS queue → module → Edgegap → two clients connected → self-stop) has not been run.
-- The exact `Authorization` value the secret needs: derived from the code (no prefix added) and Edgegap's API (`token <uuid>`), not observed against the live API.
-- Whether `MatchProperties["Players"][].CustomData` arrives in Cloud Code in the shape the module expects: covered by its unit test with a mocked payload, not seen live here.
-- Matchmaker's poll interval and how it behaves under the Status API limit; free-tier behaviour with two concurrent matches.
-- The sessions flow, backfill, WebGL/FQDN, and the webhook variant.
-- Client snippets in `references/unity.md` were written from the SDK reference and not compiled.
+- The full chain: UGS queue → module → Edgegap → two clients connected → self-stop (Phase 5 in SKILL.md).
+- The secret's `Authorization` value: the module adds no prefix, and Edgegap's API expects `token <uuid>`, so store the secret as `token <uuid>`; a 401 in the Cloud Code log means the prefix is wrong.
+- `MatchProperties["Players"][].CustomData` reaching Cloud Code in the shape the module expects (its unit test covers it with a mocked payload): the deployment's player IPs show it.
+- Matchmaker's poll interval against the Status API limit, and two concurrent matches on your tier.
+- If you use them: the sessions flow, backfill, WebGL/FQDN and the webhook variant, each with its own test match.
+- Compile the client snippets from `references/unity.md` in your project before the run (they follow the SDK reference).

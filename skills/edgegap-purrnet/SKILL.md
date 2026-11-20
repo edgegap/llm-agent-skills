@@ -2,7 +2,7 @@
 name: edgegap-purrnet
 description: 'PurrNet + Edgegap: take a Unity game built on PurrNet to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a PurrNet project (dev.purrnet.purrnet, NetworkManager start flags, UDPTransport, WebTransport, ParrelSync clones). It has PurrNet-ready C# templates verified on Edgegap that add themselves at runtime without editing scenes (server start and self-stop, connect panel with direct and matchmaker modes, settings asset), port 7777 UDP app version, Dockerfile, matchmaker config, and fixes for PurrNet pitfalls: auto start flags, the async StartClient, ObserversRpc that never runs on a dedicated server. Use when a PurrNet dev wants online play: "host my PurrNet game", "nobody should host", "works with a host but not online", "Find Match button", or is debugging PurrNet deployments, ports or matchmaking on Edgegap. Other Unity netcodes: edgegap-unity (NGO, Mirror) or edgegap-fishnet.'
 metadata:
-  version: "0.3.5"
+  version: "0.3.6"
 ---
 
 # Edgegap for PurrNet: dedicated servers + matchmaking
@@ -30,7 +30,7 @@ Read, don't ask:
 - The scene with PurrNet's `NetworkManager`: its transport (`UDPTransport` = UDP, `WebTransport` = WebSocket, `CompositeTransport`), port (`serverPort`, 5000 on UDP by default; the templates replace it with 7777 at runtime), network rules, and **Start Server Flags / Start Client Flags**.
 - How the game connects today: host in the Editor plus a ParrelSync clone is PurrNet's default. Grep `StartServer`, `StartClient`, `StartHost`, `isHost`.
 - Server-side logic that relies on a host's local client: `[ObserversRpc]` and `[TargetRpc]` methods that set up server state (`references/purrnet.md` §3). This is the bug that silently breaks dedicated servers.
-- Targets: desktop clients use UDP; WebGL needs `WebTransport` (not verified on Edgegap yet).
+- Targets: desktop clients use UDP; WebGL needs `WebTransport` (`references/purrnet.md` §8).
 
 Then ask, in one message, only what you couldn't infer: players per match, platforms, Edgegap account and Docker. Offer defaults.
 

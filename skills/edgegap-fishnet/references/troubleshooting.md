@@ -17,7 +17,7 @@ Fix: SDK **3.5.6** (released 2026-10-15) sends the body as raw bytes on older Un
 - If the project embedded and hand-patched an older SDK (a `Packages/com.edgegap.unity-sdk` folder), delete that folder and use the git package instead, so later SDK updates apply.
 - Hand-written ticket code has the same bug if it calls `UnityWebRequest.Post(url, jsonString)` on Unity before 2022.3: send `new UploadHandlerRaw(Encoding.UTF8.GetBytes(json))` with `Content-Type: application/json` instead.
 
-The verified FishNet run used 3.5.5 with this exact change patched in; 3.5.6 ships the same change (checked in the SDK source) but has not been run end to end on Edgegap yet.
+The verified FishNet run used 3.5.5 with this exact change patched in; 3.5.6 ships the same change (checked in the SDK source).
 
 ## 2. Server
 

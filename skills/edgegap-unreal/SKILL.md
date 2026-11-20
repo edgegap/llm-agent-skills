@@ -2,7 +2,7 @@
 name: edgegap-unreal
 description: 'Unreal Engine + Edgegap: get an Unreal multiplayer game online with dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on an Unreal project: it has the Unreal workflow, Edgegap''s Unreal SDK plugin for UE 5.0-5.8 (Find Match with latency beacons, server ticket check, self-stop) with tested C++ drop-ins as fallback, source-engine and Linux cross-compile setup, server packaging, Dockerfile, matchmaker config and fixes for the pitfalls that cost hours. Use when an Unreal dev wants online play: "put my game online", "players can only join on LAN", "nobody should have to host", "click Play and get matched", listen server to dedicated server, a .uproject that needs servers, "open <ip>" connections, packaging a Linux server, or debugging Edgegap deployments, ports or matchmaking for an Unreal game. Covers C++ and Blueprint-only projects. Use even for beginners who never say Edgegap, servers or Docker. Not for Unity (edgegap-unity), Godot or non-game backends.'
 metadata:
-  version: "0.4.1"
+  version: "0.4.2"
 ---
 
 # Edgegap for Unreal Engine: dedicated servers + matchmaking
@@ -28,7 +28,7 @@ Verified on **UE 5.5.4** built from source (Windows editor, Linux server on Edge
 
 Inspect, don't interrogate:
 - **A Lyra project** (`LyraGame`, `LyraStarterGame`, `CommonUser`, `ALyraGameMode`): follow `references/lyra.md` and the [Lyra sample](https://github.com/edgegap/game-sample-unreal-engine-lyra) (plugin, EOS sessions, a matchmaker profile per playlist) instead of the drop-ins below.
-- **Betide's Edgegap Integration Kit** already in `Plugins/` (`EdgegapIntegrationKit.uplugin`, Blueprint nodes for deploys and matchmaking): a third-party Fab plugin ([betidestudio/EdgegapIntegrationKit](https://github.com/betidestudio/EdgegapIntegrationKit), support from Betide), not run by this skill. Keep it if the developer relies on it; don't add a second matchmaking integration on top of it.
+- **Betide's Edgegap Integration Kit** already in `Plugins/` (`EdgegapIntegrationKit.uplugin`, Blueprint nodes for deploys and matchmaking): a third-party Fab plugin ([betidestudio/EdgegapIntegrationKit](https://github.com/betidestudio/EdgegapIntegrationKit), support from Betide). Keep it if the developer relies on it; don't add a second matchmaking integration on top of it.
 - **The Edgegap SDK** already in `Plugins/EdgegapSDK` (`EdgegapSDK.uplugin`), or the drop-in files (`EdgegapMatchmakerSubsystem.*` in the game module): keep what's there. Switching from the drop-ins to the SDK means deleting the drop-ins first, since both define the same class names (`references/sdk.md` §1).
 - `*.uproject`: `EngineAssociation` (a version like `5.5`, or a GUID meaning a source build), `Modules` (none means **Blueprint-only**), plugins (OnlineSubsystem*, EOS, Steam).
 - `Source/*.Target.cs`: is there a `Type = TargetType.Server` target? `DefaultBuildSettings`/`IncludeOrderVersion`.

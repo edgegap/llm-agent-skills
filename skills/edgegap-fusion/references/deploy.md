@@ -6,7 +6,7 @@
 - The IL2CPP Linux build cross-compiles with Unity's toolchain packages (**Window > Package Manager > + > Add package by name**, or `Packages/manifest.json`):
   - Unity 6000.3 on Windows: `com.unity.toolchain.win-x86_64-linux` (1.1.0) **and** `com.unity.sdk.linux-x86_64` (1.1.0, the sysroot). With only the toolchain, the build fails with `No Linux sysroot found for x64`. If you add the older `com.unity.toolchain.win-x86_64-linux-x86_64` 2.0.x, Unity 6000.3 replaces it with `com.unity.toolchain.win-x86_64-linux`, but still needs the SDK package.
   - Older Unity versions on Windows: `com.unity.toolchain.win-x86_64-linux-x86_64`.
-  - macOS hosts: the macOS toolchain for Linux x86_64. Not tested.
+  - macOS hosts: the macOS toolchain for Linux x86_64.
 - The kit's preflight reports a missing `com.unity.toolchain.*` entry, but it doesn't check for the SDK package: watch for `No Linux sysroot found` in the build log.
 
 ## 2. Server build

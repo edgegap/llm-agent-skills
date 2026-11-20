@@ -2,7 +2,7 @@
 name: edgegap-supabase
 description: 'Supabase + Edgegap: use Supabase as the backend of a multiplayer game (sign-in, player profiles, leaderboards, match history) while Edgegap runs one authoritative game server per match, end to end. Load this before using any Edgegap MCP tool on a project that has or wants Supabase (@supabase/supabase-js, a supabase/ folder, Supabase Auth, Edge Functions, Row Level Security). Templates verified on Edgegap with a Three.js game: anonymous sign-in, Postgres schema with RLS, an Edge Function that holds the Edgegap matchmaker token and ties tickets to users, a game server that verifies Supabase access tokens with JWKS and holds no Supabase key, results reported through a second Edge Function and checked in Postgres, a live Realtime leaderboard, headless e2e. Use for "Supabase as my game backend", "only signed-in players can find a match", "save match results/wins from the game server", "leaderboard with Supabase", "Supabase auth + dedicated servers". Nakama: edgegap-nakama; PlayFab: edgegap-playfab.'
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
 ---
 
 # Edgegap with Supabase: Supabase is the backend, Edgegap runs the matches
@@ -18,7 +18,7 @@ game server --POST report-match + shared secret--> Edge Function --record_match(
 browser <--Realtime: profiles changed--   game server --DELETE $ARBITRIUM_DELETE_URL--> stopped
 ```
 
-Verified on 2026-11-03 with [netcode-sample-threejs-supabase](https://github.com/edgegap/netcode-sample-threejs-supabase) (Sumo Push from the Three.js minigames), a hosted Supabase project on the free plan, Supabase CLI 3.0.0, supabase-js 2.118.0 and the Edgegap free tier: `assets/tools/e2e.mjs` signed in two headless players, queued them through the Edge Function, both landed on one deployment in about 15 s, played a full match with their access tokens, the server's report created the match and updated both profiles, and the deployment stopped itself 14 s after the match. A browser did the same alone (matched after the 20 s expansion, with bots) and its leaderboard updated live. Checked against the live project: players can't change their wins, insert tickets or call `record_match()`; a missing or forged token is refused by the game server; `report-match` refuses a wrong secret, a ticket that isn't the player's, and a replayed report; a human winner gets the win. Not run: a non-Node game server (Unity, Godot, Unreal) verifying the token, email/OAuth sign-in, Supabase's local stack (`supabase start`), team profiles. Say so when those matter.
+Verified on 2026-11-03 with [netcode-sample-threejs-supabase](https://github.com/edgegap/netcode-sample-threejs-supabase) (Sumo Push from the Three.js minigames), a hosted Supabase project on the free plan, Supabase CLI 3.0.0, supabase-js 2.118.0 and the Edgegap free tier: `assets/tools/e2e.mjs` signed in two headless players, queued them through the Edge Function, both landed on one deployment in about 15 s, played a full match with their access tokens, the server's report created the match and updated both profiles, and the deployment stopped itself 14 s after the match. A browser did the same alone (matched after the 20 s expansion, with bots) and its leaderboard updated live. Checked against the live project: players can't change their wins, insert tickets or call `record_match()`; a missing or forged token is refused by the game server; `report-match` refuses a wrong secret, a ticket that isn't the player's, and a replayed report; a human winner gets the win.
 
 Why this shape, so you can defend it:
 - **The browser holds no secret.** It has the project URL and the publishable key (made to ship, limited by Row Level Security). The matchmaker token lives in Edge Function secrets, so only signed-in players can queue, and each ticket is recorded against a Supabase user.
@@ -39,7 +39,7 @@ Read, don't ask: the client (renderer, bundler or none, existing Supabase usage)
 
 - No game server yet, browser game: build it with `edgegap-threejs` first (room, phases, self-stop, Dockerfile), then come back. This skill's server and client templates patch that skill's files.
 - Colyseus server: `edgegap-colyseus` for hosting; take this skill's Supabase pieces (schema, functions, `server/supabase.js` in `onAuth`).
-- Engine server (Unity, Godot, Unreal): the schema, Edge Functions and client flow are the same over HTTP; the server needs a JWT library to verify ES256 tokens against JWKS (`references/game-server.md` §4). Not verified on Edgegap.
+- Engine server (Unity, Godot, Unreal): the schema, Edge Functions and client flow are the same over HTTP; the server needs a JWT library to verify ES256 tokens against JWKS (`references/game-server.md` §4).
 
 Ask, in one message, only what you couldn't infer: their Supabase organization (or permission to create a project), whether players already have accounts, and what the leaderboard ranks.
 
@@ -85,7 +85,7 @@ Read `references/client.md`. `assets/client/backend.js` is all the Supabase clie
 
 Cancel matters: a search left in the queue can start a server nobody joins. The template cancels on the Cancel button, on a new Find Match and on page close (`references/client.md` §3); keep that when you change the client.
 
-Hand-off: Supabase project ref and what's in it, app/version/matchmaker names, which secrets live where (never their values), how to ship a new server build (`edgegap-threejs` §5 of `deploy.md`), what wasn't tested, before launch: `inspect: false`, a lower `FIRST_JOIN_TIMEOUT_S` for servers whose players left before joining, link email/OAuth to anonymous users so progress survives devices, a cleanup job for old `tickets` rows, `edgegap-launch`.
+Hand-off: Supabase project ref and what's in it, app/version/matchmaker names, which secrets live where (never their values), how to ship a new server build (`edgegap-threejs` §5 of `deploy.md`), what was tested, before launch: `inspect: false`, a lower `FIRST_JOIN_TIMEOUT_S` for servers whose players left before joining, link email/OAuth to anonymous users so progress survives devices, a cleanup job for old `tickets` rows, `edgegap-launch`.
 
 ## Reference files
 

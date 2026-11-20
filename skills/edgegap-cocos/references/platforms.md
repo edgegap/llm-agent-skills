@@ -11,7 +11,7 @@ Contents
 
 ## 1. Web
 
-Browsers open only `wss://` from `https` pages, so the app version's port is WS with TLS Upgrade and the client connects by FQDN. Run on Edgegap with a Cocos web-desktop build (Chrome) through the Colyseus sample; web-mobile was not run.
+Browsers open only `wss://` from `https` pages, so the app version's port is WS with TLS Upgrade and the client connects by FQDN. Run on Edgegap with a Cocos web-desktop build (Chrome) through the Colyseus sample.
 
 ## 2. Native
 

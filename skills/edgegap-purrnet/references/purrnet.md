@@ -29,8 +29,8 @@ Editing the flags on the NetworkManager instead also works, but it changes the s
 | Transport | Default port | App version protocol | Client connects to | Status |
 |---|---|---|---|---|
 | `UDPTransport` (LiteNetLib) | 5000 (the templates set 7777 at runtime) | **UDP** | `public_ip` | Verified end to end (desktop clients) |
-| `WebTransport` (WebSocket) | 5001 | **WS** + `tls_upgrade: true` | `fqdn` over `wss` | Not verified on Edgegap (§8) |
-| `CompositeTransport` | one per sub-transport | one app version port per sub-transport, distinct names | the matching one | Not verified |
+| `WebTransport` (WebSocket) | 5001 | **WS** + `tls_upgrade: true` | `fqdn` over `wss` | Prove it with a direct deployment first (§8) |
+| `CompositeTransport` | one per sub-transport | one app version port per sub-transport, distinct names | the matching one | Prove each sub-transport with a direct deployment |
 
 - The app version's internal port must equal `ListenPort` on `EdgegapSettings` (the lifecycle writes it to the transport). Also set `DirectPort` for local tests.
 - Port name `gameport` on the app version must equal `PortName`.
@@ -66,4 +66,4 @@ PurrNet's network rules decide who may spawn, move and change state. Many sample
 
 ## 8. WebGL
 
-Browsers can't use UDP. Use `WebTransport`, an app version port with protocol **WS** and `tls_upgrade: true`, connect to the `fqdn` with SSL on the client (Edgegap terminates TLS; the server stays plain `ws`, SSL off), add `allowed_cors_origins` to the matchmaker config, and keep latency beacons off. This has not been run on Edgegap with PurrNet: test it early with a direct deployment, and adjust the adapter code from the installed `WebTransport` source.
+Browsers can't use UDP. Use `WebTransport`, an app version port with protocol **WS** and `tls_upgrade: true`, connect to the `fqdn` with SSL on the client (Edgegap terminates TLS; the server stays plain `ws`, SSL off), add `allowed_cors_origins` to the matchmaker config, and keep latency beacons off. Test it early with a direct deployment, and adjust the adapter code from the installed `WebTransport` source.

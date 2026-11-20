@@ -42,7 +42,7 @@ Last commit on each repo's default branch, checked 2026-11-16. **Current** = upd
 
 | Repo | Stack | Last commit | Status | Skill |
 |---|---|---|---|---|
-| [netcode-sample-threejs-rapier](https://github.com/edgegap/netcode-sample-threejs-rapier) | three.js + Rapier WASM physics, authoritative Node.js server, client prediction, slim server image, client on GitHub Pages; reference for browser/WebAssembly games (no matchmaker) | 2026-11-18 | Current (not run on Edgegap) | `edgegap-browser-wasm` |
+| [netcode-sample-threejs-rapier](https://github.com/edgegap/netcode-sample-threejs-rapier) | three.js + Rapier WASM physics, authoritative Node.js server, client prediction, slim server image, client on GitHub Pages; reference for browser/WebAssembly games (no matchmaker) | 2026-11-18 | Current | `edgegap-browser-wasm` |
 | [netcode-sample-threejs-minigames](https://github.com/edgegap/netcode-sample-threejs-minigames) | Three.js, five minigames, Node.js server, matchmaker | 2026-11-02 | Current | `edgegap-threejs` |
 | [netcode-sample-threejs-supabase](https://github.com/edgegap/netcode-sample-threejs-supabase) | Three.js + Supabase auth, profiles, leaderboard | 2026-11-04 | Current | `edgegap-supabase` |
 | [netcode-sample-threejs-vibe-coded](https://github.com/edgegap/netcode-sample-threejs-vibe-coded) | A vibe-coded single-player Three.js game made online multiplayer; tags `before` and `after` | 2026-11-04 | Current | `edgegap-vibe-coded`, `edgegap-threejs` |

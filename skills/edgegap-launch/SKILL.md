@@ -2,7 +2,7 @@
 name: edgegap-launch
 description: 'Take an Edgegap-hosted game from "the test deployment works" to live players: the launch checklist (token hygiene, app version settings, restart policy, max duration, self-stop, image caching, log storage), version naming and blue/green rollouts with zero matchmaking downtime, cost and leak control, rate limits, free-tier limits to lift before launch, observability (logs, metrics, deployment IDs), capacity planning with Edgegap, Private Fleets and persistent servers, and incident basics. Use when preparing a launch, beta or playtest on Edgegap, reviewing production readiness, rolling out a new server build, deploying builds from CI or GitHub Actions (edgegap/deploy-action), or when someone mentions going live, launch day, rollout, scaling, hosting costs or operating game servers with real players.'
 metadata:
-  version: "0.3.1"
+  version: "0.3.2"
 ---
 
 # Launching and operating on Edgegap
@@ -45,7 +45,7 @@ This assumes a test deployment already accepted a real client (`edgegap-local-te
 
   Secrets are `EDGEGAP_API_TOKEN` (a CI-only token) and the registry login, which the action needs as inputs because the API never returns it. The docs page is https://docs.edgegap.com/docs/tools-and-integrations/github-actions.
   - Promoting changes only the image of `promote-version`, not its ports, resources or env vars.
-  - That a running matchmaker picks the new image up without Stop → Start was not tested. Check it with a test match after the first promotion, or use the blue/green flow above with the version the action created.
+  - Check that a running matchmaker picks the new image up without Stop → Start with a test match after the first promotion, or use the blue/green flow above with the version the action created.
 
 **Cost and leak control**
 - Self-stop + restart policy Never + max duration on every version.

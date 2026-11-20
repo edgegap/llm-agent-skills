@@ -2,7 +2,7 @@
 name: edgegap-godot
 description: 'Godot 4 + Edgegap: take a Godot multiplayer game (MultiplayerAPI, @rpc, ENetMultiplayerPeer, WebSocketMultiplayerPeer, MultiplayerSpawner, netfox) to dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a Godot project (project.godot, .gd, .tscn, export_presets.cfg). It has tested GDScript templates (a server lifecycle autoload that waits for the matched players and stops its own deployment, a matchmaker client and Find Match button), the Edgegap Godot plugin build (export, image, push from the editor), app version ports (UDP for ENet, WS + TLS Upgrade for web and wss), matchmaker config, and fixes for Godot pitfalls: empty server logs, export allowlists that drop new scripts, join validation that silently blocks matched players. Use when a Godot dev wants online play: "host my Godot game", "nobody should host", "Find Match button", "Godot web multiplayer", or is debugging Godot deployments, ports or matchmaking on Edgegap.'
 metadata:
-  version: "0.2.5"
+  version: "0.2.6"
 ---
 
 # Edgegap for Godot 4: dedicated servers + matchmaking
@@ -11,7 +11,7 @@ Goal: a player clicks **Find Match**, the Edgegap matchmaker starts a headless G
 
 Where this comes from:
 - [edgegap/game-sample-godot-arena-shooter](https://github.com/edgegap/game-sample-godot-arena-shooter) (Godot 4.7.2, server-authoritative, `WebSocketMultiplayerPeer` on port 7000) ran end to end on Edgegap on 2026-10-20: two Windows clients pressed FIND MATCH, were matched onto the same deployment over `wss://` (TLS Upgrade), played, and the deployment stopped itself. Its `EDGEGAP.md` is a working reference. On 2026-10-28 it moved to the Edgegap Godot plugin's build: its preset and the plugin's default Dockerfile, unchanged, ran in a local container and on an Edgegap deployment: two `wss://` clients played a match and the deployment stopped itself.
-- The templates in `assets/godot/edgegap/` are that sample's server lifecycle and matchmaker client made game-agnostic. They were tested on 2026-10-20 with Godot 4.7.2 in a minimal project: a Linux dedicated server export in Docker, a fake matchmaker and two clients, with both ENet (UDP) and WebSocket. Two tickets → assignment → both clients joined → `match_ready` → `match_ended` → self-stop call with the raw token. ENet on a real Edgegap deployment wasn't run yet: prove it with Phase 4 before adding the matchmaker.
+- The templates in `assets/godot/edgegap/` are that sample's server lifecycle and matchmaker client made game-agnostic. They were tested on 2026-10-20 with Godot 4.7.2 in a minimal project: a Linux dedicated server export in Docker, a fake matchmaker and two clients, with both ENet (UDP) and WebSocket. Two tickets → assignment → both clients joined → `match_ready` → `match_ended` → self-stop call with the raw token. Prove ENet on a real Edgegap deployment with Phase 4 before adding the matchmaker.
 
 Use **dedicated (authoritative) servers**, not a player host, unless the developer explicitly wants host/client.
 

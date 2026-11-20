@@ -107,4 +107,4 @@ The point of a dedicated server is that it owns the game state. In Fish Game the
 
 ## 9. Transport
 
-Use whatever the game's netcode uses and declare that protocol on the app version port: ENet is UDP (Fish Game, port 7777). Browsers can't use UDP: a web build needs a WebSocket server and a WS port with TLS Upgrade, and clients then connect with `wss://<DnsName>:<Port>` (not run with Nakama; the Colyseus and Manus skills cover WS on Edgegap).
+Use whatever the game's netcode uses and declare that protocol on the app version port: ENet is UDP (Fish Game, port 7777). Browsers can't use UDP: a web build needs a WebSocket server and a WS port with TLS Upgrade, and clients then connect with `wss://<DnsName>:<Port>` (the Colyseus and Manus skills cover WS on Edgegap).

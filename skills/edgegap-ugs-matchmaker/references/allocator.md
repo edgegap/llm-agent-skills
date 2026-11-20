@@ -77,7 +77,7 @@ The secret is read per call through `IGameApiClient.SecretManager`, so rotating 
 
 ## 4. Deploying the module and the queue
 
-Requirements from Unity's README: the .NET SDK, the UGS CLI, a service account with **Unity Environments Viewer** and **Cloud Code Editor** on the project (deploying the queue's `.mmq` with the same account likely needs a Matchmaker role too; not checked here).
+Requirements from Unity's README: the .NET SDK, the UGS CLI, a service account with **Unity Environments Viewer** and **Cloud Code Editor** on the project (deploying the queue's `.mmq` with the same account likely needs a Matchmaker role too: add it if `ugs deploy` is refused).
 
 ```bash
 git clone https://github.com/Unity-Technologies/matchmaker-hosting-providers.git

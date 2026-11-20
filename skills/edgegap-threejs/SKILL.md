@@ -2,7 +2,7 @@
 name: edgegap-threejs
 description: 'Three.js / browser game + Edgegap: make a JavaScript web game multiplayer with an authoritative Node.js WebSocket server per match and the Edgegap matchmaker called from the page, end to end. Load this before using any Edgegap MCP tool on a Three.js, Babylon.js, PlayCanvas engine, Phaser or plain canvas/WebGL game that has (or needs) its own ws server rather than Colyseus or Nakama. Templates verified on Edgegap with five Three.js games (shooter, racer, 2v2 soccer, light cycles, sumo): a room with phases, bots, fixed tick and snapshots, self-stop, matchmaker teams, a no-build Three.js client with Find Match on the Edgegap JS SDK, wss retry, Dockerfile, WS + TLS Upgrade versions, one image for several games, a multi-profile matchmaker config, headless e2e scripts. Use for "make my three.js game multiplayer", "host my browser game server", "Find Match for a web game", "wss from an https page", "several mini-games on one matchmaker", or debugging them. Colyseus: edgegap-colyseus; Manus: edgegap-manus.'
 metadata:
-  version: "0.3.7"
+  version: "0.3.8"
 ---
 
 # Edgegap for Three.js and other browser games: one Node.js server per match
@@ -15,7 +15,7 @@ browser <--HOST_ASSIGNED {fqdn, ports.gameport.link}, ticket_id--
 browser --wss://<fqdn>:<port>, hello{name, ticket}--> Node.js server (one per match) --DELETE $ARBITRIUM_DELETE_URL--> stopped
 ```
 
-Verified on Edgegap on 2026-10-22 with [netcode-sample-threejs-minigames](https://github.com/edgegap/netcode-sample-threejs-minigames): five Three.js games (top-down shooter, kart racer, 2v2 soccer with matchmaker teams, light cycles, sumo brawler) from one image, one app version per game and one matchmaker with a profile per game. Headless players queued through the matchmaker landed on one deployment per game, played full matches over `wss` with TLS Upgrade, and every deployment stopped itself about 17 s after its match; deployments whose matched players never connected stopped after 120 s; a direct deployment (no matchmaker) did the same. The templates in `assets/` are that repo's shared files plus a skeleton game. Not run on Edgegap: Babylon.js/PlayCanvas/Phaser clients (the server and matchmaker parts don't depend on the renderer), mobile browsers, latency rules. Say so when those matter.
+Verified on Edgegap on 2026-10-22 with [netcode-sample-threejs-minigames](https://github.com/edgegap/netcode-sample-threejs-minigames): five Three.js games (top-down shooter, kart racer, 2v2 soccer with matchmaker teams, light cycles, sumo brawler) from one image, one app version per game and one matchmaker with a profile per game. Headless players queued through the matchmaker landed on one deployment per game, played full matches over `wss` with TLS Upgrade, and every deployment stopped itself about 17 s after its match; deployments whose matched players never connected stopped after 120 s; a direct deployment (no matchmaker) did the same. The templates in `assets/` are that repo's shared files plus a skeleton game. The server and matchmaker parts don't depend on the renderer.
 
 The matchmaker client, the e2e tool and the server's `ARBITRIUM_*`/`MM_*` parsing use the Edgegap JS SDK (`@edgegap/sdk` 1.1.0) since skill 0.2.0, checked locally with the skeleton game on 2026-11-02 (`MM_*` parsing, `REQUIRE_TICKET=1` refusing an unknown ticket, matchmaker teams, a full match and the self-stop request) and end to end on Edgegap the same day with the skeleton game and `REQUIRE_TICKET=1`: two headless players through `tools/e2e.mjs` landed on one deployment, played a full match over `wss` and the deployment stopped itself 17 s after it; a browser Find Match from `http://localhost:8080` (import map with the SRI hash) was matched alone after the 20 s expansion, joined with its ticket, played against a bot and the deployment stopped itself.
 
@@ -88,7 +88,7 @@ Read `references/deploy.md` §4.
 
 Shipping (optional, `deploy.md` §5): `assets/ci/server-image.yml` builds and pushes the image on every push to `main`, `assets/ci/pages.yml` publishes the page on GitHub Pages. The developer sets the registry secrets (`gh secret set ...`); never pass them through chat or files.
 
-Hand-off: what changed where; app, versions and matchmaker names; how to ship a new build (new tag → `edgegap_update_app_version` on each version, or new versions + matchmaker Stop → Edit → Start); what wasn't tested (two players on different networks is the developer's test); before launch: `inspect: false`, real origins only, `REQUIRE_TICKET=1` if only matched players may join, `edgegap-launch`.
+Hand-off: what changed where; app, versions and matchmaker names; how to ship a new build (new tag → `edgegap_update_app_version` on each version, or new versions + matchmaker Stop → Edit → Start); what was tested (two players on different networks is the developer's test); before launch: `inspect: false`, real origins only, `REQUIRE_TICKET=1` if only matched players may join, `edgegap-launch`.
 
 ## Reference files
 

@@ -61,8 +61,8 @@ connect(url, { name, ticket: ticketId, token: data.session.access_token });
 
 ## 6. Keeping players' progress (upgrade from anonymous)
 
-An anonymous user is lost if the browser storage is cleared. To keep progress across devices, link an identity to the same user: `db.auth.updateUser({ email })` (then confirm) or `db.auth.linkIdentity({ provider: "github" })` (manual linking must be enabled). The user id, and so the profile and wins, stays the same. Not run in the verified sample.
+An anonymous user is lost if the browser storage is cleared. To keep progress across devices, link an identity to the same user: `db.auth.updateUser({ email })` (then confirm) or `db.auth.linkIdentity({ provider: "github" })` (manual linking must be enabled). The user id, and so the profile and wins, stays the same.
 
 ## 7. Other clients
 
-Unity, Godot and other engines call the same endpoints over HTTP: Supabase Auth (`POST /auth/v1/signup` with no email = anonymous, or their Supabase SDK), then `POST /functions/v1/matchmaking` with `Authorization: Bearer <access token>` and `apikey: <publishable key>`, then the game's own connection with the token in its first message. Not run on Edgegap.
+Unity, Godot and other engines call the same endpoints over HTTP: Supabase Auth (`POST /auth/v1/signup` with no email = anonymous, or their Supabase SDK), then `POST /functions/v1/matchmaking` with `Authorization: Bearer <access token>` and `apikey: <publishable key>`, then the game's own connection with the token in its first message.

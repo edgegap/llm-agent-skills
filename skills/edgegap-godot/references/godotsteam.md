@@ -2,7 +2,7 @@
 
 For a Godot 4 game that uses Steam: a headless GodotSteam Server build logs on to Steam and checks each player's Steam auth ticket, running as an Edgegap deployment. Sample: [edgegap/server-sample-godotsteam-dedicated-server](https://github.com/edgegap/server-sample-godotsteam-dedicated-server) (MIT). Guide: https://docs.edgegap.com/docs/sample-projects/godot/godotsteam-server.
 
-Verified on Edgegap on 2026-11-09 with Godot 4.7.2, GodotSteam Server 4.12.1 and GodotSteam 4.24 (both GDExtension, Steamworks SDK 1.65): anonymous logon on the deployment, a Windows client's auth ticket validated, and the deployment stopped itself when the client left. On 2026-11-18 the sample moved to the Edgegap Godot plugin's build (1.0.10, vendored in `addons/edgegap/`): the dock's Export server, Containerize (with the sample's Dockerfile) and Deploy local container ran, the server logged on to Steam in the local container and a client authenticated. Not tested: the dock's upload and deploy buttons with this sample, an Edgegap deployment of the plugin-built image, and `logOn()` with a Game Server Login Token (GSLT).
+Verified on Edgegap on 2026-11-09 with Godot 4.7.2, GodotSteam Server 4.12.1 and GodotSteam 4.24 (both GDExtension, Steamworks SDK 1.65): anonymous logon on the deployment, a Windows client's auth ticket validated, and the deployment stopped itself when the client left. On 2026-11-18 the sample moved to the Edgegap Godot plugin's build (1.0.10, vendored in `addons/edgegap/`): the dock's Export server, Containerize (with the sample's Dockerfile) and Deploy local container ran, the server logged on to Steam in the local container and a client authenticated.
 
 ## Shape
 

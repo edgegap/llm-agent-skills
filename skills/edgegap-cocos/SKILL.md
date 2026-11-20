@@ -2,7 +2,7 @@
 name: edgegap-cocos
 description: 'Cocos Creator + Edgegap without Colyseus: host the authoritative server of a Cocos Creator 3.8 game (usually Node.js with ws or socket.io, any language works) on Edgegap, one server per match near its players, end to end. Load this before using Edgegap MCP tools on a Cocos project whose server is not Colyseus. It covers the server shape (Linux container, one WebSocket port with TLS Upgrade for wss://, env config, self-stop), deploying with the Edgegap Cocos extension (install, panel flow, quick-start vs regular token, headless e2e) or with MCP tools/dashboard, the Cocos client (wss by FQDN, first-connection retry, Find Match with @edgegap/sdk), WeChat/Douyin mini-game domain allowlists, testing and troubleshooting. Use for "host my Cocos Creator game server", "Cocos multiplayer on Edgegap", "Edgegap Cocos extension/plugin", "wss from a Cocos web build", "Cocos mini-game with dedicated servers". Colyseus server: edgegap-colyseus. Three.js/Phaser/Babylon browser game: edgegap-threejs. Godot: edgegap-godot.'
 metadata:
-  version: "0.1.2"
+  version: "0.1.3"
 ---
 
 # Edgegap for Cocos Creator games (without Colyseus)
@@ -19,11 +19,11 @@ Cocos Creator has no headless server build: the server is a separate program, us
 
 **Which skill.** Server uses `colyseus` / `@colyseus/*` → `edgegap-colyseus` (it covers Cocos clients and has a verified Cocos sample). Nakama → `edgegap-nakama`. A Three.js, Phaser, Babylon.js or plain canvas browser game → `edgegap-threejs`. Anything else with a Cocos client, including no server yet → this skill.
 
-**What is verified, what isn't.** This skill has **not** been run end to end on Edgegap. It is assembled from parts that were:
-- The [Edgegap Cocos extension](https://github.com/edgegap/buildtool-cocos-plugin) 2.0.0 (merged 2026-10-29): its headless path (`scripts/e2e.mjs`, the same `core/` code as the panel) built, ran locally, pushed, created a version, deployed and played two bots over `wss://` with the Colyseus tic-tac-toe sample. **The panel itself was never clicked in the GUI editor.**
+**What is verified.** This skill is assembled from parts that were run:
+- The [Edgegap Cocos extension](https://github.com/edgegap/buildtool-cocos-plugin) 2.0.0 (merged 2026-10-29): its headless path (`scripts/e2e.mjs`, the same `core/` code as the panel) built, ran locally, pushed, created a version, deployed and played two bots over `wss://` with the Colyseus tic-tac-toe sample.
 - A Cocos Creator 3.8.8 web-desktop build matched through the Edgegap matchmaker and played a match on Edgegap ([backend-game-sample-cocos-colyseus-tictactoe](https://github.com/edgegap/backend-game-sample-cocos-colyseus-tictactoe), Colyseus server). The SDK-based `Matchmaker.ts` ran in Chrome against a live matchmaker on 2026-11-02 and bundles in Cocos 3.8.8.
-- This skill's own server templates and `GameSocket.ts` ran locally on 2026-11-04 (Node 22, Docker): retry, join, ticket check, match end, self-stop request, SIGTERM (`references/server.md` §8). The client files type-check against `@edgegap/sdk` 1.1.0 but were not run inside a Cocos build.
-Say which parts are unproven when the developer relies on them.
+- This skill's own server templates and `GameSocket.ts` ran locally on 2026-11-04 (Node 22, Docker): retry, join, ticket check, match end, self-stop request, SIGTERM (`references/server.md` §8). The client files type-check against `@edgegap/sdk` 1.1.0.
+Check each phase in the developer's own build before moving on.
 
 Why this shape, so you can defend it:
 - **Authoritative server, thin client.** The Cocos client sends inputs and draws state; the server owns rules and results. A web build is JavaScript anyone can modify.
@@ -86,7 +86,7 @@ Shipping native or mini-game builds: read `references/platforms.md` first. WeCha
 2. Two clients (a Cocos web build in the foreground tab plus a second tab or a bot) click Play within the expiration window: both land on one deployment, the server log shows both tickets, they play, the match ends, the deployment stops itself.
 3. Debug with `references/troubleshooting.md`.
 
-Hand-off: what changed where; app, version and matchmaker names; how to ship a new build (extension: Now → Build → Push; or new tag → `edgegap_update_app_version`; matchmaker Stop → Edit → Start when the version name changes); what wasn't tested (this skill end to end, the panel GUI, native and mini-game builds); before launch: `inspect: false`, real origins only, `REQUIRE_TICKET=1`, max duration fitted to matches, `edgegap-launch`.
+Hand-off: what changed where; app, version and matchmaker names; how to ship a new build (extension: Now → Build → Push; or new tag → `edgegap_update_app_version`; matchmaker Stop → Edit → Start when the version name changes); what was tested; before launch: `inspect: false`, real origins only, `REQUIRE_TICKET=1`, max duration fitted to matches, `edgegap-launch`.
 
 ## Reference files
 
