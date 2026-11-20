@@ -32,6 +32,14 @@
     "expected_skill": "edgegap-chat-canvas"
   },
   {
+    "query": "I made a little bomb-passing game in Gemini Canvas. Can it be online so my friends can play from their phones?",
+    "expected_skill": "edgegap-chat-canvas"
+  },
+  {
+    "query": "How do I prompt Gemini Canvas so the HTML game can run on a dedicated server later?",
+    "expected_skill": "edgegap-chat-canvas"
+  },
+  {
     "query": "I vibe coded a game in Cursor, it's one index.html with a canvas. How do I add online multiplayer?",
     "expected_skill": "edgegap-vibe-coded"
   },
