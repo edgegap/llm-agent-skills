@@ -2,6 +2,13 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.44.0 (unreleased)
+
+`edgegap-nakama` follows the Edgegap Fleet Manager for Nakama to Nakama 3.42.0 (edgegap/backend-nakama-edgegap-plugin#13, `902c9aa`). `NewEdgegapFleetManager` now takes an `EdgegapConfig` instead of the `initializer` and no longer reads the runtime env itself, and Fleet Managers can be registered by name with their own namespace.
+
+- `edgegap-nakama` 0.3.0: Nakama 3.42.0, `nakama-pluginbuilder:3.42.0` (one `NAKAMA_VERSION` build arg), nakama-common v1.49.0, Go 1.27.3 and nakama-edgegap `902c9aa`; `go.sum` checksums from sum.golang.org. `assets/nakama/main.go` builds the config with `edgegapConfigFromEnv` (the plugin's own code; same env var names, so `.env` and compose are unchanged). `references/nakama-module.md` §1 covers `EdgegapConfig`, its defaults, startup validation, `RegisterFleetManagerByName` and namespaced RPC and storage names; `references/game-server.md` lists `NAKAMA_EDGEGAP_NAMESPACE`; `references/infra.md` and `references/troubleshooting.md` give the version pairs for 3.42/3.41/3.39 and the new errors. Not built or run yet on 3.42: the module still needs a build with `nakama-pluginbuilder:3.42.0` and a load in Nakama 3.42.0.
+- Versions: `edgegap` 0.44.0, `edgegap-nakama` 0.3.0.
+
 ## 0.43.0 (unreleased)
 
 `edgegap-chat-canvas` covers Gemini Canvas, from [netcode-sample-gemini-bomb-tag](https://github.com/edgegap/netcode-sample-gemini-bomb-tag). Verified on Edgegap on 2026-11-20: Gemini (free account, Canvas tool, model on Auto) wrote Bomb Tag from the prompt that also asks for an empty `createWorld()`, a start spot per `addPlayer()`, `setInput()` for every player and bots in `step()`, and its first answer needed no fix; the split needed no edits to the block; two browser tabs played a match on a direct deployment (`?server=`), and on the matchmaker shared by all three chat samples two headless players and two browser tabs (Find match) were matched onto one deployment; every server stopped itself.

@@ -1,19 +1,40 @@
 # The Nakama Go module
 
-`assets/nakama/main.go` is the verified module from edgegap/backend-game-sample-godot-nakama-fishgame with the game-specific parts removed. It compiles with `heroiclabs/nakama-pluginbuilder:3.41.0` (and did with 3.39.0 before). This file explains each piece and what to adapt.
+`assets/nakama/main.go` is the verified module from edgegap/backend-game-sample-godot-nakama-fishgame with the game-specific parts removed, updated for Nakama 3.42.0 and nakama-edgegap `902c9aa`. This file explains each piece and what to adapt.
 
-Facts below about the plugin were read in nakama-edgegap's code at commit `20d849e` (the tagged `0.4.0` content) and rechecked at `cd9022a`, whose only behavior change is that reservation cleanup no longer drops the reserved seats of an instance that is still Requested or Running. If the pinned commit changes, re-read `pkg/fleetmanager/` before trusting them.
+Facts below about the plugin were read in nakama-edgegap's code at commit `902c9aa` (edgegap/backend-nakama-edgegap-plugin#13, Nakama 3.42.0). Earlier pins: `20d849e` (the tagged `0.4.0` content, Nakama 3.39) and `cd9022a` (Nakama 3.41). If the pinned commit changes, re-read `pkg/fleetmanager/` before trusting them.
 
-## 1. Register the Fleet Manager
+## 1. Configure and register the Fleet Manager
+
+Since `902c9aa` (Nakama 3.42) the constructor takes an `EdgegapConfig` instead of the `initializer`, and the plugin no longer reads any env var itself:
 
 ```go
-efm, err := fleetmanager.NewEdgegapFleetManager(ctx, logger, db, nk, initializer)
+cfg, err := edgegapConfigFromEnv(ctx)  // in the template's main.go
+efm, err := fleetmanager.NewEdgegapFleetManager(ctx, logger, db, nk, cfg)
 initializer.RegisterFleetManager(efm)
 ```
 
-`NewEdgegapFleetManager` reads its settings from Nakama's **runtime env** (`--runtime.env` or `runtime.env` in the YAML config), not the container environment: `EDGEGAP_API_URL`, `EDGEGAP_API_TOKEN` (with its `token ` prefix), `EDGEGAP_APPLICATION`, `INITIAL_EDGEGAP_VERSION`, `EDGEGAP_PORT_NAME`, `NAKAMA_ACCESS_URL`, plus Nakama's `runtime.http_key`. Missing `NAKAMA_ACCESS_URL` fails module load. Optional: `EDGEGAP_POLLING_INTERVAL` (15m, re-sync with Edgegap), `NAKAMA_CLEANUP_INTERVAL` (1m), `NAKAMA_RESERVATION_MAX_DURATION` (30s, seat reservations for `instance_join`).
+Code written for `cd9022a` or older (`NewEdgegapFleetManager(ctx, logger, db, nk, initializer)`) no longer compiles: `cannot use initializer (variable of interface type runtime.Initializer) as fleetmanager.EdgegapConfig value`. Copy `edgegapConfigFromEnv` from the template (same as the plugin's own `main.go`) and pass `cfg`.
 
-It also registers RPCs: the event endpoints the game server and Edgegap's webhooks call (`edgegap_instance`, `edgegap_connection`, `edgegap_deployment_ready/_error/_terminated`), S2S version RPCs (`update_edgegap_version`, `get_edgegap_version`), and client RPCs (`instance_create`, `instance_get`, `instance_list`, `instance_join`, §7).
+`fleetmanager.NewEdgegapConfig(apiUrl, apiToken, application, portName, nakamaAccessUrl)` takes the required values and sets the defaults; the optional fields can then be set on the struct:
+
+| Field | Runtime env read by `edgegapConfigFromEnv` | Default |
+|---|---|---|
+| `ApiUrl` | `EDGEGAP_API_URL` | required |
+| `ApiToken` | `EDGEGAP_API_TOKEN` (with its `token ` prefix) | required |
+| `Application` | `EDGEGAP_APPLICATION` | required |
+| `PortName` | `EDGEGAP_PORT_NAME` | required |
+| `NakamaAccessUrl` | `NAKAMA_ACCESS_URL` (`https://`) | required |
+| `InitialVersion` | `INITIAL_EDGEGAP_VERSION` (falls back to `EDGEGAP_VERSION`) | empty |
+| `PollingInterval` | `EDGEGAP_POLLING_INTERVAL` (re-sync with Edgegap; empty disables) | 15m |
+| `CleanupInterval` | `NAKAMA_CLEANUP_INTERVAL` (reservation expiry; empty disables) | 1m |
+| `ReservationMaxDuration` | `NAKAMA_RESERVATION_MAX_DURATION` (seat reservations for `instance_join`) | 30s |
+
+The values still come from Nakama's **runtime env** (`--runtime.env` or `runtime.env` in the YAML config), not the container environment, because `edgegapConfigFromEnv` reads `RUNTIME_CTX_ENV`. Any missing required key fails module load (`<KEY> not found in environment`). Nakama's `runtime.http_key` is read by the plugin from Nakama's config. `NewEdgegapFleetManager` validates the config, including a call to Edgegap checking that the application exists, so a wrong token or application name stops Nakama at startup.
+
+Registering also registers RPCs: the event endpoints the game server and Edgegap's webhooks call (`edgegap_instance`, `edgegap_connection`, `edgegap_deployment_ready/_error/_terminated`), S2S version RPCs (`update_edgegap_version`, `get_edgegap_version`), and client RPCs (`instance_create`, `instance_get`, `instance_list`, `instance_join`, §7). With `RegisterFleetManager` (the template) these IDs and the storage names (`_edgegap_instances`, `system/edgegap_version`) are unchanged from earlier versions, so an existing Nakama database keeps its instances and stored version.
+
+**Several Edgegap applications (Nakama 3.42+).** Create one `EdgegapConfig` per application and register each with `initializer.RegisterFleetManagerByName("<name>", efm)`; get it back with `nk.GetFleetManagerByName("<name>")`. The name (case-insensitive, lowercased) becomes a namespace: RPCs become `edgegap_<name>_instance_create`, `edgegap_<name>_update_version`, `edgegap_<name>_instance`..., storage `edgegap_<name>_instances` and version key `edgegap_<name>_version`. Each deployment gets `NAKAMA_EDGEGAP_NAMESPACE` and event URLs for its own namespace, so game servers need no change. Keep one default `RegisterFleetManager` unless the game really deploys more than one application.
 
 ## 2. The AfterAuthenticate hook: the game's real sign-in method
 
@@ -92,6 +113,6 @@ The Docker image then needs both: the Go plugin from the builder stage and the `
 
 ## 7. The plugin's client RPCs
 
-`instance_create`, `instance_join`, `instance_list` and `instance_get` are registered with every Fleet Manager and callable by any signed-in player. `instance_create` starts an Edgegap deployment for the caller: anyone with an account can start servers that the developer pays for. The event RPCs (`edgegap_instance`, `edgegap_connection`) don't check for the http_key in the code at `20d849e` or `cd9022a`, so a player who knows an instance ID (it is in notification 111) may be able to send `STOP` for it. Not exploited in testing; tell the developer, don't hide it. Mitigations in the developer's control: keep matches on the matchmaker, rate-limit or monitor deployments (`edgegap-launch`), and raise it upstream (https://github.com/edgegap/backend-nakama-edgegap-plugin) before launch.
+`instance_create`, `instance_join`, `instance_list` and `instance_get` are registered with every Fleet Manager and callable by any signed-in player. `instance_create` starts an Edgegap deployment for the caller: anyone with an account can start servers that the developer pays for. The event RPCs (`edgegap_instance`, `edgegap_connection`) don't check for the http_key in the code at `20d849e`, `cd9022a` or `902c9aa`, so a player who knows an instance ID (it is in notification 111) may be able to send `STOP` for it. Not exploited in testing; tell the developer, don't hide it. Mitigations in the developer's control: keep matches on the matchmaker, rate-limit or monitor deployments (`edgegap-launch`), and raise it upstream (https://github.com/edgegap/backend-nakama-edgegap-plugin) before launch.
 
 Private matches: Fish Game dropped its "match by ID" mode. `instance_create`/`instance_join`, or a custom RPC that calls `Create` for a party, could bring it back.
