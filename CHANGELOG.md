@@ -2,6 +2,12 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.44.0 (unreleased)
+
+A skill for HTML5 2D games (Phaser, canvas, PixiJS, Kaplay), from [netcode-sample-html5-phaser](https://github.com/edgegap/netcode-sample-html5-phaser). Verified on Edgegap on 2026-11-24 with a direct deployment: the image built with Docker Engine in WSL and pushed to the Edgegap registry, an app version with WS + TLS Upgrade deployed in Toronto in about 10 s, two headless players played a full Splat Arena match over `wss`, and the deployment stopped itself 25 s after the match. Locally, `npm test` played a full match with bots and two browser tabs played together. The matchmaker path (Find Match) was not run with this sample yet.
+
+- `edgegap-html5` 0.1.0: SKILL.md (2D server rules, Phaser client and its pitfalls, other renderers, Windows build-and-deploy with tokens kept in the console), `assets/client/` (Phaser 4 client), `assets/server/game.js` and `assets/server/util.js` (2D), `assets/tools/` (headless player, local test, `edgegap-env.ps1`, `edgegap-test.ps1`), `assets/matchmaker/splat-arena.json`. It shares the room, lifecycle, Dockerfile, e2e and references of `edgegap-threejs`.
+- Routing: `edgegap` 0.44.0, `edgegap-threejs` 0.3.9 (Phaser and 2D canvas go to `edgegap-html5`), `edgegap-samples` 0.1.13 (catalog), new `evals/html5-routing-eval.json`, two queries in `evals/threejs-routing-eval.json` now expect `edgegap-html5`.
 ## 0.43.0 (unreleased)
 
 `edgegap-chat-canvas` covers Gemini Canvas, from [netcode-sample-gemini-bomb-tag](https://github.com/edgegap/netcode-sample-gemini-bomb-tag). Verified on Edgegap on 2026-11-20: Gemini (free account, Canvas tool, model on Auto) wrote Bomb Tag from the prompt that also asks for an empty `createWorld()`, a start spot per `addPlayer()`, `setInput()` for every player and bots in `step()`, and its first answer needed no fix; the split needed no edits to the block; two browser tabs played a match on a direct deployment (`?server=`), and on the matchmaker shared by all three chat samples two headless players and two browser tabs (Find match) were matched onto one deployment; every server stopped itself.
