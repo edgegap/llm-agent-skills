@@ -80,6 +80,18 @@ def check_manifests() -> None:
     codex = json.loads((ROOT / ".codex-plugin/plugin.json").read_text(encoding="utf-8"))
     if codex.get("version") != plugin.get("version"):
         errors.append(f".codex-plugin/plugin.json version {codex.get('version')} differs from .claude-plugin/plugin.json {plugin.get('version')}")
+    ui = codex.get("interface", {})
+    for key, limit in (("displayName", 30), ("shortDescription", 30), ("longDescription", 4000), ("developerName", 80)):
+        if len(ui.get(key, "")) > limit:
+            errors.append(f".codex-plugin/plugin.json: interface.{key} is over {limit} characters (Plugins Directory limit)")
+    if len(codex.get("description", "")) > 4000 or len(codex.get("keywords", [])) > 25:
+        errors.append(".codex-plugin/plugin.json: description over 4000 characters or more than 25 keywords")
+    for prompt in ui.get("defaultPrompt", []):
+        if len(prompt) > 128:
+            errors.append(f".codex-plugin/plugin.json: defaultPrompt over 128 characters: {prompt[:40]}...")
+    for key in ("logo", "composerIcon"):
+        if not (ROOT / ui.get(key, "missing")).exists():
+            errors.append(f".codex-plugin/plugin.json: interface.{key} file not found")
     for key in ("skills", "mcpServers"):
         if not (ROOT / codex.get(key, "")).exists():
             errors.append(f".codex-plugin/plugin.json: {key} path {codex.get(key)} not found")

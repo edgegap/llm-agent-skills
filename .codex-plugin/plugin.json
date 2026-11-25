@@ -28,7 +28,7 @@
   "mcpServers": "./.codex-plugin/mcp.json",
   "interface": {
     "displayName": "Edgegap",
-    "shortDescription": "Put your game online: servers and matchmaking",
+    "shortDescription": "Game servers and matchmaking",
     "longDescription": "Turn a game you built with Codex into online matches. One authoritative server per match on Edgegap, a Find Match button backed by Edgegap's matchmaker, a GitHub Actions image build, and tests, with workflows verified on Edgegap for browser games, Unity, Unreal, Godot and common game backends. Connect the Edgegap MCP server to let Codex deploy, read logs and clean up for you.",
     "developerName": "Edgegap",
     "category": "Developer Tools",
@@ -43,7 +43,8 @@
     "defaultPrompt": [
       "Make this game online multiplayer on Edgegap with a Find Match button"
     ],
-    "logo": "./.codex-plugin/icon.png",
-    "screenshots": []
+    "logo": "./assets/icon.png",
+    "screenshots": [],
+    "composerIcon": "./assets/icon.png"
   }
 }
