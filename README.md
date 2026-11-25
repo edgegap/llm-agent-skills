@@ -156,6 +156,8 @@ The plugin installs every skill (call one with `$edgegap`, `$edgegap-threejs`...
 
 Without the plugin, add the server yourself (`codex mcp add edgegap --url https://mcp.edgegap.dev/mcp --bearer-token-env-var EDGEGAP_API_TOKEN`) and install the skills with `npx skills add edgegap/llm-agent-skills --skill "*"`, which puts them in `.agents/skills`, where Codex reads them.
 
+Worked example: [netcode-sample-codex-slime-sumo](https://github.com/edgegap/netcode-sample-codex-slime-sumo), where Codex built a Phaser game with OpenAI's Game Studio plugin, then made it online multiplayer on Edgegap with this plugin from one prompt (every prompt is in its `PROMPTS.md`). On Windows, the Codex CLI's sandbox may only allow reading files; run it in the ChatGPT desktop app, in WSL, or start `codex` with `--dangerously-bypass-approvals-and-sandbox` in the game's folder.
+
 To keep Codex on the Edgegap rules in a game repo, copy [`skills/edgegap/assets/AGENTS.md`](skills/edgegap/assets/AGENTS.md) into the repo's `AGENTS.md`.
 
 ### Other agents
