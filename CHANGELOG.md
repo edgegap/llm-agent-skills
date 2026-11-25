@@ -2,6 +2,13 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.45.1 (unreleased)
+
+The hosted Edgegap MCP server's URL is now `https://mcp.edgegap.com/mcp` (MCP 0.19.16). The earlier `https://mcp.edgegap.dev/mcp` serves the same server, so installs made with it keep working.
+
+- `.mcp.json` (Claude Code plugin), `.codex-plugin/mcp.json` (Codex plugin) and the README use the new URL.
+- `edgegap-fishnet` 0.3.7, `edgegap-godot` 0.2.7, `edgegap-manus` 0.2.4, `edgegap-ngo` 0.2.7, `edgegap-purrnet` 0.3.7, `edgegap-unity` 0.2.7, `edgegap-unreal` 0.4.3 (`references/deploy.md`) and `edgegap` 0.45.1 (`assets/AGENTS.md`, `references/agent-rules.md`): the connect commands use the new URL.
+
 ## 0.45.0 (unreleased)
 
 Codex worked example and Plugins Directory listing fields, from [netcode-sample-codex-slime-sumo](https://github.com/edgegap/netcode-sample-codex-slime-sumo). Verified on Edgegap on 2026-11-25: Codex CLI 0.172.0 with OpenAI's Game Studio plugin wrote Slime Sumo (Phaser + Vite, solo vs bots) from one prompt; with this plugin (0.44.0, installed from GitHub) and the hosted MCP server, one more prompt made it online: Codex loaded `edgegap-vibe-coded`, `edgegap-threejs` and `edgegap`, moved the rules into one module, added the server, Find Match and tests, validated the Dockerfile, pushed the image, created the app and version, deployed a test server, joined it from two browser tabs over `wss://` and stopped it. Through a matchmaker, two browser tabs were matched onto one server in 16 s and the server stopped itself about 30 s after both left.
