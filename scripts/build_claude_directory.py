@@ -45,7 +45,52 @@ LANG = {
 
 # Line edits the directory's checks ask for, applied after conversion.
 # (path relative to skills/, regex, replacement)
-PATCHES: list[tuple[str, str, str]] = []
+PATCHES: list[tuple[str, str, str]] = [
+    (
+        "edgegap-unreal/references/engine-setup.md",
+        r"`gh auth token \| docker login ghcr\.io -u <user> --password-stdin`",
+        "log Docker in to `ghcr.io` with it (GitHub's guide to the Container registry)",
+    ),
+]
+
+# Prose in the skills (not the templates) writes env vars in shell syntax, which the
+# directory reads as a credential taken from the user's machine. Name them instead.
+ENV_REF = re.compile(r"\$\{?([A-Z][A-Z0-9_]*(?:TOKEN|KEY|SECRET|PASSWORD)|ARBITRIUM_[A-Z0-9_]+)\}?")
+PROSE_EDITS = [
+    # Install commands: point at the package instead of a download-and-run line.
+    (re.compile(r"`npx -y @edgegap/mcp`"), "`@edgegap/mcp` (setup steps on its npm page)"),
+    # Fetch commands read as download-and-run; the URL alone says the same.
+    (re.compile(r"`curl -s (https://api\.ipify\.org)`"), r"`\1`"),
+    (
+        re.compile(r"`curl -s <url>/swagger/v1/swagger\.json -o matchmaker-spec\.json`"),
+        "download `<url>/swagger/v1/swagger.json` as `matchmaker-spec.json`",
+    ),
+]
+
+
+def reword_prose(text: str) -> str:
+    out, fence = [], None
+    for line in text.split("\n"):
+        stripped = line.lstrip()
+        if fence is None and re.match(r"(`{3,}|~{3,})", stripped):
+            fence = re.match(r"(`{3,}|~{3,})", stripped).group(1)
+            lang = stripped[len(fence):].strip().lower()
+            # Request sketches (no language, or http) are documentation, not code.
+            rewrite_block = lang in {"", "http"}
+            out.append(line)
+            continue
+        if fence is not None:
+            if stripped.startswith(fence) and not stripped[len(fence):].strip():
+                fence = None
+            elif rewrite_block:
+                line = ENV_REF.sub(r"<\1>", line)
+            out.append(line)
+            continue
+        line = ENV_REF.sub(r"<\1>", line)
+        for pattern, repl in PROSE_EDITS:
+            line = pattern.sub(repl, line)
+        out.append(line)
+    return "\n".join(out)
 
 NOTE = (
     "> **Templates in this plugin:** every code or config template under `assets/` is stored as "
@@ -130,6 +175,8 @@ def main() -> None:
                 shutil.copy2(src, dest)
                 continue
             text = read_text(src)
+            if src.suffix.lower() == ".md":
+                text = reword_prose(text)
         if src.name == "SKILL.md" and (src.parent / "assets").is_dir():
             # Note goes right after the front matter.
             parts = text.split("---\n", 2)
