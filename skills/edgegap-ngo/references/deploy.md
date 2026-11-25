@@ -73,7 +73,7 @@ Verify with `edgegap_list_app_versions`: `registry_credentials_set: true`. A reg
 
 ## 5. Direct test deployment
 
-1. The plugin's **Deploy to cloud** (deploys near the developer's IP, tag `quickstart`; **Stop last deployment** stops it), or `edgegap_deploy` with the app, version, the developer's public IP (`curl -s https://api.ipify.org`) and `tags: ["mcp-test"]`.
+1. The plugin's **Deploy to cloud** (deploys near the developer's IP, tag `quickstart`; **Stop last deployment** stops it), or `edgegap_deploy` with the app, version, the developer's public IP (`https://api.ipify.org`) and `tags: ["mcp-test"]`.
 2. `edgegap_wait_for_deployment` → `fqdn`, `public_ip`, external port of `gameport`. `edgegap_get_deployment_logs`: `Edgegap Server | Starting server on 0.0.0.0:7777.` and `Deployment '<id>' started ... 0 matched player(s)`.
 3. Two clients connect to `<public_ip>:<external>` (the game's own connect UI, or the flags in §6). UnityTransport over UDP needs the IP, not the fqdn. Logs: `Edgegap Server | 2 player(s) connected.`
 4. `edgegap_stop_deployment`, or close both clients and watch the server stop itself 30 s later. Nobody joining within 120 s also stops it.

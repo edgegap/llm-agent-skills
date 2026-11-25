@@ -88,7 +88,7 @@ Verify with `edgegap_list_app_versions`: `registry_credentials_set: true`, and `
 
 ## 5. Direct test deployment
 
-1. `edgegap_deploy` with the app, version, the developer's public IP (`curl -s https://api.ipify.org`) and `tags: ["mcp-test"]`.
+1. `edgegap_deploy` with the app, version, the developer's public IP (`https://api.ipify.org`) and `tags: ["mcp-test"]`.
 2. `edgegap_wait_for_deployment` → `fqdn`, `public_ip`, external port of `gameport`. `edgegap_get_deployment_logs`: `EDGEGAP listening transport=... port=7777` and `EDGEGAP ready edgegap=true request_id=<id> ... expected_players=0`.
 3. WebSocket: `curl -i -H "Connection: Upgrade" -H "Upgrade: websocket" -H "Sec-WebSocket-Version: 13" -H "Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==" https://<fqdn>:<external>/` answers `101` (proves the port and TLS Upgrade; it counts as a peer for a moment). ENet has no handshake curl can do: prove it with a client.
 4. Two clients join (`TEST_CONNECT`-style env var, a debug field, or `EdgegapMatchmaker.create_client_peer({"host": ..., "port": ..., "url": ...})`). Logs: `player_joined` ×2, `match_ready players=2` after the 10 s grace (no tickets on a direct deploy).

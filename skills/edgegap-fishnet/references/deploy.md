@@ -65,7 +65,7 @@ Verify with `edgegap_list_app_versions`: `registry_credentials_set: true`, and `
 
 ## 5. Direct test deployment
 
-1. `edgegap_deploy` with the app, version, the developer's public IP (`curl -s https://api.ipify.org`) and `tags: ["mcp-test"]`.
+1. `edgegap_deploy` with the app, version, the developer's public IP (`https://api.ipify.org`) and `tags: ["mcp-test"]`.
 2. `edgegap_wait_for_deployment` → `fqdn`, `public_ip`, external port. `edgegap_get_deployment_logs`: expect `Edgegap Server | Starting server on 0.0.0.0:7770.` and `Deployment '<id>' started ... 0 matched player(s)`.
 3. Bayou port check:
    ```bash

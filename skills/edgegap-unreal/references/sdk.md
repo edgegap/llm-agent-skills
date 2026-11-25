@@ -132,7 +132,7 @@ python generator/generate.py --service matchmaker --spec <matchmaker API URL> --
 - A URL that doesn't end in `.json` gets `/swagger/v1/swagger.json` appended. Only `EdgegapMM*` files under `Public/Generated` and `Private/Generated` are written. Rebuild the editor afterwards.
 - Run it again whenever profiles or rules change; the compiler then flags attributes the game no longer sends.
 - Optional: `FindMatch(Profile, AttributesJson, ...)` works for any profile without regenerating.
-- Each generated file records the spec it came from, so generating from a URL writes the matchmaker hostname into the source. In a public repo, save the spec to a file (`curl -s <url>/swagger/v1/swagger.json -o matchmaker-spec.json`, keep it out of git) and generate from that.
+- Each generated file records the spec it came from, so generating from a URL writes the matchmaker hostname into the source. In a public repo, save the spec to a file (download `<url>/swagger/v1/swagger.json` as `matchmaker-spec.json`, keep it out of git) and generate from that.
 
 ## 7. Editor panel (optional build path)
 

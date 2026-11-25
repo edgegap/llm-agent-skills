@@ -82,7 +82,7 @@ Do this once per new image, before building a matchmaker or backend on top of it
 
 1. `edgegap_list_registry_tags` → the tag is there.
 2. `edgegap_list_app_versions` → the version points at that tag, `registry_credentials_set: true`, ports and protocol right (and `tls_upgrade` on WS ports for browsers).
-3. `edgegap_deploy` with the developer's public IP as the user (`curl -s https://api.ipify.org`) and a tag such as `agent-test`. Record the `request_id`.
+3. `edgegap_deploy` with the developer's public IP as the user (`https://api.ipify.org`) and a tag such as `agent-test`. Record the `request_id`.
 4. `edgegap_wait_for_deployment` → `fqdn`, `public_ip`, external ports.
 5. `edgegap_get_deployment_logs` → boot line and READY, no crash loop, no restarts. Read them again while the test match is still on: a server that self-stops takes its logs with it seconds after the match.
 6. For WS ports, prove the port and TLS Upgrade answer:

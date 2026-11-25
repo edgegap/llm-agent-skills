@@ -114,7 +114,7 @@ Dashboard version settings worth knowing: **Restart policy** "Never" is recommen
 
 Do this before the matchmaker. It proves image, ports, and netcode work, and isolates later matchmaker issues.
 
-1. `edgegap_deploy` with `application`, `version`, `users: {"ip_addresses": ["<developer public IP>"]}` (ask, or get it from `curl -s https://api.ipify.org`), `tags: ["mcp-test"]`. Costs a little (free tier: free, 1 at a time).
+1. `edgegap_deploy` with `application`, `version`, `users: {"ip_addresses": ["<developer public IP>"]}` (ask, or get it from `https://api.ipify.org`), `tags: ["mcp-test"]`. Costs a little (free tier: free, 1 at a time).
 2. `edgegap_wait_for_deployment` → `fqdn`, `public_ip`, `ports[].external`.
 3. `edgegap_get_deployment_logs`: expect the server startup lines, transport listening, and `Edgegap Server | Deployment '...' started`. A crash loop or OOM shows here.
 4. Connect a client to it directly: Editor play mode with the transport address/port set to `public_ip`/`fqdn` + external port (WS + TLS: `wss://fqdn:external`). The server may need up to ~1 min after Ready before it accepts connections. Optionally write a temporary "Direct Connect" field in the client for this.
