@@ -140,7 +140,7 @@ Manual copies don't update themselves; copy again after pulling.
 Then add the Edgegap MCP server yourself:
 
 ```bash
-claude mcp add --transport http edgegap https://mcp.edgegap.dev/mcp -H "Authorization: token <YOUR_EDGEGAP_API_TOKEN>" --scope user
+claude mcp add --transport http edgegap https://mcp.edgegap.com/mcp -H "Authorization: token <YOUR_EDGEGAP_API_TOKEN>" --scope user
 ```
 
 ### Codex: plugin
@@ -154,7 +154,7 @@ codex plugin add edgegap@edgegap
 
 The plugin installs every skill (call one with `$edgegap`, `$edgegap-threejs`... or just describe what you want) **and** the hosted Edgegap MCP server, which reads your [Edgegap API token](https://app.edgegap.com/user-settings?tab=tokens) from the `EDGEGAP_API_TOKEN` environment variable. Set it to the UUID only, in the environment Codex starts from; Codex sends it as `Authorization: Bearer <token>`, which the hosted server accepts. The token stays out of your project. `codex mcp list` shows `edgegap` with `Bearer token` auth.
 
-Without the plugin, add the server yourself (`codex mcp add edgegap --url https://mcp.edgegap.dev/mcp --bearer-token-env-var EDGEGAP_API_TOKEN`) and install the skills with `npx skills add edgegap/llm-agent-skills --skill "*"`, which puts them in `.agents/skills`, where Codex reads them.
+Without the plugin, add the server yourself (`codex mcp add edgegap --url https://mcp.edgegap.com/mcp --bearer-token-env-var EDGEGAP_API_TOKEN`) and install the skills with `npx skills add edgegap/llm-agent-skills --skill "*"`, which puts them in `.agents/skills`, where Codex reads them.
 
 Worked example: [netcode-sample-codex-slime-sumo](https://github.com/edgegap/netcode-sample-codex-slime-sumo), where Codex built a Phaser game with OpenAI's Game Studio plugin, then made it online multiplayer on Edgegap with this plugin from one prompt (every prompt is in its `PROMPTS.md`). On Windows, the Codex CLI's sandbox may only allow reading files; run it in the ChatGPT desktop app, in WSL, or start `codex` with `--dangerously-bypass-approvals-and-sandbox` in the game's folder.
 
@@ -171,7 +171,7 @@ Each skill is a plain folder: `SKILL.md`, plus `references/` and sometimes `asse
 Everything here happens only when you ask the agent to work on your game, and most steps show you the command first.
 
 **Network**
-- **Hosted Edgegap MCP server**, `https://mcp.edgegap.dev/mcp`, operated by Edgegap. Every tool call sends your Edgegap API token in the `Authorization` header. The server uses it for that request against the Edgegap API (`https://api.edgegap.com`) and does not store it. Tools list and create applications and app versions, start, inspect and stop deployments, read deployment logs, list registry tags, and generate Dockerfiles and matchmaker configs. Deployments are billed to your Edgegap account outside the free tier.
+- **Hosted Edgegap MCP server**, `https://mcp.edgegap.com/mcp`, operated by Edgegap. Every tool call sends your Edgegap API token in the `Authorization` header. The server uses it for that request against the Edgegap API (`https://api.edgegap.com`) and does not store it. Tools list and create applications and app versions, start, inspect and stop deployments, read deployment logs, list registry tags, and generate Dockerfiles and matchmaker configs. Deployments are billed to your Edgegap account outside the free tier.
 - **Edgegap API from your backend**, `https://api.edgegap.com`: code the `edgegap-deployments-api` skill writes for your backend calls it at runtime, with the token from your backend's secret manager. The agent itself never calls it directly or reads a token from your machine.
 - **Edgegap container registry**, `registry.edgegap.com`: `docker push` of your game server image, using the registry login you enter yourself with `docker login`.
 - **GitHub**: Unity Package Manager downloads the Edgegap Unity SDK (`https://github.com/edgegap/sdk-unity-sessions-matchmaker-server-browser.git`, latest) when the skill adds it to your project. For Unreal, you clone the engine source (`https://github.com/EpicGames/UnrealEngine`) yourself, and its `Setup.bat` downloads engine dependencies from Epic.

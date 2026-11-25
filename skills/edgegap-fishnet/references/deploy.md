@@ -14,7 +14,7 @@ Contents
 - **API token**: dashboard → User Settings → Tokens. Organization-wide and unscopable, so it is a password: never in project files, Dockerfiles, git, the game client, or chat. It is not the matchmaker Auth Token.
 - **MCP**: if `edgegap_list_apps` already works, skip this. With the `edgegap` Claude Code plugin, Claude Code prompts for the token when the plugin is enabled (re-enter it via `/plugin` → edgegap → configure). Otherwise the developer runs, in their own terminal:
   ```bash
-  claude mcp add --transport http edgegap https://mcp.edgegap.dev/mcp -H "Authorization: token <YOUR_EDGEGAP_API_TOKEN>" --scope user
+  claude mcp add --transport http edgegap https://mcp.edgegap.com/mcp -H "Authorization: token <YOUR_EDGEGAP_API_TOKEN>" --scope user
   ```
   and restarts the session. "does not contain an Edgegap API token" almost always means the header became `token token <uuid>`. Claude Desktop and claude.ai custom connectors can't send the header; use the local server `npx -y @edgegap/mcp` there.
 - Without MCP, guide the developer through the dashboard click by click and ask them to paste results.

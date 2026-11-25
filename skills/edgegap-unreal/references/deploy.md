@@ -16,7 +16,7 @@ Contents
 - **API token:** https://app.edgegap.com/user-settings?tab=tokens. Organization-wide and unscoped: never in files, code, git, the game or chat output. It is not the matchmaker auth token.
 - **MCP:** first check whether `edgegap_*` tools already work (`edgegap_list_apps`). If this skill came with the `edgegap` Claude Code plugin, the plugin asks for the token. Otherwise the developer runs, in their own terminal:
   ```bash
-  claude mcp add --transport http edgegap https://mcp.edgegap.dev/mcp -H "Authorization: token <YOUR_EDGEGAP_API_TOKEN>" --scope user
+  claude mcp add --transport http edgegap https://mcp.edgegap.com/mcp -H "Authorization: token <YOUR_EDGEGAP_API_TOKEN>" --scope user
   ```
   and restarts the session. "does not contain an Edgegap API token" almost always means `token token <uuid>` (the pasted value already had the prefix).
 

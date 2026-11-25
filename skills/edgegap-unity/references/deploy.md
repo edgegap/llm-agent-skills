@@ -19,14 +19,14 @@ Contents
 - Never echo it back in chat or logs.
 - It is *not* the matchmaker Auth Token (that one is client-safe).
 
-**Connect the Edgegap MCP server** (hosted, `https://mcp.edgegap.dev/mcp`). First check whether tools named like `edgegap_list_apps` are already available and work; if so, skip this.
+**Connect the Edgegap MCP server** (hosted, `https://mcp.edgegap.com/mcp`). First check whether tools named like `edgegap_list_apps` are already available and work; if so, skip this.
 
 If this skill was installed through the `edgegap` Claude Code plugin, the plugin already declares the MCP server. Its token is a sensitive plugin setting that Claude Code asks for when the plugin is enabled, and keeps in the system credential store. If the tools fail with a missing or invalid token, ask the developer to re-enter it: `/plugin` → edgegap → configure, or disable and re-enable the plugin. Paste only the UUID.
 
 Otherwise ask the developer to run this in their own terminal, so the token never passes through the conversation:
 
 ```bash
-claude mcp add --transport http edgegap https://mcp.edgegap.dev/mcp -H "Authorization: token <YOUR_EDGEGAP_API_TOKEN>" --scope user
+claude mcp add --transport http edgegap https://mcp.edgegap.com/mcp -H "Authorization: token <YOUR_EDGEGAP_API_TOKEN>" --scope user
 ```
 
 Then restart the Claude Code session (or `/mcp` to reconnect) so the tools load. `Bearer <token>` also works as the header value.
