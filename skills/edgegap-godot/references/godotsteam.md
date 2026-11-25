@@ -7,7 +7,7 @@ Verified on Edgegap on 2026-11-09 with Godot 4.7.2, GodotSteam Server 4.12.1 and
 ## Shape
 
 - One autoload for both sides (`net/session.gd` in the sample).
-  - **Server:** `SteamServer.serverInitEx()`, then `logOnAnonymous()` (or `logOn(STEAM_GSLT)` for a persistent server Steam ID), ENet on UDP 7777, `beginAuthSession()` for every player, kick anyone without a valid ticket, self-stop when empty (`DELETE $ARBITRIUM_DELETE_URL`, see the lifecycle template).
+  - **Server:** `SteamServer.serverInitEx()`, then `logOnAnonymous()` (or `logOn(STEAM_GSLT)` for a persistent server Steam ID), ENet on UDP 7777, `beginAuthSession()` for every player, kick anyone without a valid ticket, self-stop when empty (`DELETE <ARBITRIUM_DELETE_URL>`, see the lifecycle template).
   - **Client:** `Steam.steamInitEx()`, ENet connect, then send an auth session ticket bound to the server's Steam ID.
 - The headless server must call `SteamServer.run_callbacks()` in `_process`. Embedded callbacks depend on `frame_post_draw`, which a headless server never reaches.
 - App version: `gameport` 7777 **UDP**, and optionally `queryport` 27015 **UDP** with port verification off; 0.5 vCPU / 1 GB. Env: `SteamAppId` (instead of `steam_appid.txt`), `STEAM_GSLT` if used.

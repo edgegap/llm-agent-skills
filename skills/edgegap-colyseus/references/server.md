@@ -113,7 +113,7 @@ Make the end condition an env var with "endless" as the default if the game is a
 - everyone left and nobody came back within `EMPTY_TIMEOUT_S` (default 30);
 - the game calls `selfStop(reason)`.
 
-Self-stop is `DELETE $ARBITRIUM_DELETE_URL` with header `authorization: $ARBITRIUM_DELETE_TOKEN`, both injected by Edgegap. Edgegap then sends SIGTERM; Colyseus's graceful shutdown disconnects rooms and exits. If the call fails, the process exits, which also ends the deployment under the default restart policy. The app version's max duration is the backstop for anything else.
+Self-stop is `DELETE <ARBITRIUM_DELETE_URL>` with header `authorization: <ARBITRIUM_DELETE_TOKEN>`, both injected by Edgegap. Edgegap then sends SIGTERM; Colyseus's graceful shutdown disconnects rooms and exits. If the call fails, the process exits, which also ends the deployment under the default restart policy. The app version's max duration is the backstop for anything else.
 
 It logs one line at boot with the request ID, public IP, host, `MM_MATCH_ID` and `MM_TICKET_IDS` (`match=direct` without a matchmaker), and one line per self-stop. It never logs the delete token or the environment.
 

@@ -16,7 +16,7 @@ Contents
   ```bash
   claude mcp add --transport http edgegap https://mcp.edgegap.com/mcp -H "Authorization: token <YOUR_EDGEGAP_API_TOKEN>" --scope user
   ```
-  and restarts the session. "does not contain an Edgegap API token" almost always means the header became `token token <uuid>`. Claude Desktop and claude.ai custom connectors can't send the header; use the local server `npx -y @edgegap/mcp` there.
+  and restarts the session. "does not contain an Edgegap API token" almost always means the header became `token token <uuid>`. Claude Desktop and claude.ai custom connectors can't send the header; use the local server `@edgegap/mcp` (setup steps on its npm page) there.
 - Without MCP, guide the developer through the dashboard click by click and ask them to paste results.
 
 ## 2. Build the Linux dedicated server and clients

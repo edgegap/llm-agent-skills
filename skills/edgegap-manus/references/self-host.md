@@ -61,7 +61,7 @@ Read `src/server.js` against this list (all held in our run except the snapshot 
 
 ## 5. Add the Edgegap self-stop
 
-Copy `assets/self-host/edgegap.js` into the server's `src/`. It does nothing off Edgegap (no `ARBITRIUM_REQUEST_ID`), so the self-hosted server and its binaries keep working. On Edgegap it calls `DELETE $ARBITRIUM_DELETE_URL` with `$ARBITRIUM_DELETE_TOKEN` when: nobody joined within 120 s, everyone left 30 s ago, or the match ended 60 s ago (rematch window); each is an env var (`EDGEGAP_NO_JOIN_SEC`, `EDGEGAP_EMPTY_SEC`, `EDGEGAP_RESULTS_SEC`). No dependency (Node 18+ `fetch`).
+Copy `assets/self-host/edgegap.js` into the server's `src/`. It does nothing off Edgegap (no `ARBITRIUM_REQUEST_ID`), so the self-hosted server and its binaries keep working. On Edgegap it calls `DELETE <ARBITRIUM_DELETE_URL>` with `<ARBITRIUM_DELETE_TOKEN>` when: nobody joined within 120 s, everyone left 30 s ago, or the match ended 60 s ago (rematch window); each is an env var (`EDGEGAP_NO_JOIN_SEC`, `EDGEGAP_EMPTY_SEC`, `EDGEGAP_RESULTS_SEC`). No dependency (Node 18+ `fetch`).
 
 Five one-line hooks in the server (names from the Manus server; find the equivalents):
 

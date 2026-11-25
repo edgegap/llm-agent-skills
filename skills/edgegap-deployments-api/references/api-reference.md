@@ -84,8 +84,8 @@ Graceful: SIGTERM, then SIGKILL after the version's termination grace period. `2
 
 ## From inside a deployment (no API token needed)
 
-- Self-stop: `DELETE $ARBITRIUM_DELETE_URL` with header `Authorization: $ARBITRIUM_DELETE_TOKEN`.
-- Context: `GET $ARBITRIUM_CONTEXT_URL` with header `Authorization: $ARBITRIUM_CONTEXT_TOKEN`. Rate limited (20 req/s per organization, shared with Status), so call it once at boot at most.
+- Self-stop: `DELETE <ARBITRIUM_DELETE_URL>` with header `Authorization: <ARBITRIUM_DELETE_TOKEN>`.
+- Context: `GET <ARBITRIUM_CONTEXT_URL>` with header `Authorization: <ARBITRIUM_CONTEXT_TOKEN>`. Rate limited (20 req/s per organization, shared with Status), so call it once at boot at most.
 
 ## Logs: `GET https://api.edgegap.com/v1/deployment/{request_id}/container-logs`
 

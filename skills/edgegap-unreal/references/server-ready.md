@@ -73,7 +73,7 @@ PublicDependencyModuleNames.AddRange(new string[] { /* existing */ "HTTP", "Json
 ```
 
 - **`EdgegapMatchmakerSubsystem`** (game instance subsystem, clients only): beacon pings → ticket → poll → `ClientTravel`. Shows a Find Match overlay on standalone maps (`bShowDefaultUI`), registers `Edgegap.FindMatch` / `Edgegap.CancelMatch` console commands, honors `-FindMatch` on the command line, and exposes BlueprintCallable functions and an `OnStatusChanged` event. It doesn't exist unless `bEnabled=True`, so a disabled build behaves exactly as before.
-- **`EdgegapServerSubsystem`** (dedicated server only): if the server was started by the matchmaker (`MM_MATCH_ID` or `MM_TICKET_IDS` present), it calls `DELETE $ARBITRIUM_DELETE_URL` 15 s after the last player leaves, or after 5 min if nobody joins. It uses `FGameModeEvents`, so the game mode stays untouched. Hand-deployed and local servers aren't affected.
+- **`EdgegapServerSubsystem`** (dedicated server only): if the server was started by the matchmaker (`MM_MATCH_ID` or `MM_TICKET_IDS` present), it calls `DELETE <ARBITRIUM_DELETE_URL>` 15 s after the last player leaves, or after 5 min if nobody joins. It uses `FGameModeEvents`, so the game mode stays untouched. Hand-deployed and local servers aren't affected.
 
 The classes have no `<MODULE>_API` macro: they're used inside the game module only. Their ini sections are `[/Script/<Module>.EdgegapMatchmakerSubsystem]` and `[/Script/<Module>.EdgegapServerSubsystem]`, with the module name from `Build.cs`, not the project display name.
 

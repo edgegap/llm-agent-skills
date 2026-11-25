@@ -60,5 +60,5 @@ Numbers are rounded to 3 decimals. At 30 Hz with 2 players and 10 crates a snaps
 
 - Listen on `0.0.0.0:$PORT` (default 7777): a server bound to localhost is unreachable in a container.
 - `SIGTERM` (Edgegap's stop, after the self-stop or the max duration): close every socket with code `1001`, close the servers, exit 0 within 2 s. The version's termination grace period is 5 s by default.
-- Empty timer: start at boot and whenever the player count drops to 0; cancel on join. On expiry, on Edgegap only, `DELETE $ARBITRIUM_DELETE_URL` with header `authorization: $ARBITRIUM_DELETE_TOKEN`. If those are missing, exit (with `restart_policy: "never"` that ends the deployment too).
+- Empty timer: start at boot and whenever the player count drops to 0; cancel on join. On expiry, on Edgegap only, `DELETE <ARBITRIUM_DELETE_URL>` with header `authorization: <ARBITRIUM_DELETE_TOKEN>`. If those are missing, exit (with `restart_policy: "never"` that ends the deployment too).
 - Keep-alive: `ws.ping()` every 15 s; a connection that answered neither a ping nor sent a message since the previous round is terminated. Browsers answer pings in hidden tabs, so only dead connections are dropped.

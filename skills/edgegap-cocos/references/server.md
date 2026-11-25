@@ -41,7 +41,7 @@ Native-only games (desktop/mobile, no web or mini-game build) may use TCP or UDP
 - the server has been empty for `EMPTY_TIMEOUT_S` (30 s);
 - the game calls `selfStop("match over")`.
 
-Self-stop is `DELETE $ARBITRIUM_DELETE_URL` with `Authorization: $ARBITRIUM_DELETE_TOKEN`; if that fails it exits (with restart policy `never` that also ends the deployment). It logs one line at boot (request ID, public IP, host, `MM_MATCH_ID`, number of tickets) and one per self-stop; it never logs the delete token or the environment. Off Edgegap nothing runs, so local development and the extension's **Run locally** behave as before.
+Self-stop is `DELETE <ARBITRIUM_DELETE_URL>` with `Authorization: <ARBITRIUM_DELETE_TOKEN>`; if that fails it exits (with restart policy `never` that also ends the deployment). It logs one line at boot (request ID, public IP, host, `MM_MATCH_ID`, number of tickets) and one per self-stop; it never logs the delete token or the environment. Off Edgegap nothing runs, so local development and the extension's **Run locally** behave as before.
 
 A TypeScript server can use it as is (`allowJs`) or rename it to `.ts` and add types. A server that already uses `@edgegap/sdk` on Node 22+ can read the same variables with `DeploymentEnvironment.fromEnv(process.env)` and `MatchEnvironment.fromEnv(process.env)` instead, as `edgegap-threejs` does.
 

@@ -48,8 +48,8 @@ Your own values come from app version env vars (same for every deployment of tha
 **6. End deliberately by stopping yourself.** When the match is over, or the server has been empty for a short while (30 s works), report results to your backend first, then call the self-stop endpoint:
 
 ```
-DELETE $ARBITRIUM_DELETE_URL
-Authorization: $ARBITRIUM_DELETE_TOKEN
+DELETE <ARBITRIUM_DELETE_URL>
+Authorization: <ARBITRIUM_DELETE_TOKEN>
 ```
 
 This is the most important cost control there is: an idle deployment bills until it hits its max duration. A clean exit (code 0) also ends the deployment, but only with restart policy **Never** or **On Crash**; the default, Always, restarts the server and keeps billing. Set restart policy Never on match servers (`restart_policy: "never"` on `edgegap_create_app_version` or `edgegap_update_app_version`, MCP 0.16.0 and later; or the dashboard) and still self-stop explicitly. Do not loop back to a lobby.

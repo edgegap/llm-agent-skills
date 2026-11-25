@@ -14,7 +14,7 @@ Goal: a browser game where each match runs on its own authoritative Node.js serv
 ```
 browser --@edgegap/sdk GroupAgent: POST /groups {profile}--> Edgegap Matchmaker --deploys the profile's app version near the players--> Edgegap
 browser <--HOST_ASSIGNED {fqdn, ports.gameport.link}, ticket_id--
-browser --wss://<fqdn>:<port>, hello{name, ticket}--> Node.js server (one per match) --DELETE $ARBITRIUM_DELETE_URL--> stopped
+browser --wss://<fqdn>:<port>, hello{name, ticket}--> Node.js server (one per match) --DELETE <ARBITRIUM_DELETE_URL>--> stopped
 ```
 
 Verified on Edgegap on 2026-10-22 with [netcode-sample-threejs-minigames](https://github.com/edgegap/netcode-sample-threejs-minigames): five Three.js games (top-down shooter, kart racer, 2v2 soccer with matchmaker teams, light cycles, sumo brawler) from one image, one app version per game and one matchmaker with a profile per game. Headless players queued through the matchmaker landed on one deployment per game, played full matches over `wss` with TLS Upgrade, and every deployment stopped itself about 17 s after its match; deployments whose matched players never connected stopped after 120 s; a direct deployment (no matchmaker) did the same. The templates in `assets/` are that repo's shared files plus a skeleton game. The server and matchmaker parts don't depend on the renderer.

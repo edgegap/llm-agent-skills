@@ -17,7 +17,7 @@ browser --functions.invoke("matchmaking", join/status/cancel)--> Edge Function -
 browser <--{status, ticket_id, url: wss://<fqdn>:<port>}--
 browser ==wss, hello{ticket, Supabase access token}==> Node.js game server: verifies the token (JWKS), checks the ticket (MM_TICKET_IDS), runs the match
 game server --POST report-match + shared secret--> Edge Function --record_match()--> Postgres: every ticket must be its player's, unused
-browser <--Realtime: profiles changed--   game server --DELETE $ARBITRIUM_DELETE_URL--> stopped
+browser <--Realtime: profiles changed--   game server --DELETE <ARBITRIUM_DELETE_URL>--> stopped
 ```
 
 Verified on 2026-11-03 with [netcode-sample-threejs-supabase](https://github.com/edgegap/netcode-sample-threejs-supabase) (Sumo Push from the Three.js minigames), a hosted Supabase project on the free plan, Supabase CLI 3.0.0, supabase-js 2.118.0 and the Edgegap free tier: `assets/tools/e2e.mjs` signed in two headless players, queued them through the Edge Function, both landed on one deployment in about 15 s, played a full match with their access tokens, the server's report created the match and updated both profiles, and the deployment stopped itself 14 s after the match. A browser did the same alone (matched after the 20 s expansion, with bots) and its leaderboard updated live. Checked against the live project: players can't change their wins, insert tickets or call `record_match()`; a missing or forged token is refused by the game server; `report-match` refuses a wrong secret, a ticket that isn't the player's, and a replayed report; a human winner gets the win.

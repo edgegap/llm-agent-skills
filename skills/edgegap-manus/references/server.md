@@ -42,7 +42,7 @@ JSON at 20 Hz is fine for small matches. For many entities, switch to binary (`A
 
 `lifecycle.mjs`:
 - Binds `0.0.0.0:7777` (`PORT` env). The port is fixed inside the container; Edgegap maps it to a random external port.
-- **Self-stop** with `DELETE $ARBITRIUM_DELETE_URL` and header `Authorization: $ARBITRIUM_DELETE_TOKEN`:
+- **Self-stop** with `DELETE <ARBITRIUM_DELETE_URL>` and header `Authorization: <ARBITRIUM_DELETE_TOKEN>`:
   - nobody joined within 120 s (matched players gave up);
   - everyone left and nobody came back within 30 s (reconnect grace);
   - 10 s after the game reports it's over.

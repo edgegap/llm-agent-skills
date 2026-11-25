@@ -14,7 +14,7 @@ Goal: a Cocos Creator 3.8 game whose matches each run on their own authoritative
 ```
 Cocos client --@edgegap/sdk: ticket--> Edgegap Matchmaker --deploys near the players--> Edgegap
 Cocos client <--HOST_ASSIGNED {fqdn, gameport}--
-Cocos client --wss://<fqdn>:<port>, hello{name, ticket}--> game server (one per match) --DELETE $ARBITRIUM_DELETE_URL--> stopped
+Cocos client --wss://<fqdn>:<port>, hello{name, ticket}--> game server (one per match) --DELETE <ARBITRIUM_DELETE_URL>--> stopped
 ```
 
 Cocos Creator has no headless server build: the server is a separate program, usually a Node.js app in the project's `Server/` folder. That is what goes on Edgegap; the Cocos project stays a normal client build (web, native, mini-game).

@@ -95,7 +95,7 @@ On a matchmaker deployment Edgegap injects `MM_MATCH_ID`, `MM_MATCH_PROFILE`, `M
 
 **Servers that should stop fast.** For a matchmaker that stays up while every deployment comes and goes, set on the app version: `EMPTY_TIMEOUT_S=10`, `FIRST_JOIN_TIMEOUT_S=45`, `IDLE_TIMEOUT_S=75`, `RESULTS_SECONDS=8`, `REQUIRE_TICKET=1`, plus `restart_policy: "never"`. Verified on Edgegap on 2026-11-04 (Thin Ice Tussle): a match both players left stopped about 12 s and 24 s later; after one of two players left, the other, whose tab was in the background, kept playing for over 100 s (rounds 4 to 6) instead of being dropped. An earlier build with `IDLE_TIMEOUT_S=30` and no heartbeat dropped background-tab players, and when the other player then left the whole server stopped: keep the heartbeat whenever the idle timeout is on.
 
-`selfStop(reason)` sends `DELETE $ARBITRIUM_DELETE_URL` with header `Authorization: $ARBITRIUM_DELETE_TOKEN` (raw). Edgegap then sends SIGTERM; `main.js` closes sockets (code 1001) and exits. If the request fails, the process exits, which also ends the deployment.
+`selfStop(reason)` sends `DELETE <ARBITRIUM_DELETE_URL>` with header `Authorization: <ARBITRIUM_DELETE_TOKEN>` (raw). Edgegap then sends SIGTERM; `main.js` closes sockets (code 1001) and exits. If the request fails, the process exits, which also ends the deployment.
 
 Node must be PID 1 (`CMD ["node", "server/main.js"]`, no `sh -c`, no `npm start`) or SIGTERM never reaches it.
 

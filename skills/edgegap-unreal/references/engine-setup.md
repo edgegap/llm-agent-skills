@@ -87,7 +87,7 @@ Engine\Build\BatchFiles\Build.bat ShaderCompileWorker Win64 Development -WaitMut
 
 Verified on 2026-11-02 with Lyra on UE 5.8.4 (Launcher editor and clients, Linux server built in Docker, Edgegap matchmaker and EOS sessions, end to end on Edgegap), and with a minimal C++ project through the build scripts below.
 
-- Image: `ghcr.io/epicgames/unreal-engine:dev-slim-<version>` (dev-slim-5.8.4 is about 82 GB unpacked; give Docker Desktop the disk). Pulling needs the Epic ↔ GitHub link (§1) and a GitHub token with `read:packages`: `gh auth token | docker login ghcr.io -u <user> --password-stdin` from bash.
+- Image: `ghcr.io/epicgames/unreal-engine:dev-slim-<version>` (dev-slim-5.8.4 is about 82 GB unpacked; give Docker Desktop the disk). Pulling needs the Epic ↔ GitHub link (§1) and a GitHub token with `read:packages`: log Docker in to `ghcr.io` with it (GitHub's guide to the Container registry) from bash.
 - Easiest path: [edgegap/buildtool-unreal-scripts](https://github.com/edgegap/buildtool-unreal-scripts) 1.1.0 or newer. Its `BuildUploadServer.ps1`/`.sh` build, cook and package the server in the image, keep compiled code, cooked content and DDC in Docker cache mounts (a rebuild of an unchanged project compiled in 12 s instead of 66 s), and push to the Edgegap registry. Older releases fail at the runtime stage (`apt-get jq curl` without `install`) and print the self-stop token in the logs.
 - Running RunUAT yourself in the container: `BuildCookRun -server -noclient -platform=Linux -build -cook -stage -pak -archive`, the project in a Docker volume, not a Windows bind mount (much faster).
 
