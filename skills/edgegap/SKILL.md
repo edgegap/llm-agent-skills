@@ -2,12 +2,12 @@
 name: edgegap
 description: 'Start here for hosting a game on Edgegap (dedicated servers + matchmaking) when the engine is not Unity, Unreal or Godot, is unknown, or the question is about the platform. Use when someone wants to host or deploy a game server, wants a solo or co-op game always online or uncrackable, asks how players join, wants custom-engine servers, compares hosts, or asks what Edgegap apps, versions, deployments, fleets or matchmakers are, even without saying "hosting". It picks the server shape, explains vocabulary, safety rules, routes to a skill. For a Unity project, load edgegap-unity instead (NGO: edgegap-ngo, FishNet: edgegap-fishnet, PurrNet: edgegap-purrnet, Fusion: edgegap-fusion); Unreal: edgegap-unreal; Godot 4: edgegap-godot; Colyseus: edgegap-colyseus; Cocos: edgegap-cocos; Nakama: edgegap-nakama; Manus: edgegap-manus; Three.js/web: edgegap-threejs; WASM: edgegap-browser-wasm; vibe-coded: edgegap-vibe-coded; chat canvas game: edgegap-chat-canvas; fal.ai: edgegap-fal; matchmaking: edgegap-matchmaking.'
 metadata:
-  version: "0.44.0"
+  version: "0.44.1"
 ---
 
 # Edgegap
 
-Pack version: 0.44.0
+Pack version: 0.44.1
 
 Edgegap runs dedicated game servers. You push a **Linux container image** of your game server, register it as an **app version**, and ask for a **deployment** near a group of players. Edgegap picks the location with the best ping for that group, starts the container in seconds, and returns a URL (`<id>.pr.edgegap.net`), a public IP, and an external port per internal port. Players connect. The match ends, the server stops, billing stops.
 
@@ -65,7 +65,7 @@ For a Godot 4 game whose server is Godot itself (high-level multiplayer with ENe
 | A game made, or to be made, with fal.ai (a coding agent with fal-generated 3D models, sprites or sounds, or fal Agent writing the code) that should get online matches: server-ready rules, assets kept out of the server, then the same path | `edgegap-fal` |
 | A game with a Supabase backend (Supabase Auth, profiles, leaderboards, Edge Functions): only signed-in players find a match, the game server records results in Supabase | `edgegap-supabase` |
 | Design matchmaking: queues, parties, skill, modes, region selection, join in progress (backfill), or pick a matchmaker | `edgegap-matchmaking` |
-| Write backend code that starts, finds or stops servers, or receives webhooks | `edgegap-deployments-api` |
+| Write backend code that starts, finds or stops servers (an allocator, lobby service or custom matchmaker), polls deployment status (`/v1/status`) or receives webhooks: the API rate limits and webhook rules are there | `edgegap-deployments-api` |
 | Write or fix a Dockerfile, push to a registry, pick an image tag | `edgegap-containerize` |
 | Test a server image before spending money | `edgegap-local-testing` |
 | Go live, plan capacity, roll out a new build, control cost | `edgegap-launch` |
