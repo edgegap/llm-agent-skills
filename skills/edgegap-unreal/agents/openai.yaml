@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap Unreal"
+  short_description: "Unreal Engine servers on Edgegap"
+  default_prompt: "Use $edgegap-unreal to put this Unreal game on Edgegap dedicated servers."
+policy:
+  allow_implicit_invocation: true

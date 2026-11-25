@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap launch"
+  short_description: "CI deploys and launch checklist"
+  default_prompt: "Use $edgegap-launch to set up CI deploys with edgegap/deploy-action and check launch readiness."
+policy:
+  allow_implicit_invocation: true

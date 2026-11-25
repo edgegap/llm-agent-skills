@@ -1,0 +1,61 @@
+// Boss Room adapter for EdgegapMatchmakingClient.cs, verified end to end on Edgegap in
+// edgegap/netcode-game-sample-unity-ngo-bossroom. Replace the NETCODE ADAPTER region with this one and add:
+//   using Unity.BossRoom.ConnectionManagement;
+//   using Unity.BossRoom.Gameplay.Configuration;
+// (your game's ConnectionManager and name generator namespaces). Set MenuSceneName = "MainMenu".
+
+    #region NETCODE ADAPTER
+    // Netcode for GameObjects through Boss Room's ConnectionManager, which builds the connection payload and
+    // runs its connection state machine (CharSelect is loaded by the server once the client is in).
+    // UnityTransport over UDP needs an IP address, so connect to the deployment's public IP.
+
+    private ConnectionManager connectionManager;
+    private float clientStartedAt = -10f;
+
+    private ConnectionManager GetConnectionManager()
+    {
+        if (connectionManager == null)
+            connectionManager = FindFirstObjectByType<ConnectionManager>();
+        return connectionManager;
+    }
+
+    private void StartClientConnection(string fqdn, string publicIp, ushort port)
+    {
+        ConnectionManager cm = GetConnectionManager();
+        if (cm == null)
+        {
+            Debug.LogError("Edgegap MM | No Boss Room ConnectionManager found.");
+            return;
+        }
+
+        clientStartedAt = Time.realtimeSinceStartup;
+        cm.StartClientIp(PlayerName(), publicIp, port);
+    }
+
+    private static string PlayerName()
+    {
+        NameGenerationData[] names = Resources.FindObjectsOfTypeAll<NameGenerationData>();
+        return names.Length > 0 ? names[0].GenerateName() : $"Player{Random.Range(1000, 9999)}";
+    }
+
+    // StartClientIp awaits the connection setup before NetworkManager.StartClient, so IsClient stays
+    // false for a few frames.
+    private bool IsClientConnecting()
+    {
+        NetworkManager nm = NetworkManager.Singleton;
+        if (nm == null)
+            return false;
+        return (nm.IsClient && !nm.IsConnectedClient)
+            || (!nm.IsClient && Time.realtimeSinceStartup - clientStartedAt < 1f);
+    }
+
+    private bool IsClientConnected() => NetworkManager.Singleton != null && NetworkManager.Singleton.IsConnectedClient;
+
+    private bool IsClientActive() => NetworkManager.Singleton != null && NetworkManager.Singleton.IsClient;
+
+    private void StopClientConnection()
+    {
+        if (IsClientActive())
+            GetConnectionManager()?.RequestShutdown();
+    }
+    #endregion

@@ -1,0 +1,19 @@
+{
+  "name": "20261019-1430",
+  "docker_repository": "registry.edgegap.com",
+  "docker_image": "<your-registry-project>/br200",
+  "docker_tag": "20261019-1430",
+  "registry_profile": "Edgegap",
+  "req_cpu": 1024,
+  "req_memory": 2048,
+  "ports": [
+    { "name": "gameport", "port": 7777, "protocol": "UDP", "to_check": false }
+  ],
+  "restart_policy": "never",
+  "max_duration": 60,
+  "termination_grace_period_seconds": 15,
+  "time_to_deploy": 120,
+  "envs": [
+    { "key": "BR200_MAX_PLAYERS", "value": "200", "is_hidden": false }
+  ]
+}

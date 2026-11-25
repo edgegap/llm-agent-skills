@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap NGO"
+  short_description: "Netcode for GameObjects on Edgegap"
+  default_prompt: "Use $edgegap-ngo to put this NGO game on Edgegap dedicated servers."
+policy:
+  allow_implicit_invocation: true

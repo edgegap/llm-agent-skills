@@ -1,0 +1,13 @@
+{
+  "application": "br200",
+  "version": "20261019-1430",
+  "users": [
+    { "user_type": "ip_address", "user_data": { "ip_address": "198.51.100.23" } },
+    { "user_type": "ip_address", "user_data": { "ip_address": "203.0.113.71" } }
+  ],
+  "environment_variables": [
+    { "key": "BR200_MODE", "value": "battleRoyale", "is_hidden": false },
+    { "key": "BR200_MAX_PLAYERS", "value": "2", "is_hidden": false }
+  ],
+  "tags": ["br200"]
+}

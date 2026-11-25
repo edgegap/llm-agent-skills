@@ -1,0 +1,26 @@
+# `assets/simplefps/scripts/package.sh`
+
+Template file. Write the content of the code block below, without the fences, to `package.sh`.
+
+```bash
+#!/usr/bin/env bash
+# Builds the server image for linux/amd64, and optionally tags and pushes it.
+# Usage: scripts/package.sh                                  -> simplefps-edgegap:local
+#        scripts/package.sh registry.edgegap.com/<project>/simplefps [tag]   (docker login first; tag defaults to the UTC time, YYYYMMDD-HHMM)
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+grep -qx 'result=Succeeded' Builds/EdgegapServer/edgegap-build.txt 2>/dev/null \
+    && grep -qx 'subtarget=Server' Builds/EdgegapServer/edgegap-build.txt \
+    || { echo "No successful server build: run scripts/build.sh server (see Builds/server.log)" >&2; exit 1; }
+
+docker build --platform linux/amd64 -f edgegap/Dockerfile -t simplefps-edgegap:local .
+
+if [[ $# -ge 1 ]]; then
+    tag="${2:-$(date -u +%Y%m%d-%H%M)}"   # UTC timestamp: shows when the build was made; use it as the app version name too
+    [[ "$tag" != latest ]] || { echo "Pass a new tag (not 'latest') after the image" >&2; exit 2; }
+    docker tag simplefps-edgegap:local "$1:$tag"
+    docker push "$1:$tag"
+    echo "Pushed $1:$tag. Use this tag as the app version name."
+fi
+```

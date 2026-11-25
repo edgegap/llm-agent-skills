@@ -1,0 +1,17 @@
+# `assets/unity/link.xml`
+
+Template file. Write the content of the code block below, without the fences, to `link.xml`.
+
+```xml
+<!-- Keep Edgegap SDK data classes intact under IL2CPP managed code stripping (WebGL, IL2CPP servers).
+     Newtonsoft.Json creates them via reflection, so the linker can't see they're used.
+     Put this file anywhere under Assets/. If the DTOs live in an asmdef, replace Assembly-CSharp
+     with that assembly's name. -->
+<linker>
+  <assembly fullname="Edgegap.SDK" preserve="all" ignoreIfMissing="1" />
+  <assembly fullname="Assembly-CSharp" ignoreIfMissing="1">
+    <type fullname="GameTicketAttributes" preserve="all" />
+    <type fullname="GameGroupUpRequestDTO" preserve="all" />
+  </assembly>
+</linker>
+```

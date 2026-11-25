@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap vibe-coded"
+  short_description: "Make a vibe-coded game online multiplayer"
+  default_prompt: "Use $edgegap-vibe-coded to make this solo browser game online multiplayer on Edgegap."
+policy:
+  allow_implicit_invocation: true

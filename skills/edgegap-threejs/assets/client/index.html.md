@@ -1,0 +1,31 @@
+# `assets/client/index.html`
+
+Template file. Write the content of the code block below, without the fences, to `index.html`.
+
+```html
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Coins</title>
+  <link rel="stylesheet" href="./ui.css" />
+  <!-- Three.js and the Edgegap JS SDK from a CDN through an import map: no bundler needed. Pin the
+       versions; the integrity hash makes the browser refuse a modified SDK file. -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+        "@edgegap/sdk": "https://cdn.jsdelivr.net/npm/@edgegap/sdk@1.1.0/dist/browser/edgegap.js"
+      },
+      "integrity": {
+        "https://cdn.jsdelivr.net/npm/@edgegap/sdk@1.1.0/dist/browser/edgegap.js": "sha384-U8KQMl3e8xF4aAIJJMXV8IdkCKWiHSQhHISsedbG4z/L99dNOq5FoRlMgPDYgNUF"
+      }
+    }
+  </script>
+</head>
+<body>
+  <script type="module" src="./game-client.js"></script>
+</body>
+</html>
+```

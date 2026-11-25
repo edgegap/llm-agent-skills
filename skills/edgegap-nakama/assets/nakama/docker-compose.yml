@@ -1,0 +1,58 @@
+# Local Nakama + Postgres with the Edgegap Fleet Manager.
+# Copy .env.example to .env and fill it in first, then:
+#   docker compose up -d --build
+services:
+  postgres:
+    image: postgres:16.2-alpine
+    command: postgres -c shared_preload_libraries=pg_stat_statements -c pg_stat_statements.track=all
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=nakama
+      - POSTGRES_PASSWORD=localdb
+    volumes:
+      - data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "nakama"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+  nakama:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    # Values come from .env at runtime; nothing secret is baked into the image.
+    env_file: .env
+    entrypoint:
+      - "/bin/sh"
+      # -ec, never -ecx: -x prints the expanded command, token and http_key included.
+      - "-ec"
+      # The plugin reads its settings from Nakama's runtime env (--runtime.env),
+      # not from the container's environment. $$ defers expansion to this shell.
+      - >
+        /nakama/nakama migrate up --database.address postgres:localdb@postgres:5432/nakama &&
+        exec /nakama/nakama --name nakama1
+        --database.address postgres:localdb@postgres:5432/nakama
+        --logger.level INFO
+        --session.token_expiry_sec 7200
+        --runtime.http_key "$${NAKAMA_HTTP_KEY}"
+        --runtime.env "EDGEGAP_API_URL=$${EDGEGAP_API_URL:-https://api.edgegap.com}"
+        --runtime.env "EDGEGAP_API_TOKEN=$${EDGEGAP_API_TOKEN}"
+        --runtime.env "EDGEGAP_APPLICATION=$${EDGEGAP_APPLICATION}"
+        --runtime.env "INITIAL_EDGEGAP_VERSION=$${INITIAL_EDGEGAP_VERSION}"
+        --runtime.env "EDGEGAP_PORT_NAME=$${EDGEGAP_PORT_NAME:-gameport}"
+        --runtime.env "NAKAMA_ACCESS_URL=$${NAKAMA_ACCESS_URL}"
+    ports:
+      - "7349:7349"
+      - "7350:7350"
+      - "7351:7351"
+    healthcheck:
+      test: ["CMD", "/nakama/nakama", "healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  data:

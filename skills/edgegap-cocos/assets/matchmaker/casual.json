@@ -1,0 +1,32 @@
+{
+  "version": "3.3.2",
+  "inspect": true,
+  "max_deployment_retry_count": 3,
+  "allowed_cors_origins": [
+    "http://localhost:7456",
+    "http://localhost:8080"
+  ],
+  "profiles": {
+    "casual": {
+      "ticket_expiration_period": "30s",
+      "ticket_removal_period": "1m",
+      "group_inactivity_removal_period": "5m",
+      "application": {
+        "name": "my-cocos-game",
+        "version": "20261104-1200"
+      },
+      "rules": {
+        "initial": {
+          "match_size": {
+            "type": "player_count",
+            "attributes": {
+              "team_count": 1,
+              "min_team_size": 2,
+              "max_team_size": 8
+            }
+          }
+        }
+      }
+    }
+  }
+}

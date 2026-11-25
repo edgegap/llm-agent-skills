@@ -1,0 +1,32 @@
+# `assets/unity/Resources/EdgegapSettings.asset`
+
+Template file. Write the content of the code block below, without the fences, to `EdgegapSettings.asset`.
+
+```
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68cf63f843114ee5a06574618cbc0583, type: 3}
+  m_Name: EdgegapSettings
+  m_EditorClassIdentifier: 
+  UseEdgegapMatchmaker: 0
+  ApplyInEditor: 0
+  ListenPort: 7777
+  FirstPlayerTimeoutSeconds: 120
+  EmptyServerTimeoutSeconds: 30
+  DirectAddress: 127.0.0.1
+  DirectPort: 7777
+  MatchmakerUrl: 
+  MatchmakerAuthToken: 
+  Profile: casual
+  PortName: gameport
+  UseLatencyBeacons: 0
+```

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap Godot"
+  short_description: "Godot 4 servers on Edgegap"
+  default_prompt: "Use $edgegap-godot to put this Godot 4 game on Edgegap dedicated servers."
+policy:
+  allow_implicit_invocation: true

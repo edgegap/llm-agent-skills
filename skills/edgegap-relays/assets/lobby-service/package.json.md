@@ -1,0 +1,18 @@
+# `assets/lobby-service/package.json`
+
+Template file. Write the content of the code block below, without the fences, to `package.json`.
+
+```json
+{
+  "name": "lightnet-relay-lobby",
+  "version": "1.0.0",
+  "description": "Minimal lobby service for the LightNet + Edgegap relay sample: creates relay sessions and hands players their relay tokens.",
+  "main": "server.js",
+  "private": true,
+  "license": "Apache-2.0",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "start": "node server.js"
+  }
+}
+```

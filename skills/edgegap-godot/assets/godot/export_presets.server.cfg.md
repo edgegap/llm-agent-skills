@@ -1,0 +1,52 @@
+# `assets/godot/export_presets.server.cfg`
+
+Template file. Write the content of the code block below, without the fences, to `export_presets.server.cfg`.
+
+```ini
+; The preset the Edgegap Godot plugin (addons/edgegap) exports with, written
+; the way the plugin's "Export server" button writes it. The button creates
+; it when missing and never changes an existing one, so add this only when
+; the defaults need changes: an explicit export allowlist (export_filter
+; "resources" or "scenes"), custom feature tags, or a headless export without
+; opening the editor. Append to export_presets.cfg and renumber [preset.N] /
+; [preset.N.options] to the next free index.
+;   godot --headless --path . --export-release "Edgegap Linux Server" build/edgegap-linux-server.x86_64
+;
+; Keep the name, export_path and embed_pck=false: the plugin's Dockerfile
+; copies build/edgegap-linux-server.x86_64 and .pck. dedicated_server=true
+; adds the dedicated_server feature tag (EdgegapServer.is_server_launch()),
+; makes the export start headless, and strips textures, audio and meshes.
+; "customized" with res:// = "strip" is the plugin's default filter. With an
+; allowlist, copy the game's server preset filter instead and add
+; res://edgegap/*.gd to it (references/godot.md §6).
+
+[preset.9]
+
+name="Edgegap Linux Server"
+platform="Linux"
+runnable=false
+dedicated_server=true
+custom_features=""
+export_filter="customized"
+customized_files={
+"res://": "strip"
+}
+include_filter=""
+exclude_filter=""
+export_path="build/edgegap-linux-server.x86_64"
+encryption_include_filters=""
+encryption_exclude_filters=""
+encrypt_pck=false
+encrypt_directory=false
+script_export_mode=2
+
+[preset.9.options]
+
+custom_template/debug=""
+custom_template/release=""
+debug/export_console_wrapper=2
+binary_format/embed_pck=false
+texture_format/s3tc_bptc=true
+texture_format/etc2_astc=false
+binary_format/architecture="x86_64"
+```
