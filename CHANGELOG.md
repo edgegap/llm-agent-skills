@@ -2,6 +2,15 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.45.0 (unreleased)
+
+Codex worked example and Plugins Directory listing fields, from [netcode-sample-codex-slime-sumo](https://github.com/edgegap/netcode-sample-codex-slime-sumo). Verified on Edgegap on 2026-11-25: Codex CLI 0.172.0 with OpenAI's Game Studio plugin wrote Slime Sumo (Phaser + Vite, solo vs bots) from one prompt; with this plugin (0.44.0, installed from GitHub) and the hosted MCP server, one more prompt made it online: Codex loaded `edgegap-vibe-coded`, `edgegap-threejs` and `edgegap`, moved the rules into one module, added the server, Find Match and tests, validated the Dockerfile, pushed the image, created the app and version, deployed a test server, joined it from two browser tabs over `wss://` and stopped it. Through a matchmaker, two browser tabs were matched onto one server in 16 s and the server stopped itself about 30 s after both left.
+
+- `.codex-plugin/plugin.json`: `shortDescription` within the directory's 30 characters, `composerIcon`, icon moved to `assets/`. `scripts/validate.py` checks the directory's length limits and that both icons exist.
+- `edgegap` 0.45.0: `references/agent-rules.md` says `EDGEGAP_API_TOKEN` holds the UUID only for Codex.
+- `edgegap-vibe-coded` 0.1.9 and `edgegap-samples` 0.1.13 (catalog): the Codex sample.
+- README: Codex worked example; the Codex CLI's Windows sandbox may only allow reading files.
+
 ## 0.44.1 (unreleased)
 
 Backend code that polls deployment status now routes to `edgegap-deployments-api`, where the 20 requests per second organization limit on Status and Context and the webhook rules live. An agent asked to "poll /v1/status for every deployment" from a backend could otherwise skip the skill and hit constant 429s.
