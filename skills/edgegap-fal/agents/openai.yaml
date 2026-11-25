@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap fal.ai"
+  short_description: "fal.ai games made multiplayer on Edgegap"
+  default_prompt: "Use $edgegap-fal to make this fal.ai game online multiplayer on Edgegap."
+policy:
+  allow_implicit_invocation: true

@@ -143,6 +143,21 @@ Then add the Edgegap MCP server yourself:
 claude mcp add --transport http edgegap https://mcp.edgegap.dev/mcp -H "Authorization: token <YOUR_EDGEGAP_API_TOKEN>" --scope user
 ```
 
+### Codex: plugin
+
+Add this repository as a plugin marketplace and install the plugin (Codex CLI; in the ChatGPT desktop app, install `edgegap` from the Plugins Directory after adding the marketplace):
+
+```bash
+codex plugin marketplace add edgegap/llm-agent-skills
+codex plugin add edgegap@edgegap
+```
+
+The plugin installs every skill (call one with `$edgegap`, `$edgegap-threejs`... or just describe what you want) **and** the hosted Edgegap MCP server, which reads your [Edgegap API token](https://app.edgegap.com/user-settings?tab=tokens) from the `EDGEGAP_API_TOKEN` environment variable. Set it to the UUID only, in the environment Codex starts from; Codex sends it as `Authorization: Bearer <token>`, which the hosted server accepts. The token stays out of your project. `codex mcp list` shows `edgegap` with `Bearer token` auth.
+
+Without the plugin, add the server yourself (`codex mcp add edgegap --url https://mcp.edgegap.dev/mcp --bearer-token-env-var EDGEGAP_API_TOKEN`) and install the skills with `npx skills add edgegap/llm-agent-skills --skill "*"`, which puts them in `.agents/skills`, where Codex reads them.
+
+To keep Codex on the Edgegap rules in a game repo, copy [`skills/edgegap/assets/AGENTS.md`](skills/edgegap/assets/AGENTS.md) into the repo's `AGENTS.md`.
+
 ### Other agents
 
 Each skill is a plain folder: `SKILL.md`, plus `references/` and sometimes `assets/`. Use the `skills` CLI above, or point your agent at `skills/edgegap/SKILL.md` (or `skills/edgegap-unity/SKILL.md` for Unity, `skills/edgegap-fishnet/SKILL.md` for FishNet, `skills/edgegap-purrnet/SKILL.md` for PurrNet, `skills/edgegap-unreal/SKILL.md` for Unreal Engine, `skills/edgegap-colyseus/SKILL.md` for Colyseus servers, `skills/edgegap-nakama/SKILL.md` for Nakama backends, `skills/edgegap-manus/SKILL.md` for Manus games). Manus users can import `skills/edgegap-manus` in Manus (Plugins & Skills → Skills → Create → Import skill from GitHub) or upload the folder. For the MCP server in other clients (Cursor, VS Code, Codex, Claude Desktop), see [llm-mcp-server](https://github.com/edgegap/llm-mcp-server).

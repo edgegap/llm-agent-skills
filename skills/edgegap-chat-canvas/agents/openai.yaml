@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap chat games"
+  short_description: "Claude, ChatGPT, Gemini chat games online"
+  default_prompt: "Use $edgegap-chat-canvas to make this chat-made HTML game online multiplayer on Edgegap."
+policy:
+  allow_implicit_invocation: true

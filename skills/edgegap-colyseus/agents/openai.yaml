@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap Colyseus"
+  short_description: "Colyseus rooms on Edgegap servers"
+  default_prompt: "Use $edgegap-colyseus to host this Colyseus server per match on Edgegap."
+policy:
+  allow_implicit_invocation: true

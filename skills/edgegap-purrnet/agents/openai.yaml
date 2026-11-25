@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap PurrNet"
+  short_description: "PurrNet games on Edgegap servers"
+  default_prompt: "Use $edgegap-purrnet to put this PurrNet game on Edgegap dedicated servers."
+policy:
+  allow_implicit_invocation: true

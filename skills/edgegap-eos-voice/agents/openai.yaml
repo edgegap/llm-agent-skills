@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap EOS voice"
+  short_description: "EOS voice chat with Edgegap servers"
+  default_prompt: "Use $edgegap-eos-voice to add EOS voice rooms to this Unreal game on Edgegap."
+policy:
+  allow_implicit_invocation: true
