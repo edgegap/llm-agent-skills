@@ -1,3 +1,8 @@
+# `assets/nakama/docker-compose.yml`
+
+Template file. Write the content of the code block below, without the fences, to `docker-compose.yml`.
+
+```yaml
 # Local Nakama + Postgres with the Edgegap Fleet Manager.
 # Copy .env.example to .env and fill it in first, then:
 #   docker compose up -d --build
@@ -56,3 +61,4 @@ services:
 
 volumes:
   data:
+```

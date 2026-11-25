@@ -9,6 +9,7 @@
   "homepage": "https://docs.edgegap.com",
   "repository": "https://github.com/edgegap/llm-agent-skills",
   "license": "Apache-2.0",
+  "privacyPolicyUrl": "https://edgegap.com/legal",
   "keywords": [
     "edgegap",
     "unity",
