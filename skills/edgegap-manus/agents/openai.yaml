@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap Manus"
+  short_description: "Manus games online on Edgegap"
+  default_prompt: "Use $edgegap-manus to put this Manus game online on Edgegap."
+policy:
+  allow_implicit_invocation: true

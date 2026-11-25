@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap local tests"
+  short_description: "Test the server image like Edgegap runs it"
+  default_prompt: "Use $edgegap-local-testing to test this server image locally before deploying."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap"
+  short_description: "Host any game on Edgegap: start here"
+  default_prompt: "Use $edgegap to pick the server shape for this game and the right Edgegap workflow."
+policy:
+  allow_implicit_invocation: true

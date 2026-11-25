@@ -2,6 +2,16 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.44.0 (unreleased)
+
+Codex plugin. The repository is now a Codex plugin marketplace as well as a Claude Code one. Verified on 2026-11-25 with Codex CLI 0.172.0: `codex plugin marketplace add` and `codex plugin add edgegap@edgegap` installed the plugin; Codex listed all 31 skills; `codex mcp list` showed the hosted Edgegap MCP server with `Bearer token` auth read from `EDGEGAP_API_TOKEN`, and `edgegap_context` with `check_token: true` reported the token accepted (MCP 0.19.13).
+
+- `.codex-plugin/plugin.json` (skills, MCP server and Plugins Directory listing fields), `.codex-plugin/mcp.json` (hosted server, token from `EDGEGAP_API_TOKEN`), `.agents/plugins/marketplace.json`.
+- `agents/openai.yaml` in every skill: Codex display name, short description and default prompt.
+- `edgegap-chat-canvas` 0.3.1: its description had a lone apostrophe inside single quotes, so Codex's YAML parser refused to load the skill. `scripts/validate.py` now fails on that, on a missing `agents/openai.yaml`, and on Codex and Claude plugin versions that differ.
+- `edgegap` 0.44.0: `assets/AGENTS.md`, a section to copy into a game repo's `AGENTS.md`; `references/agent-rules.md` gives the Codex command to add the MCP server.
+- README: Codex install section.
+
 ## 0.43.0 (unreleased)
 
 `edgegap-chat-canvas` covers Gemini Canvas, from [netcode-sample-gemini-bomb-tag](https://github.com/edgegap/netcode-sample-gemini-bomb-tag). Verified on Edgegap on 2026-11-20: Gemini (free account, Canvas tool, model on Auto) wrote Bomb Tag from the prompt that also asks for an empty `createWorld()`, a start spot per `addPlayer()`, `setInput()` for every player and bots in `step()`, and its first answer needed no fix; the split needed no edits to the block; two browser tabs played a match on a direct deployment (`?server=`), and on the matchmaker shared by all three chat samples two headless players and two browser tabs (Find match) were matched onto one deployment; every server stopped itself.

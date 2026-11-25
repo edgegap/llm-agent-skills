@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap Deploy API"
+  short_description: "Call the Edgegap Deploy API from a backend"
+  default_prompt: "Use $edgegap-deployments-api to start Edgegap servers from this backend."
+policy:
+  allow_implicit_invocation: true

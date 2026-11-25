@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap web games"
+  short_description: "Three.js and web game servers on Edgegap"
+  default_prompt: "Use $edgegap-threejs to add an authoritative Node.js server and Find Match to this web game."
+policy:
+  allow_implicit_invocation: true

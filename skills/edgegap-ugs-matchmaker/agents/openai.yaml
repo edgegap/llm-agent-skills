@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap UGS Matchmaker"
+  short_description: "Unity Matchmaker with Edgegap servers"
+  default_prompt: "Use $edgegap-ugs-matchmaker to start Edgegap servers from Unity Matchmaker."
+policy:
+  allow_implicit_invocation: true

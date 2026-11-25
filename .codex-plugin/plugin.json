@@ -1,0 +1,49 @@
+{
+  "name": "edgegap",
+  "version": "0.44.0",
+  "description": "Get multiplayer games online on Edgegap: dedicated servers, matchmaking, backend integration, launch and troubleshooting for browser games (Phaser, Three.js, canvas), Unity, Unreal Engine, Godot 4, Colyseus, Nakama, PlayFab, Supabase and any other engine, driven by Codex.",
+  "author": {
+    "name": "Edgegap",
+    "url": "https://edgegap.com"
+  },
+  "homepage": "https://docs.edgegap.com/docs/mcp-integration",
+  "repository": "https://github.com/edgegap/llm-agent-skills",
+  "license": "Apache-2.0",
+  "keywords": [
+    "edgegap",
+    "multiplayer",
+    "dedicated-server",
+    "game-server-hosting",
+    "matchmaking",
+    "browser-games",
+    "phaser",
+    "threejs",
+    "websocket",
+    "unity",
+    "unreal",
+    "godot",
+    "docker"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.codex-plugin/mcp.json",
+  "interface": {
+    "displayName": "Edgegap",
+    "shortDescription": "Put your game online: servers and matchmaking",
+    "longDescription": "Turn a game you built with Codex into online matches. One authoritative server per match on Edgegap, a Find Match button backed by Edgegap's matchmaker, a GitHub Actions image build, and tests, with workflows verified on Edgegap for browser games, Unity, Unreal, Godot and common game backends. Connect the Edgegap MCP server to let Codex deploy, read logs and clean up for you.",
+    "developerName": "Edgegap",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://edgegap.com",
+    "privacyPolicyURL": "https://edgegap.com/legal",
+    "termsOfServiceURL": "https://edgegap.com/legal",
+    "supportURL": "https://github.com/edgegap/llm-agent-skills/issues",
+    "defaultPrompt": [
+      "Make this game online multiplayer on Edgegap with a Find Match button"
+    ],
+    "logo": "./.codex-plugin/icon.png",
+    "screenshots": []
+  }
+}
