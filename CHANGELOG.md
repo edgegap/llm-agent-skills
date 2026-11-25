@@ -2,6 +2,14 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.44.1 (unreleased)
+
+Backend code that polls deployment status now routes to `edgegap-deployments-api`, where the 20 requests per second organization limit on Status and Context and the webhook rules live. An agent asked to "poll /v1/status for every deployment" from a backend could otherwise skip the skill and hit constant 429s.
+
+- `edgegap` 0.44.1: the routing row names allocators, lobby services, custom matchmakers and status polling (`/v1/status`).
+- `edgegap-deployments-api` 0.2.14: the description names polling `GET /v1/status` or Context and the 20 req/s organization limit.
+- Two backend polling queries in `evals/routing-eval.json`.
+
 ## 0.44.0 (unreleased)
 
 Codex plugin. The repository is now a Codex plugin marketplace as well as a Claude Code one. Verified on 2026-11-25 with Codex CLI 0.172.0: `codex plugin marketplace add` and `codex plugin add edgegap@edgegap` installed the plugin; Codex listed all 31 skills; `codex mcp list` showed the hosted Edgegap MCP server with `Bearer token` auth read from `EDGEGAP_API_TOKEN`, and `edgegap_context` with `check_token: true` reported the token accepted (MCP 0.19.13).
