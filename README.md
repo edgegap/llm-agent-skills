@@ -114,7 +114,7 @@ You only handle the parts that need a human: secrets, a few dashboard clicks, an
 /plugin install edgegap@edgegap
 ```
 
-The plugin installs all the skills **and** the hosted Edgegap MCP server. When you install and enable it, Claude Code asks for your [Edgegap API token](https://app.edgegap.com/user-settings?tab=tokens) (paste just the UUID). It is stored in your system's secure credential store (it's a `sensitive` plugin setting), never in your project, and sent only to the Edgegap MCP server.
+The plugin installs all the skills **and** the hosted Edgegap MCP server. Run `/mcp`, pick `edgegap` and sign in with your Edgegap account: you choose the organization and approve what the connection may do. No API token is pasted anywhere. See and revoke connected apps in the [dashboard](https://app.edgegap.com) under **User Settings → Authorized apps**.
 
 ### Any agent: the `skills` CLI
 
@@ -140,21 +140,40 @@ Manual copies don't update themselves; copy again after pulling.
 Then add the Edgegap MCP server yourself:
 
 ```bash
-claude mcp add --transport http edgegap https://mcp.edgegap.dev/mcp -H "Authorization: token <YOUR_EDGEGAP_API_TOKEN>" --scope user
+claude mcp add --transport http edgegap https://mcp.edgegap.com/mcp --scope user
 ```
+
+Then run `/mcp`, pick `edgegap` and sign in. An older entry that sends an `Authorization` header is refused by the hosted server: remove it (`claude mcp remove edgegap --scope user`) and add it again.
+
+### Codex: plugin
+
+Add this repository as a plugin marketplace and install the plugin (Codex CLI; in the ChatGPT desktop app, install `edgegap` from the Plugins Directory after adding the marketplace):
+
+```bash
+codex plugin marketplace add edgegap/llm-agent-skills
+codex plugin add edgegap@edgegap
+```
+
+The plugin installs every skill (call one with `$edgegap`, `$edgegap-threejs`... or just describe what you want) **and** the hosted Edgegap MCP server. Sign in once with `codex mcp login edgegap` (your Edgegap account, in the browser); no API token is needed. `codex mcp list` shows `edgegap` with `OAuth` auth.
+
+Without the plugin, add the server yourself (`codex mcp add edgegap --url https://mcp.edgegap.com/mcp`, then `codex mcp login edgegap`) and install the skills with `npx skills add edgegap/llm-agent-skills --skill "*"`, which puts them in `.agents/skills`, where Codex reads them.
+
+Worked example: [netcode-sample-codex-slime-sumo](https://github.com/edgegap/netcode-sample-codex-slime-sumo), where Codex built a Phaser game with OpenAI's Game Studio plugin, then made it online multiplayer on Edgegap with this plugin from one prompt (every prompt is in its `PROMPTS.md`). On Windows, the Codex CLI's sandbox may only allow reading files; run it in the ChatGPT desktop app, in WSL, or start `codex` with `--dangerously-bypass-approvals-and-sandbox` in the game's folder.
+
+To keep Codex on the Edgegap rules in a game repo, copy [`skills/edgegap/assets/AGENTS.md`](skills/edgegap/assets/AGENTS.md) into the repo's `AGENTS.md`.
 
 ### Other agents
 
 Each skill is a plain folder: `SKILL.md`, plus `references/` and sometimes `assets/`. Use the `skills` CLI above, or point your agent at `skills/edgegap/SKILL.md` (or `skills/edgegap-unity/SKILL.md` for Unity, `skills/edgegap-fishnet/SKILL.md` for FishNet, `skills/edgegap-purrnet/SKILL.md` for PurrNet, `skills/edgegap-unreal/SKILL.md` for Unreal Engine, `skills/edgegap-colyseus/SKILL.md` for Colyseus servers, `skills/edgegap-nakama/SKILL.md` for Nakama backends, `skills/edgegap-manus/SKILL.md` for Manus games). Manus users can import `skills/edgegap-manus` in Manus (Plugins & Skills → Skills → Create → Import skill from GitHub) or upload the folder. For the MCP server in other clients (Cursor, VS Code, Codex, Claude Desktop), see [llm-mcp-server](https://github.com/edgegap/llm-mcp-server).
 
-> claude.ai and Claude Desktop *custom connectors* can't send an `Authorization` header, so they can't use the hosted MCP server. In Claude Desktop, use the local server (`npx -y @edgegap/mcp`) as described in the edgegap-mcp README.
+> In claude.ai and Claude Desktop, add a custom connector (Settings → Connectors) with the URL `https://mcp.edgegap.com/mcp`, then connect and sign in. To use an API token instead of sign-in, run the local server (`npx -y @edgegap/mcp`) as described in the [llm-mcp-server README](https://github.com/edgegap/llm-mcp-server).
 
 ## What the plugin runs, sends and fetches
 
 Everything here happens only when you ask the agent to work on your game, and most steps show you the command first.
 
 **Network**
-- **Hosted Edgegap MCP server**, `https://mcp.edgegap.dev/mcp`, operated by Edgegap. Every tool call sends your Edgegap API token in the `Authorization` header. The server uses it for that request against the Edgegap API (`https://api.edgegap.com`) and does not store it. Tools list and create applications and app versions, start, inspect and stop deployments, read deployment logs, list registry tags, and generate Dockerfiles and matchmaker configs. Deployments are billed to your Edgegap account outside the free tier.
+- **Hosted Edgegap MCP server**, `https://mcp.edgegap.com/mcp`, operated by Edgegap. You sign in with your Edgegap account; your MCP client then sends a short-lived access token, limited to the organization and access you approved, with each tool call. The server uses it for that request against the Edgegap API (`https://api.edgegap.com`) and does not store it. Revoke the connection any time in the dashboard (User Settings → Authorized apps). Tools list and create applications and app versions, start, inspect and stop deployments, read deployment logs, list registry tags, and generate Dockerfiles and matchmaker configs. Deployments are billed to your Edgegap account outside the free tier.
 - **Edgegap API from your backend**, `https://api.edgegap.com`: code the `edgegap-deployments-api` skill writes for your backend calls it at runtime, with the token from your backend's secret manager. The agent itself never calls it directly or reads a token from your machine.
 - **Edgegap container registry**, `registry.edgegap.com`: `docker push` of your game server image, using the registry login you enter yourself with `docker login`.
 - **GitHub**: Unity Package Manager downloads the Edgegap Unity SDK (`https://github.com/edgegap/sdk-unity-sessions-matchmaker-server-browser.git`, latest) when the skill adds it to your project. For Unreal, you clone the engine source (`https://github.com/EpicGames/UnrealEngine`) yourself, and its `Setup.bat` downloads engine dependencies from Epic.
@@ -209,7 +228,7 @@ Everything here happens only when you ask the agent to work on your game, and mo
 
 ## Security and cost
 
-- Your **Edgegap API token** is organization-wide and can't be scoped. The skill never writes it to files, code or chat. It goes in the plugin's sensitive setting (prompted at install) or your own MCP config.
+- Your **Edgegap API token** is organization-wide and can't be scoped. The skill never writes it to files, code or chat. The hosted MCP server doesn't need it: you sign in with your Edgegap account instead. It goes only in your backend, your CI secrets, or a local MCP server's config.
 - The **matchmaker Auth Token** is designed to ship in game clients and grants no account access.
 - Deployments cost money outside the free tier. The skill tags its test deployments, stops the ones it starts, and makes servers stop themselves when matches end.
 
@@ -217,7 +236,7 @@ Everything here happens only when you ask the agent to work on your game, and mo
 
 ```
 .claude-plugin/        plugin + marketplace manifests
-.mcp.json              hosted Edgegap MCP server (token from the plugin's sensitive user setting)
+.mcp.json              hosted Edgegap MCP server (Edgegap sign-in, no token)
 skills/edgegap/        entry skill: routing, vocabulary, agent safety rules
 skills/edgegap-unity/  Unity skill: SKILL.md, references/, assets/ (C# templates, Dockerfile, matchmaker configs)
 skills/edgegap-fishnet/ FishNet skill: SKILL.md, references/, assets/ (FishNet-ready C# templates, Dockerfile, matchmaker config)

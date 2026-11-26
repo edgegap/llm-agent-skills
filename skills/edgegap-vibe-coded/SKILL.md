@@ -2,7 +2,7 @@
 name: edgegap-vibe-coded
 description: 'Make a vibe-coded game online multiplayer on Edgegap: a single-player browser game made with an AI tool (Claude, Cursor, Codex, ChatGPT, Lovable, Bolt, v0, Replit, Websim...) that plays against bots in the page, turned into online matches with one authoritative server per match, Find Match and a matchmaker, while solo play keeps working. Load this first for "make my vibe-coded game multiplayer", "add online play to the game I made with AI", "play this with friends online", "my Lovable/Bolt game needs multiplayer", or which game ideas work online. It checks whether the game holds up with network delay, gets the code out of the AI tool into a repo, moves the rules into one file shared by page and server, and runs a public demo cheaply (matchmaker always on, servers stop fast, free-tier limits). Verified with Thin Ice Tussle. Claude, ChatGPT, Gemini chat games: edgegap-chat-canvas; fal.ai: edgegap-fal; server and client templates: edgegap-threejs; games on Supabase: edgegap-supabase; Manus: edgegap-manus.'
 metadata:
-  version: "0.1.8"
+  version: "0.1.10"
 ---
 
 # Edgegap for vibe-coded games: from single-player to online matches
@@ -27,6 +27,7 @@ after:  page = rendering + input + Find Match ──> Edgegap matchmaker (always
 - [netcode-sample-claude-star-snatch](https://github.com/edgegap/netcode-sample-claude-star-snatch) (2026-11-20): Star Snatch, a Claude artifact written on claude.ai from one prompt, Canvas 2D; `edgegap-chat-canvas` covers the artifact side.
 - [netcode-sample-chatgpt-turf-painters](https://github.com/edgegap/netcode-sample-chatgpt-turf-painters) (2026-11-20): Turf Painters, one HTML file written on chatgpt.com, Canvas 2D; `edgegap-chat-canvas` covers the ChatGPT side.
 - [netcode-sample-gemini-bomb-tag](https://github.com/edgegap/netcode-sample-gemini-bomb-tag) (2026-11-20): Bomb Tag, written in Gemini Canvas from one prompt, Canvas 2D; `edgegap-chat-canvas` covers the Gemini side.
+- [netcode-sample-codex-slime-sumo](https://github.com/edgegap/netcode-sample-codex-slime-sumo) (2026-11-25): Slime Sumo, a Phaser + Vite game written by OpenAI Codex with the Game Studio plugin, then made online by Codex itself from one prompt with this skill and the Edgegap MCP: shared `src/rules.js`, the `edgegap-threejs` server, Find Match, image, app version and a direct test deployment, about 30 minutes with no further input. Through the matchmaker, two browser tabs were matched onto one server in 16 s and the server stopped itself about 30 s after both left.
 - [netcode-sample-fal-relic-rumble](https://github.com/edgegap/netcode-sample-fal-relic-rumble) (2026-11-17): Relic Rumble, 3D, written by a coding agent with rigged characters, props and sounds generated on fal.ai; built and tested online as a graybox before any asset existed. `edgegap-fal` covers the asset side.
 
 Two players on different networks or devices is each developer's own test. Games whose source is React + Vite from Lovable, Bolt or v0 follow the same pattern; the files move.
@@ -79,7 +80,7 @@ Load `edgegap-threejs` and follow its Phases 1 to 5 with this game:
 ## Phase 3: What the developer does
 
 Only these, each with the exact link or value:
-1. An Edgegap account and an API token, put in the agent's MCP settings (never in the game, the repo or chat).
+1. An Edgegap account, signed in from the agent's Edgegap MCP connection when it asks (no API token; nothing goes in the game, the repo or chat).
 2. Create the matchmaker in the dashboard from the config file you wrote (give its full path), and start it.
 3. Secrets for the image workflow in GitHub, if CI builds the image.
 4. Play it with someone on another network.

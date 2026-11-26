@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap Unity"
+  short_description: "Unity games on Edgegap servers"
+  default_prompt: "Use $edgegap-unity to put this Unity game on Edgegap dedicated servers and matchmaking."
+policy:
+  allow_implicit_invocation: true

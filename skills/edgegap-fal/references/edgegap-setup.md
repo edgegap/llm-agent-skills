@@ -34,9 +34,9 @@ The agent's sandbox often can't build or push: Docker Hub base images and `regis
 | Max duration | 30 minutes |
 | Env | `EMPTY_TIMEOUT_S=15`, `FIRST_JOIN_TIMEOUT_S=60`, `RESULTS_SECONDS=8`; add `REQUIRE_TICKET=1` once only matched players should get in |
 
-With an API token: `edgegap_create_app` and `edgegap_create_app_version` with these values, then `edgegap_list_app_versions` shows `registry_credentials_set: true`.
+With the Edgegap MCP connected: `edgegap_create_app` and `edgegap_create_app_version` with these values, then `edgegap_list_app_versions` shows `registry_credentials_set: true`.
 
-Without a usable token (for example a hosted MCP connection that can't forward the developer's Edgegap token: `edgegap_context` says `token_status: foreign`), use the dashboard with the developer signed in:
+Without the Edgegap MCP (for example a chat that can't connect it), use the dashboard with the developer signed in:
 1. Applications > Create application, name.
 2. The version form: name, vCPU slider to 0.25, Registry "Edgegap (registry.edgegap.com)", repository and tag, max duration, restart policy. Submit.
 3. The Create Port dialog opens right after: port, protocol WS (default is UDP), name, TLS Upgrade on. Submit.

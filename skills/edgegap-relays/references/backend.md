@@ -20,7 +20,7 @@ Base `https://api.edgegap.com`, header `Authorization: token <relay token>`. The
 - Tokens are unsigned 32-bit integers. Carry them as numbers (`long`/`uint` in C#; JavaScript numbers are fine).
 - Sessions bill while open. Delete them when the match ends.
 
-The Edgegap MCP has the same calls for tests (`edgegap_create_relay_session`, `edgegap_authorize_relay_user`, `edgegap_get_relay_session`, `edgegap_list_relay_sessions`, `edgegap_revoke_relay_user`, `edgegap_delete_relay_session`). They only work when the MCP runs with a relay token; with an API token they return 403.
+The Edgegap MCP has the same calls for tests (`edgegap_create_relay_session`, `edgegap_authorize_relay_user`, `edgegap_get_relay_session`, `edgegap_list_relay_sessions`, `edgegap_revoke_relay_user`, `edgegap_delete_relay_session`). They are on the local server (`npx -y @edgegap/mcp`) only, not the hosted one with Edgegap sign-in, and only work when it runs with a relay token; with an API token they return 403.
 
 ## 2. Who calls what
 

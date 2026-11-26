@@ -1,8 +1,8 @@
 ---
 name: edgegap-chat-canvas
-description: 'Chat canvases + Edgegap: make a browser game written in a chat app as one HTML file (a Claude artifact, a ChatGPT file or canvas, a Gemini Canvas) online multiplayer on Edgegap, one authoritative server per match with an optional matchmaker, while the file still plays in the chat preview. Load this when someone made, or wants to make, a game with Claude, ChatGPT or Gemini in the chat (artifact, canvas, "single HTML file it wrote") and wants online play, friends joining, Find Match or real servers, or asks how to prompt so the game can go online later. Has the prompt that keeps every rule between /* RULES:BEGIN */ and /* RULES:END */ markers, checks and fix prompts, getting the file out of each chat, a split script (block to the server's ES module, CI sync check), the online page, a direct ?server= path, CI image build, tests. Verified samples: netcode-sample-claude-star-snatch, -chatgpt-turf-painters, -gemini-bomb-tag. Other AI tools: edgegap-vibe-coded.'
+description: 'Chat canvases + Edgegap: make a browser game written in a chat app as one HTML file (a Claude artifact, a ChatGPT file or canvas, a Gemini Canvas) online multiplayer on Edgegap, one authoritative server per match with an optional matchmaker, while the file still plays in the chat preview. Load this when someone made, or wants to make, a game with Claude, ChatGPT or Gemini in the chat (artifact, canvas, "single HTML file it wrote") and wants online play, friends joining, Find Match or real servers, or asks how to prompt so the game can go online later. Has the prompt that keeps every rule between /* RULES:BEGIN */ and /* RULES:END */ markers, checks and fix prompts, getting the file out of each chat, a split script (block to an ES module for the server, CI sync check), the online page, a direct ?server= path, CI image build, tests. Verified samples: netcode-sample-claude-star-snatch, -chatgpt-turf-painters, -gemini-bomb-tag. Other AI tools: edgegap-vibe-coded.'
 metadata:
-  version: "0.3.0"
+  version: "0.3.2"
 ---
 
 # Edgegap for chat-canvas games: the chat writes one HTML file, Edgegap runs the matches
@@ -60,7 +60,7 @@ Often someone who made a game by chatting and has never run a server. Speak in o
 ## Phase 2: Image, app version, a direct match
 
 1. **Image from GitHub Actions**: `edgegap-threejs` [`server-image.yml`](../edgegap-threejs/assets/ci/server-image.yml) with `IMAGE` set, `artifact/**` and `tools/**` in its `paths`, and a `npm run check:rules` step before the local match test. Keep `provenance: false` and `sbom: false`. The developer sets the registry secrets; the `EDGEGAP_REGISTRY_PROJECT` variable is not a secret.
-2. **App version**: `edgegap_create_app_version` with port 7777 WS `gameport`, `tls_upgrade: true`, 256 vCPU units / 512 MB, restart `never`, max 30 minutes, env `EMPTY_TIMEOUT_S=15`, `FIRST_JOIN_TIMEOUT_S=60`, `RESULTS_SECONDS=8`. Without an API token, the same fields in the dashboard ([references/edgegap-setup.md](../edgegap-fal/references/edgegap-setup.md) in `edgegap-fal` lists each one).
+2. **App version**: `edgegap_create_app_version` with port 7777 WS `gameport`, `tls_upgrade: true`, 256 vCPU units / 512 MB, restart `never`, max 30 minutes, env `EMPTY_TIMEOUT_S=15`, `FIRST_JOIN_TIMEOUT_S=60`, `RESULTS_SECONDS=8`. Without the Edgegap MCP, the same fields in the dashboard ([references/edgegap-setup.md](../edgegap-fal/references/edgegap-setup.md) in `edgegap-fal` lists each one).
 3. **Direct match, no matchmaker**: `edgegap_deploy` near the players, `edgegap_wait_for_deployment`, then everyone opens `<page>?server=wss://<fqdn>:<external port>`. This is enough for playing with friends; the matchmaker is optional.
 
 ✅ Check: two windows on the `?server=` URL play one match; the deployment logs show both joins, `phase playing`, `match over`, `self-stop`, and the deployment leaves the list by itself.

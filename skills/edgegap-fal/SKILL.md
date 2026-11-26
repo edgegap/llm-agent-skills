@@ -2,7 +2,7 @@
 name: edgegap-fal
 description: 'fal.ai + Edgegap: make a browser game built with fal.ai online multiplayer on Edgegap (matchmaker, one authoritative server per match), keeping solo play. Load this when someone makes, or wants to make, a game with fal, fal.ai, the fal MCP, the genmedia CLI, fal game skills or fal Agent and wants Find Match, online play or real servers, or asks how to build a fal game that can go online. Two paths: a coding agent (Claude Code, Codex, Cursor, ChatGPT) writes a Three.js or canvas game and fal generates the assets (rigged 3D characters, props, sprites, textures, sounds); or fal Agent writes the code in a chat. Has the prompts that keep the rules in one DOM-free file the server runs, the fal asset pipeline (image to rigged GLB, clips, sizes, loader pitfalls, nothing in the server image), edgegap-threejs templates, CI image build, tests, clean-up. Verified samples: netcode-sample-fal-relic-rumble (3D, fal assets), netcode-sample-fal-orb-arena (fal Agent). Other AI tools: edgegap-vibe-coded.'
 metadata:
-  version: "0.2.1"
+  version: "0.2.2"
 ---
 
 # Edgegap for fal.ai games: fal makes the game's media, Edgegap runs the matches
@@ -71,7 +71,7 @@ Follow `edgegap-vibe-coded` Phases 1 and 2 with the `edgegap-threejs` templates.
 
 Read [references/edgegap-setup.md](references/edgegap-setup.md). In short:
 1. **Image from GitHub Actions** ([`server-image.yml`](../edgegap-threejs/assets/ci/server-image.yml) from `edgegap-threejs`): it runs the local match test, then pushes `registry.edgegap.com/<project>/<game>:<YYYYMMDD-HHMM>`. Keep `provenance: false` and `sbom: false` on `docker/build-push-action`: with the defaults, Orb Arena's first image failed every deployment with `Unable to pull image from registry`. The developer sets the registry secrets in GitHub; you can set the `EDGEGAP_REGISTRY_PROJECT` variable. A Docker login on the developer's machine may belong to another registry project (a push then answers 401): CI with the repo's own secrets avoids guessing.
-2. **App version**: with an Edgegap API token, `edgegap_create_app_version` (port 7777 WS `gameport`, `tls_upgrade: true`, 256 vCPU units, restart `never`, max 30 minutes, quick-stop env vars). Without one, the same settings in the dashboard: the setup reference lists every field. Before the matchmaker exists you can already prove the server: `edgegap_deploy`, then `SERVER_URL=wss://<fqdn>:<port> node tests/e2e.mjs 2`.
+2. **App version**: with the Edgegap MCP connected, `edgegap_create_app_version` (port 7777 WS `gameport`, `tls_upgrade: true`, 256 vCPU units, restart `never`, max 30 minutes, quick-stop env vars). Without one, the same settings in the dashboard: the setup reference lists every field. Before the matchmaker exists you can already prove the server: `edgegap_deploy`, then `SERVER_URL=wss://<fqdn>:<port> node tests/e2e.mjs 2`.
 3. **Matchmaker**: `matchmaker/<profile>.json` (2 to 4 players, a lone player after 20 s with bots) with the version name and every page origin in `allowed_cors_origins`. The developer creates and starts it in the dashboard; give them the file's full path. Its API URL and Auth Token go in `client/config.local.js` (git-ignored) or `client/config.js` (client-safe; never the Edgegap API token).
 
 To ship a new server build (the rules changed), point the version at the new tag with `edgegap_update_app_version`; the matchmaker keeps working. Asset-only changes need no server build at all.

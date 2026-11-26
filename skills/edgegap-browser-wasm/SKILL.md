@@ -2,7 +2,7 @@
 name: edgegap-browser-wasm
 description: 'Browser / WebAssembly game multiplayer on Edgegap: a three.js (or other web) game with WASM physics (Rapier, Box2D, Jolt, ammo.js) taken to an authoritative Node.js server over secure WebSockets, with client-side prediction and the client on a CDN, not in the server image. Load this for "make my browser/WASM game multiplayer", "three.js + Rapier multiplayer", "authoritative physics server for my web game", "client prediction / reconciliation with Rapier", "wss:// from my https page fails", "mixed content", "ERR_CERT_COMMON_NAME_INVALID", "ERR_SSL_PROTOCOL_ERROR", "WASM init fails in Docker", or a server image bloated with the client bundle. Has the shared physics module, predictor, connection error messages, slim multi-stage Dockerfile and the WS + TLS Upgrade setup, from netcode-sample-threejs-rapier. Matchmaker and Find Match: edgegap-threejs; vibe-coded games: edgegap-vibe-coded; Unity WebGL: edgegap-unity; Godot web: edgegap-godot.'
 metadata:
-  version: "0.1.1"
+  version: "0.1.2"
 ---
 
 # Edgegap for browser and WebAssembly games: authoritative physics over wss://
@@ -69,7 +69,7 @@ Read `references/wasm-in-containers.md`. Template: `assets/server/Dockerfile` an
 ## Phase 4: Deploy on Edgegap
 
 Same as `edgegap-threejs` Phase 3 ([its deploy reference](../edgegap-threejs/references/deploy.md)). In short:
-1. Push to `registry.edgegap.com/<project>/<image>:<tag>`. The developer logs in (`echo "<token>" | docker login registry.edgegap.com -u "<username>" --password-stdin`); `edgegap_get_registry_credentials` returns nothing with a regular API token. A `401` on push means a stale login or another project. CI: the sample's `.github/workflows/server-image.yml` with repo secrets.
+1. Push to `registry.edgegap.com/<project>/<image>:<tag>`. The developer logs in (`echo "<token>" | docker login registry.edgegap.com -u "<username>" --password-stdin`); `edgegap_get_registry_credentials` returns nothing with Edgegap sign-in or a regular API token. A `401` on push means a stale login or another project. CI: the sample's `.github/workflows/server-image.yml` with repo secrets.
 2. `edgegap_create_app` + `edgegap_create_app_version`: port `7777`, protocol `WS`, `tls_upgrade: true`, name `gameport`; 256 CPU units / 512 MB; `max_duration_minutes` 30-60; `restart_policy: "never"`.
 3. Ask, then `edgegap_deploy` (player IP, test tag) → `edgegap_wait_for_deployment` → `wss://<fqdn>:<external>`. The API equivalent is `GET /v1/status/{request_id}`: `fqdn`, `ports.gameport.external`, `ports.gameport.link`.
 

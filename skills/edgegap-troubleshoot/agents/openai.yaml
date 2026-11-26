@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap troubleshoot"
+  short_description: "Fix Edgegap deployments, ports, matchmaking"
+  default_prompt: "Use $edgegap-troubleshoot to find why this Edgegap deployment or match fails."
+policy:
+  allow_implicit_invocation: true

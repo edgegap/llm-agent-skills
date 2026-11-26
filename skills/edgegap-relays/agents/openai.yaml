@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap relays"
+  short_description: "Host/client games through Edgegap relays"
+  default_prompt: "Use $edgegap-relays to connect this host/client game through Edgegap relays."
+policy:
+  allow_implicit_invocation: true

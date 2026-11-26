@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap WASM games"
+  short_description: "WASM and Rapier games on Edgegap servers"
+  default_prompt: "Use $edgegap-browser-wasm to run this game's WebAssembly physics on an Edgegap server."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "edgegap": {
+      "type": "http",
+      "url": "https://mcp.edgegap.com/mcp"
+    }
+  }
+}

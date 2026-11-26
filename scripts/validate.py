@@ -1,4 +1,4 @@
-"""Repository checks: skill frontmatter, JSON files, plugin manifests. Run: python scripts/validate.py"""
+"""Repository checks: skill frontmatter, JSON files, Claude and Codex plugin manifests. Run: python scripts/validate.py"""
 import json
 import re
 import sys
@@ -31,6 +31,13 @@ def check_skill(skill_md: Path) -> None:
     raw = m.group(1).split("description:", 1)[1].strip() if "description:" in m.group(1) else ""
     if ": " in raw and not raw.startswith(("'", '"', ">", "|")):
         errors.append(f"{skill_md}: quote the description, it contains ': ' (invalid plain YAML scalar)")
+    first = raw.splitlines()[0] if raw else ""
+    if first.startswith("'") and "'" in first[1:-1].replace("''", ""):
+        errors.append(f"{skill_md}: the single-quoted description contains a lone ' (write '' or rephrase); strict YAML parsers such as Codex's reject it")
+    if first.startswith('"') and re.search(r'(?<!\)"', first[1:-1]):
+        errors.append(f"{skill_md}: the double-quoted description contains an unescaped \"")
+    if not (skill_md.parent / "agents/openai.yaml").exists():
+        errors.append(f"{skill_md.parent.name}: missing agents/openai.yaml (Codex display name and default prompt)")
     lines = text.count("\n")
     if lines > 500:
         errors.append(f"{skill_md}: {lines} lines, keep SKILL.md under 500")
@@ -70,6 +77,24 @@ def check_manifests() -> None:
     versions = {plugin.get("version")} | {p.get("version") for p in market.get("plugins", []) if p.get("name") == plugin.get("name")}
     if len(versions) != 1:
         errors.append(f"plugin.json and marketplace.json versions differ: {versions}")
+    codex = json.loads((ROOT / ".codex-plugin/plugin.json").read_text(encoding="utf-8"))
+    if codex.get("version") != plugin.get("version"):
+        errors.append(f".codex-plugin/plugin.json version {codex.get('version')} differs from .claude-plugin/plugin.json {plugin.get('version')}")
+    ui = codex.get("interface", {})
+    for key, limit in (("displayName", 30), ("shortDescription", 30), ("longDescription", 4000), ("developerName", 80)):
+        if len(ui.get(key, "")) > limit:
+            errors.append(f".codex-plugin/plugin.json: interface.{key} is over {limit} characters (Plugins Directory limit)")
+    if len(codex.get("description", "")) > 4000 or len(codex.get("keywords", [])) > 25:
+        errors.append(".codex-plugin/plugin.json: description over 4000 characters or more than 25 keywords")
+    for prompt in ui.get("defaultPrompt", []):
+        if len(prompt) > 128:
+            errors.append(f".codex-plugin/plugin.json: defaultPrompt over 128 characters: {prompt[:40]}...")
+    for key in ("logo", "composerIcon"):
+        if not (ROOT / ui.get(key, "missing")).exists():
+            errors.append(f".codex-plugin/plugin.json: interface.{key} file not found")
+    for key in ("skills", "mcpServers"):
+        if not (ROOT / codex.get(key, "")).exists():
+            errors.append(f".codex-plugin/plugin.json: {key} path {codex.get(key)} not found")
     if plugin.get("version") and plugin["version"] not in (ROOT / "CHANGELOG.md").read_text(encoding="utf-8"):
         errors.append(f"CHANGELOG.md has no entry for {plugin['version']}")
 

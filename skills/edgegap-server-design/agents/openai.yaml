@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap server design"
+  short_description: "Authoritative server rules for Edgegap"
+  default_prompt: "Use $edgegap-server-design to check this game server is ready for Edgegap."
+policy:
+  allow_implicit_invocation: true

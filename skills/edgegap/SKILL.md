@@ -2,12 +2,12 @@
 name: edgegap
 description: 'Start here for hosting a game on Edgegap (dedicated servers + matchmaking) when the engine is not Unity, Unreal or Godot, is unknown, or the question is about the platform. Use when someone wants to host or deploy a game server, wants a solo or co-op game always online or uncrackable, asks how players join, wants custom-engine servers, compares hosts, or asks what Edgegap apps, versions, deployments, fleets or matchmakers are, even without saying "hosting". It picks the server shape, explains vocabulary, safety rules, routes to a skill. For a Unity project, load edgegap-unity instead (NGO: edgegap-ngo, FishNet: edgegap-fishnet, PurrNet: edgegap-purrnet, Fusion: edgegap-fusion); Unreal: edgegap-unreal; Godot 4: edgegap-godot; Colyseus: edgegap-colyseus; Cocos: edgegap-cocos; Nakama: edgegap-nakama; Manus: edgegap-manus; Three.js/web: edgegap-threejs; WASM: edgegap-browser-wasm; vibe-coded: edgegap-vibe-coded; chat canvas game: edgegap-chat-canvas; fal.ai: edgegap-fal; matchmaking: edgegap-matchmaking.'
 metadata:
-  version: "0.44.0"
+  version: "0.47.0"
 ---
 
 # Edgegap
 
-Pack version: 0.44.0
+Pack version: 0.47.0
 
 Edgegap runs dedicated game servers. You push a **Linux container image** of your game server, register it as an **app version**, and ask for a **deployment** near a group of players. Edgegap picks the location with the best ping for that group, starts the container in seconds, and returns a URL (`<id>.pr.edgegap.net`), a public IP, and an external port per internal port. Players connect. The match ends, the server stops, billing stops.
 
@@ -65,7 +65,7 @@ For a Godot 4 game whose server is Godot itself (high-level multiplayer with ENe
 | A game made, or to be made, with fal.ai (a coding agent with fal-generated 3D models, sprites or sounds, or fal Agent writing the code) that should get online matches: server-ready rules, assets kept out of the server, then the same path | `edgegap-fal` |
 | A game with a Supabase backend (Supabase Auth, profiles, leaderboards, Edge Functions): only signed-in players find a match, the game server records results in Supabase | `edgegap-supabase` |
 | Design matchmaking: queues, parties, skill, modes, region selection, join in progress (backfill), or pick a matchmaker | `edgegap-matchmaking` |
-| Write backend code that starts, finds or stops servers, or receives webhooks | `edgegap-deployments-api` |
+| Write backend code that starts, finds or stops servers (an allocator, lobby service or custom matchmaker), polls deployment status (`/v1/status`) or receives webhooks: the API rate limits and webhook rules are there | `edgegap-deployments-api` |
 | Write or fix a Dockerfile, push to a registry, pick an image tag | `edgegap-containerize` |
 | Test a server image before spending money | `edgegap-local-testing` |
 | Go live, plan capacity, roll out a new build, control cost | `edgegap-launch` |
@@ -89,7 +89,7 @@ For a Godot 4 game whose server is Godot itself (high-level multiplayer with ENe
 
 ## Accounts, tokens and money
 
-- **Edgegap API token** (dashboard: User Settings → Tokens). It is organization-wide and cannot be scoped, so it is a password. It lives only in the developer's backend, their CI secret store, or the MCP configuration. Never in a game client, a game server image, a deployment env var, a file in git, or chat output. Header format: `Authorization: token <uuid>`.
+- **Edgegap API token** (dashboard: User Settings → Tokens). It is organization-wide and cannot be scoped, so it is a password. It lives only in the developer's backend, their CI secret store, or a local MCP server's configuration; the hosted MCP signs in with the Edgegap account instead. Never in a game client, a game server image, a deployment env var, a file in git, or chat output. Header format: `Authorization: token <uuid>`.
 - **Registry credentials** (dashboard: Container Registry) let Docker push and let Edgegap pull. They are secrets too.
 - **Matchmaker Auth Token** is designed to ship in game clients. It grants no account access.
 - **Free tier**: one deployment at a time, 60-minute deployments, 2 applications, 2 versions, 10 GB registry, at most 1.5 vCPU / 3 GB per deployment, and the matchmaker stops 3 hours after each start. Paid tiers lift these and unlock image caching and detailed metrics.
@@ -98,7 +98,7 @@ For a Godot 4 game whose server is Godot itself (high-level multiplayer with ENe
 
 ## How you act on Edgegap
 
-Read [references/agent-rules.md](references/agent-rules.md) before your first Edgegap action. In short: when you act on Edgegap yourself, use the `edgegap_*` MCP tools if they are connected, otherwise guide the developer through the dashboard; code you write for the developer's product always calls HTTP. Confirm before anything that costs money or changes what players get, tag what you start, and stop only what you started. A tool result with `status: "empty"` or `"not_configured"` and a `next_step` is a normal answer, not a failure: follow the next step instead of retrying. When `edgegap_wait_for_deployment` times out, call it again; when a deployment fails, read its logs before redeploying. Before you finish, stop every deployment you started and confirm with `edgegap_list_deployments` `only_agent_deployments: true`. A version's registry login and secret env values read back as `This value is set and encrypted`: never copy them into a new or updated version. Once per conversation, check the installed skills with `edgegap_update_skills` (without `apply`) and ask before updating.
+Read [references/agent-rules.md](references/agent-rules.md) before your first Edgegap action. To keep Codex and other agents on these rules in a game repo, offer to add [assets/AGENTS.md](assets/AGENTS.md) to the repo's `AGENTS.md`. In short: when you act on Edgegap yourself, use the `edgegap_*` MCP tools if they are connected, otherwise guide the developer through the dashboard; code you write for the developer's product always calls HTTP. Confirm before anything that costs money or changes what players get, tag what you start, and stop only what you started. A tool result with `status: "empty"` or `"not_configured"` and a `next_step` is a normal answer, not a failure: follow the next step instead of retrying. When `edgegap_wait_for_deployment` times out, call it again; when a deployment fails, read its logs before redeploying. Before you finish, stop every deployment you started and confirm with `edgegap_list_deployments` `only_agent_deployments: true`. A version's registry login and secret env values read back as `This value is set and encrypted`: never copy them into a new or updated version. Once per conversation, check the installed skills with `edgegap_update_skills` (without `apply`) and ask before updating.
 
 ## When the API and these skills disagree
 

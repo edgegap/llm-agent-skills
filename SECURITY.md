@@ -15,4 +15,4 @@ Useful in a report: which skill, template or script is affected, what an agent o
 
 ## Scope notes
 
-The Edgegap API token is organization-wide and cannot be scoped; the skills are written so it stays in the MCP configuration or the developer's backend. The matchmaker Auth Token is designed to ship in game clients and is not a secret.
+The Edgegap API token is organization-wide and cannot be scoped; the skills are written so it stays in the developer's backend, CI secrets or a local MCP server's configuration (the hosted MCP server uses Edgegap sign-in, not the token). The matchmaker Auth Token is designed to ship in game clients and is not a secret.

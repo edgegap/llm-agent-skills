@@ -2,7 +2,7 @@
 name: edgegap-unity
 description: 'Unity + Edgegap: get a Unity multiplayer game online with dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on a Unity project: it has the Unity workflow, tested C# templates (matchmaker client, server self-stop), Linux server build, Dockerfile, matchmaker config and fixes for known pitfalls. Use when a Unity dev wants online play: "put my game online", "play with people over the internet", "works on LAN/same wifi but not online", "nobody should have to host", "click Play and get matched", how Fall Guys/Among Us match players, servers for a playtest, "where do I start with servers". Also for Mirror host/client games moving to dedicated servers, WebGL multiplayer, or debugging Edgegap deployments, ports or matchmaking for a Unity game. Use even for beginners who never say Edgegap, servers or Docker. Not for NGO (edgegap-ngo), FishNet (edgegap-fishnet), PurrNet (edgegap-purrnet) or Fusion (edgegap-fusion) projects, Unreal (edgegap-unreal), Godot or non-game backends.'
 metadata:
-  version: "0.2.6"
+  version: "0.2.8"
 ---
 
 # Edgegap for Unity: dedicated servers + matchmaking
@@ -50,7 +50,7 @@ Read `references/netcode.md`.
 
 ## Phase 2: Connect to Edgegap
 
-Read `references/deploy.md` §1-2. Make sure the developer has an account, Docker running, and the Unity Linux Build Support + Linux Dedicated Server modules. Then get the Edgegap MCP connected with their API token: with the `edgegap` plugin Claude Code prompts them for it when the plugin is enabled; otherwise they run the `claude mcp add ...` command in their own terminal. Either way they restart the session afterwards. Common slip: the header must be exactly `Authorization: token <uuid>`. A token pasted with its own `token ` prefix becomes `token token <uuid>` and is rejected as "not an Edgegap API token".
+Read `references/deploy.md` §1-2. Make sure the developer has an account, Docker running, and the Unity Linux Build Support + Linux Dedicated Server modules. Then get the Edgegap MCP connected: the `edgegap` plugin declares it, or they run the `claude mcp add ...` command (no header) in their own terminal. Either way they sign in with their Edgegap account from `/mcp`; no API token is pasted. An old entry that still sends an `Authorization` header is refused: remove it, add it again, sign in.
 
 ✅ Check: `edgegap_list_apps` succeeds.
 

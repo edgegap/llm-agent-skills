@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap Cocos"
+  short_description: "Cocos Creator games on Edgegap"
+  default_prompt: "Use $edgegap-cocos to put this Cocos Creator game online on Edgegap."
+policy:
+  allow_implicit_invocation: true
