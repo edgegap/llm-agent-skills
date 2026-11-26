@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Splat Arena: HTML5 multiplayer with Phaser and Edgegap</title>
+  <meta name="description" content="A 2D HTML5 multiplayer game made with Phaser and a Node.js WebSocket server, hosted on Edgegap with matchmaking." />
+  <link rel="stylesheet" href="./style.css" />
+  <!-- Phaser as a classic script: it defines the global Phaser. No bundler, no build step.
+       The version is pinned and the integrity hash makes the browser refuse a modified file. -->
+  <script src="https://cdn.jsdelivr.net/npm/phaser@4.2.1/dist/phaser.min.js"
+          integrity="sha384-kyUQ5+cxc6+X89xEG6DhcXLcDU9T3Z+o/45VdT6pgAwtG6gxtAzYTEn0Wwj/BKZd"
+          crossorigin="anonymous"></script>
+  <!-- The Edgegap JS SDK (matchmaking from the browser) through an import map, also pinned and hashed. -->
+  <script type="importmap">
+    {
+      "imports": {
+        "@edgegap/sdk": "https://cdn.jsdelivr.net/npm/@edgegap/sdk@1.1.0/dist/browser/edgegap.js"
+      },
+      "integrity": {
+        "https://cdn.jsdelivr.net/npm/@edgegap/sdk@1.1.0/dist/browser/edgegap.js": "sha384-U8KQMl3e8xF4aAIJJMXV8IdkCKWiHSQhHISsedbG4z/L99dNOq5FoRlMgPDYgNUF"
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="game"></div>
+
+  <div class="ui">
+    <div class="menu" id="menu">
+      <h1>Splat Arena</h1>
+      <p class="tagline">HTML5 multiplayer paintball. Phaser in the browser, one Node.js server per match on Edgegap.</p>
+      <label>Name <input id="name" maxlength="16" /></label>
+      <div class="buttons">
+        <button id="find" class="primary">Find match</button>
+        <button id="local">Local server :7777</button>
+        <button id="cancel" hidden>Cancel</button>
+      </div>
+      <p class="status" id="status"></p>
+      <p class="help">WASD or arrows to move, mouse to aim, click or Space to fire. First to 10 hits wins.</p>
+    </div>
+
+    <div class="hud" id="hud" hidden>
+      <ol class="board" id="board"></ol>
+      <div class="banner" id="banner"></div>
+      <div class="big" id="big"></div>
+    </div>
+  </div>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

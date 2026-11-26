@@ -43,6 +43,7 @@ Last commit on each repo's default branch, checked 2026-11-16. **Current** = upd
 | Repo | Stack | Last commit | Status | Skill |
 |---|---|---|---|---|
 | [netcode-sample-threejs-rapier](https://github.com/edgegap/netcode-sample-threejs-rapier) | three.js + Rapier WASM physics, authoritative Node.js server, client prediction, slim server image, client on GitHub Pages; reference for browser/WebAssembly games (no matchmaker) | 2026-11-18 | Current | `edgegap-browser-wasm` |
+| [netcode-sample-html5-phaser](https://github.com/edgegap/netcode-sample-html5-phaser) | HTML5 2D game (Phaser 4, Splat Arena), authoritative Node.js server with projectiles and bots, Find Match, Windows build-and-deploy script; README is an HTML5 multiplayer tutorial | 2026-11-24 | Current | `edgegap-html5` |
 | [netcode-sample-threejs-minigames](https://github.com/edgegap/netcode-sample-threejs-minigames) | Three.js, five minigames, Node.js server, matchmaker | 2026-11-02 | Current | `edgegap-threejs` |
 | [netcode-sample-threejs-supabase](https://github.com/edgegap/netcode-sample-threejs-supabase) | Three.js + Supabase auth, profiles, leaderboard | 2026-11-04 | Current | `edgegap-supabase` |
 | [netcode-sample-threejs-vibe-coded](https://github.com/edgegap/netcode-sample-threejs-vibe-coded) | A vibe-coded single-player Three.js game made online multiplayer; tags `before` and `after` | 2026-11-04 | Current | `edgegap-vibe-coded`, `edgegap-threejs` |
@@ -56,7 +57,7 @@ Last commit on each repo's default branch, checked 2026-11-16. **Current** = upd
 | [netcode-sample-fal-orb-arena](https://github.com/edgegap/netcode-sample-fal-orb-arena) | A game written by fal Agent (fal.ai) from one prompt, Canvas 2D arena shooter, made online multiplayer; README is a step-by-step recipe, no live demo | 2026-11-09 | Current | `edgegap-fal`, `edgegap-vibe-coded` |
 | [backend-game-sample-threejs-colyseus-tanks](https://github.com/edgegap/backend-game-sample-threejs-colyseus-tanks) (fork) | Colyseus 0.17 tanks | 2026-11-04 | Current | `edgegap-colyseus` |
 | [backend-game-sample-cocos-colyseus-tictactoe](https://github.com/edgegap/backend-game-sample-cocos-colyseus-tictactoe) (fork) | Cocos Creator 3.8 + Colyseus, vendors the Cocos extension | 2026-10-29 | Current | `edgegap-colyseus` |
-| [backend-game-sample-colyseus-phaser](https://github.com/edgegap/backend-game-sample-colyseus-phaser) | Colyseus + Phaser, client and server in one container | 2026-06-12 | Dated (older Colyseus; its README notes a wrong clone URL) | none; follow `edgegap-colyseus` |
+| [backend-game-sample-colyseus-phaser](https://github.com/edgegap/backend-game-sample-colyseus-phaser) | Colyseus + Phaser, client and server in one container; archived | 2026-06-12 | Dated (older Colyseus; its README notes a wrong clone URL) | none; follow `edgegap-colyseus`, or `edgegap-html5` for Phaser without Colyseus |
 
 ## Relays (host-client games)
 
@@ -80,7 +81,7 @@ Last commit on each repo's default branch, checked 2026-11-16. **Current** = upd
 | Repo | What it is | Last commit | Skill |
 |---|---|---|---|
 | [sdk-unity-sessions-matchmaker-server-browser](https://github.com/edgegap/sdk-unity-sessions-matchmaker-server-browser) | Unity SDK: matchmaker, deployments, server browser | 2026-10-22 | `edgegap-unity` and the Unity netcode skills |
-| [sdk-js-sessions-matchmaker-server-browser](https://github.com/edgegap/sdk-js-sessions-matchmaker-server-browser) | JavaScript SDK (`@edgegap/sdk`) | 2026-11-02 | `edgegap-threejs`, `edgegap-colyseus`, `edgegap-matchmaking` |
+| [sdk-js-sessions-matchmaker-server-browser](https://github.com/edgegap/sdk-js-sessions-matchmaker-server-browser) | JavaScript SDK (`@edgegap/sdk`) | 2026-11-02 | `edgegap-threejs`, `edgegap-html5`, `edgegap-colyseus`, `edgegap-matchmaking` |
 | [sdk-unreal-engine](https://github.com/edgegap/sdk-unreal-engine) | Unreal SDK (UE 5.0 to 5.8, beta): matchmaker client, server ticket check | 2026-11-03 | `edgegap-unreal` |
 | [buildtool-unity-plugin](https://github.com/edgegap/buildtool-unity-plugin) | Unity editor plugin: build, push, deploy | 2026-11-02 | `edgegap-unity` and the Unity netcode skills |
 | [buildtool-unreal-scripts](https://github.com/edgegap/buildtool-unreal-scripts) | Unreal build scripts | 2026-11-02 | `edgegap-unreal` |

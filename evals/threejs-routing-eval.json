@@ -1,11 +1,11 @@
 [
   {"query": "I made a little three.js arena game, it's single player right now. How do I make it online multiplayer with a real server and matchmaking?", "expected_skill": "edgegap-threejs"},
   {"query": "my three.js racing game has a node ws server I run on my laptop. I want every race to get its own server near the players with a Find Match button", "expected_skill": "edgegap-threejs"},
-  {"query": "browser game (vanilla JS + canvas) with a Node.js websocket server: how do I host the server on edgegap and connect over wss from my https itch.io page?", "expected_skill": "edgegap-threejs"},
+  {"query": "browser game (vanilla JS + canvas) with a Node.js websocket server: how do I host the server on edgegap and connect over wss from my https itch.io page?", "expected_skill": "edgegap-html5"},
   {"query": "We have five small web minigames and want one Edgegap matchmaker with a queue per game. Can they share one docker image?", "expected_skill": "edgegap-threejs"},
   {"query": "Babylon.js game, players currently connect peer to peer with PeerJS. We want an authoritative server per match on Edgegap instead", "expected_skill": "edgegap-threejs"},
   {"query": "the edgegap matchmaker returns 429 when a lot of players click Play in my three.js game at the same time. what should the browser client do?", "expected_skill": "edgegap-threejs"},
-  {"query": "phaser 3 game with a plain ws node server, 2v2 teams. how do the matchmaker's teams reach my server so it puts players on the right side?", "expected_skill": "edgegap-threejs"},
+  {"query": "phaser 3 game with a plain ws node server, 2v2 teams. how do the matchmaker's teams reach my server so it puts players on the right side?", "expected_skill": "edgegap-html5"},
   {"query": "how should my node game server (three.js client) stop its own edgegap deployment when the match ends so I don't pay for idle servers?", "expected_skill": "edgegap-threejs"},
   {"query": "our phaser + colyseus.js game works locally on ws://localhost:2567. what do we need so players on https can connect to edgegap servers?", "expected_skill": "edgegap-colyseus"},
   {"query": "I built a browser game in Manus and want online matchmaking with Steam login. How do I add multiplayer servers?", "expected_skill": "edgegap-manus"},

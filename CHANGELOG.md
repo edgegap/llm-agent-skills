@@ -2,6 +2,13 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.48.0 (unreleased)
+
+A skill for HTML5 2D games (Phaser, canvas, PixiJS, Kaplay), from [netcode-sample-html5-phaser](https://github.com/edgegap/netcode-sample-html5-phaser). Verified on Edgegap on 2026-11-24 with a direct deployment: the image built with Docker Engine in WSL and pushed to the Edgegap registry, an app version with WS + TLS Upgrade deployed in Toronto in about 10 s, two headless players played a full Splat Arena match over `wss`, and the deployment stopped itself 25 s after the match. Locally, `npm test` played a full match with bots and two browser tabs played together. Through the matchmaker, two headless players were matched onto one deployment (HOST_ASSIGNED in about 23 s) and it stopped itself 24 s after the match; two Chrome tabs pressing Find Match landed on the same server, which stopped after both left.
+
+- `edgegap-html5` 0.1.0: SKILL.md (2D server rules, Phaser client and its pitfalls, other renderers, Windows build-and-deploy with tokens kept in the console), `assets/client/` (Phaser 4 client), `assets/server/game.js` and `assets/server/util.js` (2D), `assets/tools/` (headless player, local test, `edgegap-env.ps1`, `edgegap-test.ps1`), `assets/matchmaker/splat-arena.json`. It shares the room, lifecycle, Dockerfile, e2e and references of `edgegap-threejs`.
+- Routing: `edgegap` 0.48.0, `edgegap-threejs` 0.3.10 (Phaser and 2D canvas go to `edgegap-html5`), `edgegap-samples` 0.1.14 (catalog), new `evals/html5-routing-eval.json`, two queries in `evals/threejs-routing-eval.json` now expect `edgegap-html5`.
+
 ## 0.47.0 (unreleased)
 
 `edgegap-nakama` follows the Edgegap Fleet Manager for Nakama to Nakama 3.42.0 (edgegap/backend-nakama-edgegap-plugin#13, `902c9aa`). `NewEdgegapFleetManager` now takes an `EdgegapConfig` instead of the `initializer` and no longer reads the runtime env itself, and Fleet Managers can be registered by name with their own namespace.

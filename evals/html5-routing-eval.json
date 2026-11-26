@@ -1,0 +1,17 @@
+[
+  {"query": "I'm looking for an html5 multiplayer game tutorial where each match gets its own server and players click Find Match", "expected_skill": "edgegap-html5"},
+  {"query": "my phaser 3 platformer runs in the browser, single player. how do I make it online multiplayer with an authoritative node server?", "expected_skill": "edgegap-html5"},
+  {"query": "vanilla JS canvas 2D shooter with a socket.io server on my laptop. I want to host the server on edgegap and connect over wss from github pages", "expected_skill": "edgegap-html5"},
+  {"query": "PixiJS top-down game: players should get matched and land on a server near them. what does the browser send and what does the server decide?", "expected_skill": "edgegap-html5"},
+  {"query": "phaser game with a plain ws node server, 2v2 teams. how do the matchmaker's teams reach my server so it puts players on the right side?", "expected_skill": "edgegap-html5"},
+  {"query": "players in my html5 canvas game can fire faster by editing the page in devtools. how should the edgegap server handle bullets and cooldowns?", "expected_skill": "edgegap-html5"},
+  {"query": "I'm on Windows without Docker Desktop. How do I build my HTML5 game's node server image, push it to the Edgegap registry and test one deployment?", "expected_skill": "edgegap-html5"},
+  {"query": "three.js arena game with a node ws server, I want Find Match and a server per match on edgegap", "expected_skill": "edgegap-threejs"},
+  {"query": "our phaser + colyseus.js game works locally on ws://localhost:2567. what do we need so players on https can connect to edgegap servers?", "expected_skill": "edgegap-colyseus"},
+  {"query": "I asked Claude for a canvas game in an artifact. How do I make that one HTML file multiplayer?", "expected_skill": "edgegap-chat-canvas"},
+  {"query": "Godot 4 HTML5 web export with WebSocketMultiplayerPeer, I want dedicated servers on edgegap", "expected_skill": "edgegap-godot"},
+  {"query": "Unity WebGL build with Mirror, need dedicated servers and a matchmaker on Edgegap", "expected_skill": "edgegap-unity"},
+  {"query": "How do I make a Phaser arcade physics sprite bounce off world bounds?", "expected_skill": null},
+  {"query": "What's the difference between Phaser.Scale.FIT and Phaser.Scale.RESIZE for a canvas game on mobile?", "expected_skill": null},
+  {"query": "How do I draw a rotated rectangle on an HTML5 canvas 2D context?", "expected_skill": null}
+]
