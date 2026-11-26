@@ -12,12 +12,12 @@ Contents
 ## 1. Edgegap access and the MCP connection
 
 - **Account**: free at https://app.edgegap.com/auth/register.
-- **API token**: dashboard → User Settings → Tokens. Organization-wide, so it is a password: never in project files, Dockerfiles, git, the game client or chat. It is not the matchmaker Auth Token.
-- **MCP**: if `edgegap_list_apps` already works, skip this. With the `edgegap` Claude Code plugin, Claude Code prompts for the token when the plugin is enabled (`/plugin` → edgegap → configure to re-enter it). Otherwise the developer runs, in their own terminal:
+- **API token**: not needed for the hosted MCP, which signs in; the engine plugin, a backend, CI or the local MCP server (`npx -y @edgegap/mcp`) use one. Dashboard → User Settings → Tokens. Organization-wide, so it is a password: never in project files, Dockerfiles, git, the game client or chat. It is not the matchmaker Auth Token.
+- **MCP**: if `edgegap_list_apps` already works, skip this. The `edgegap` Claude Code plugin already declares the server. Otherwise the developer runs, in their own terminal:
   ```bash
-  claude mcp add --transport http edgegap https://mcp.edgegap.com/mcp -H "Authorization: token <YOUR_EDGEGAP_API_TOKEN>" --scope user
+  claude mcp add --transport http edgegap https://mcp.edgegap.com/mcp --scope user
   ```
-  and restarts the session. "does not contain an Edgegap API token" usually means the header became `token token <uuid>`. Claude Desktop and claude.ai custom connectors can't send the header; use `npx -y @edgegap/mcp` there.
+  then `/mcp` → `edgegap` → sign in with their Edgegap account (they pick the organization and approve what the connection may do; no API token is pasted anywhere). Claude Desktop and claude.ai: Settings → Connectors → add a custom connector with that URL, connect, sign in. An old entry that still sends an `Authorization` header is refused: `claude mcp remove edgegap --scope user`, add it again, sign in.
 - Without MCP, guide the developer through the dashboard and ask them to paste results.
 
 ## 2. Build the Linux dedicated server and clients
@@ -51,7 +51,7 @@ docker run --rm -p 7777:7777/udp --env-file "<plugin>/Editor/EdgegapMock.env" re
 ```
 Tags: never `latest`, never reuse a tag (Edgegap caches by tag). Use a UTC timestamp `YYYYMMDD-HHMM` (`date -u +%Y%m%d-%H%M`), the same string for the image tag and the app version name.
 
-**Push:** the plugin's **Upload image and Create app version** logs in to the registry with the plugin's own credentials and pushes. From the command line the developer runs `docker login registry.edgegap.com -u '<username>'` (Container Registry page), then you `docker push`. Confirm with `edgegap_list_registry_tags` (image name only). `edgegap_get_registry_credentials` hands credentials only to plugin quick-start tokens: with a normal API token it returns `status: "manual_steps_required"`, which is expected. Don't call it again.
+**Push:** the plugin's **Upload image and Create app version** logs in to the registry with the plugin's own credentials and pushes. From the command line the developer runs `docker login registry.edgegap.com -u '<username>'` (Container Registry page), then you `docker push`. Confirm with `edgegap_list_registry_tags` (image name only). `edgegap_get_registry_credentials` hands credentials only to plugin quick-start tokens: with Edgegap sign-in or a normal API token it returns `status: "manual_steps_required"`, which is expected. Don't call it again.
 
 To push without the plugin, the developer runs `docker login` once (above). Building and pushing yourself, add `assets/unity/Editor/EdgegapPluginBuild.cs` to `Assets/Edgegap/Editor/` for §2.
 

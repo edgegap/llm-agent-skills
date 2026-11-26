@@ -40,7 +40,7 @@ Record the first live relay run's round-trip time, resend count and player count
 
 ## 3. Without a lobby (MCP sessions)
 
-With the Edgegap MCP running on a relay token, the agent can open a session by hand: `edgegap_create_relay_session` with `user_ips` (the developer's public IP, host first; one entry per player). Then pass `relay.ip`, the server port and the host's token to the host, and the client port and each other user's token to the clients (`-relayAddress -relayPort -sessionToken -userToken`, `-client` for clients). Delete the session afterwards with `edgegap_delete_relay_session`.
+With the local Edgegap MCP server (`npx -y @edgegap/mcp`; the hosted one has no relay tools) running on a relay token, the agent can open a session by hand: `edgegap_create_relay_session` with `user_ips` (the developer's public IP, host first; one entry per player). Then pass `relay.ip`, the server port and the host's token to the host, and the client port and each other user's token to the clients (`-relayAddress -relayPort -sessionToken -userToken`, `-client` for clients). Delete the session afterwards with `edgegap_delete_relay_session`.
 
 ## 4. Cleanup
 

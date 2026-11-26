@@ -2,6 +2,15 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.46.0 (unreleased)
+
+The hosted Edgegap MCP server (`https://mcp.edgegap.com/mcp`, MCP 0.20.1+) uses Edgegap sign-in (OAuth) and refuses API tokens. Every skill, the README and both plugins now connect without a token and sign in; the API token stays for the local server (`npx -y @edgegap/mcp`), backends and CI.
+
+- Claude Code plugin: `.mcp.json` has no `Authorization` header and the plugin no longer asks for an API token; sign in through `/mcp`.
+- Codex plugin: `.codex-plugin/mcp.json` has no `bearer_token_env_var`; `codex mcp login edgegap` signs in.
+- `edgegap` 0.46.0: `references/agent-rules.md` covers sign-in, sign-in problems, the local server's token, and relay tools being local-only; `assets/AGENTS.md` no longer mentions a token for agents.
+- Engine and platform skills (`edgegap-unity`, `-ngo`, `-fishnet`, `-purrnet`, `-godot`, `-unreal`, `-cocos`, `-threejs`, `-browser-wasm`, `-vibe-coded`, `-chat-canvas`, `-fal`, `-manus`, `-relays`): MCP setup steps sign in instead of pasting a token.
+
 ## 0.45.1 (unreleased)
 
 The hosted Edgegap MCP server's URL is now `https://mcp.edgegap.com/mcp` (MCP 0.19.16). The earlier `https://mcp.edgegap.dev/mcp` serves the same server, so installs made with it keep working.

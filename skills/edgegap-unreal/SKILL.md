@@ -2,7 +2,7 @@
 name: edgegap-unreal
 description: 'Unreal Engine + Edgegap: get an Unreal multiplayer game online with dedicated servers and matchmaking, end to end. Load this before using any Edgegap MCP tool on an Unreal project: it has the Unreal workflow, Edgegap''s Unreal SDK plugin for UE 5.0-5.8 (Find Match with latency beacons, server ticket check, self-stop) with tested C++ drop-ins as fallback, source-engine and Linux cross-compile setup, server packaging, Dockerfile, matchmaker config and fixes for the pitfalls that cost hours. Use when an Unreal dev wants online play: "put my game online", "players can only join on LAN", "nobody should have to host", "click Play and get matched", listen server to dedicated server, a .uproject that needs servers, "open <ip>" connections, packaging a Linux server, or debugging Edgegap deployments, ports or matchmaking for an Unreal game. Covers C++ and Blueprint-only projects. Use even for beginners who never say Edgegap, servers or Docker. Not for Unity (edgegap-unity), Godot or non-game backends.'
 metadata:
-  version: "0.4.3"
+  version: "0.4.4"
 ---
 
 # Edgegap for Unreal Engine: dedicated servers + matchmaking
@@ -59,7 +59,7 @@ Read `references/server-ready.md`.
 
 ## Phase 3: Connect to Edgegap
 
-Read `references/deploy.md` §1. Get the Edgegap MCP connected with the developer's API token (they run the `claude mcp add` command themselves, or the plugin prompts for it). The header must be exactly `Authorization: token <uuid>`.
+Read `references/deploy.md` §1. Get the Edgegap MCP connected (the plugin declares it, or the developer runs the `claude mcp add` command themselves), then the developer signs in with their Edgegap account from `/mcp`; no API token is pasted.
 
 ✅ Check: `edgegap_list_apps` succeeds.
 
