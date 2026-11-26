@@ -134,7 +134,7 @@ If the backend runtime has no `node:crypto` (an edge runtime), sign with WebCryp
 | `PUBLIC_BASE_URL` | Manus backend | no |
 | `JOIN_TOKEN_PUBLIC_KEY` | Edgegap app version env | no |
 | Registry username/token | GitHub Actions secrets | yes |
-| Edgegap API token | the developer's MCP config only | yes; never in the Manus project |
+| Edgegap API token | nowhere in this design (the agent's MCP signs in with Edgegap) | yes; never in the Manus project |
 
 In Manus, secrets are given to Manus in chat and stored as server-side env vars. Prefer that the developer types them there directly; don't echo them back, and check the code never logs them or sends them to the browser.
 

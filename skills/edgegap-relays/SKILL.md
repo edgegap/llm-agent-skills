@@ -2,7 +2,7 @@
 name: edgegap-relays
 description: 'Edgegap Relays (Smart Relays, Distributed Relay) for host/client games: one player hosts, friends join with a code, and traffic goes through an Edgegap relay near them, so nobody port forwards and NAT or firewalls stop mattering. Load this once the developer has chosen peer-to-peer or a listen server over a dedicated server, before using edgegap_create_relay_session or any relay API. Tested end to end with a relay emulator; points to the LightNet relay deployment verified on Edgegap. Ships a relay transport for raw-UDP netcodes (relay protocol plus reliable fragmented and unreliable ordered channels), a lobby service that keeps the relay token off players'' machines, an offline relay emulator, and fixes for relay pitfalls: relay vs API token, server vs client port, IP authorization, 1200-byte MTU, clients only reach the host. Use for "relay for my P2P game", "join by code without port forwarding", "replace Unity Relay or Steam P2P with Edgegap", or a custom relay transport.'
 metadata:
-  version: "0.1.2"
+  version: "0.1.3"
 ---
 
 # Edgegap Relays: host/client games without port forwarding
@@ -44,7 +44,7 @@ Use a relay when the game is built host/client (co-op, friends lobbies, a listen
 
 - **Be the engineer.** Read the project, write the transport and the backend calls, build the game, run the lobby service and the clients, and read the logs. Hand the developer only the account steps: creating the relay profile token, putting it in a git-ignored env file, and playtesting.
 - **No relay access?** If `edgegap_list_relay_sessions` answers `not_configured` (403), the plan has no relays: offer the LightNet relay deployment above, or a dedicated server.
-- **Relay token, not API token.** Relay endpoints (`/v1/relays/*`) need a token from a **relay profile** (dashboard: Relays). A regular API token gets `401`/`403` there, and so does the Edgegap MCP when it runs with one. The relay token is a secret like the API token: it lives in the backend only, never in the game ([agent rules](../edgegap/references/agent-rules.md)). Don't read it from the developer's machine; ask them to write it to `lobby-service/.env`, which the service loads.
+- **Relay token, not API token.** Relay endpoints (`/v1/relays/*`) need a token from a **relay profile** (dashboard: Relays). A regular API token gets `401`/`403` there, and so does the Edgegap MCP when it runs with one. The hosted MCP (`https://mcp.edgegap.com/mcp`, Edgegap sign-in) has no relay tools: for MCP relay sessions, run the local server (`npx -y @edgegap/mcp`) with the relay token. The relay token is a secret like the API token: it lives in the backend only, never in the game ([agent rules](../edgegap/references/agent-rules.md)). Don't read it from the developer's machine; ask them to write it to `lobby-service/.env`, which the service loads.
 - **One layer at a time:** transport against the offline emulator → lobby service → real relay with two clients → cleanup. Each phase has a check.
 - **Money.** Relay sessions bill while open. Delete every session you created before you finish (`edgegap_list_relay_sessions` / `edgegap_delete_relay_session`, or the lobby's `DELETE`), and only the ones you created.
 

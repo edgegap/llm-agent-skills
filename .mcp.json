@@ -2,10 +2,7 @@
   "mcpServers": {
     "edgegap": {
       "type": "http",
-      "url": "https://mcp.edgegap.com/mcp",
-      "headers": {
-        "Authorization": "token ${user_config.edgegap_api_token}"
-      }
+      "url": "https://mcp.edgegap.com/mcp"
     }
   }
 }

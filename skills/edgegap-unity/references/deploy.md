@@ -1,7 +1,7 @@
 # Build, containerize, register and deploy on Edgegap
 
 Contents
-1. Edgegap access: account, API token, MCP connection
+1. Edgegap access: account, MCP sign-in, API token
 2. Prerequisites check
 3. Build the Linux dedicated server
 4. Docker image and registry push
@@ -14,37 +14,32 @@ Contents
 
 **Account:** free at https://app.edgegap.com/auth/register (verify the email, or registry/plugin steps fail). No credit card for testing.
 
-**API token** (needed for creating the app/version, deploying, logs): Dashboard → User Settings → Tokens, https://app.edgegap.com/user-settings?tab=tokens. It is organization-wide and can't be scoped, so treat it like a password:
+**API token**: not needed for the hosted MCP, which signs in with the Edgegap account. The Edgegap Unity plugin, a backend, CI and the local MCP server (`npx -y @edgegap/mcp`) use one: Dashboard → User Settings → Tokens, https://app.edgegap.com/user-settings?tab=tokens. It is organization-wide and can't be scoped, so treat it like a password:
 - Never write it into project files, scripts, Dockerfiles, git, or the game client.
 - Never echo it back in chat or logs.
 - It is *not* the matchmaker Auth Token (that one is client-safe).
 
 **Connect the Edgegap MCP server** (hosted, `https://mcp.edgegap.com/mcp`). First check whether tools named like `edgegap_list_apps` are already available and work; if so, skip this.
 
-If this skill was installed through the `edgegap` Claude Code plugin, the plugin already declares the MCP server. Its token is a sensitive plugin setting that Claude Code asks for when the plugin is enabled, and keeps in the system credential store. If the tools fail with a missing or invalid token, ask the developer to re-enter it: `/plugin` → edgegap → configure, or disable and re-enable the plugin. Paste only the UUID.
-
-Otherwise ask the developer to run this in their own terminal, so the token never passes through the conversation:
+If this skill was installed through the `edgegap` Claude Code plugin, the plugin already declares the MCP server. Otherwise ask the developer to run this in their own terminal:
 
 ```bash
-claude mcp add --transport http edgegap https://mcp.edgegap.com/mcp -H "Authorization: token <YOUR_EDGEGAP_API_TOKEN>" --scope user
+claude mcp add --transport http edgegap https://mcp.edgegap.com/mcp --scope user
 ```
 
-Then restart the Claude Code session (or `/mcp` to reconnect) so the tools load. `Bearer <token>` also works as the header value.
+Then `/mcp` → `edgegap` → sign in. The developer signs in with their Edgegap account in the browser, picks the organization and approves what the connection may do; no API token is pasted anywhere. Skills, `edgegap_context`, `edgegap_generate_dockerfile` and `edgegap_validate_server_config` work before sign-in; the first tool that needs the account starts it.
 
 Checks if the tools fail:
-- "does not contain an Edgegap API token": the header is malformed. Most often it's `token token <uuid>`, because the copied value already had the prefix. Fix it with `claude mcp remove edgegap --scope user` and add it again.
-- Tools named `edgegap_*` that come from a claude.ai/desktop **connector** (no header) fail the same way. Make sure the configured `edgegap` server is the one in use.
+- "Edgegap no longer accepts this sign-in" (revoked or expired, or the developer's access to the organization changed): reconnect from `/mcp` and sign in again. Don't retry before then.
+- A tool asks for access the developer didn't approve: the client asks again; if they decline, stop and say which step needed it.
+- An old entry that sends an `Authorization: token ...` header is refused by the hosted server: `claude mcp remove edgegap --scope user`, add it again without the header, sign in.
 - In the Claude desktop app, a newly added user-scope server may only appear after the app or session fully restarts.
 
-If the developer prefers to paste the token to you, run that command for them with the Bash tool, and don't repeat the token in your messages.
-
 Other clients:
-- **Claude Desktop / claude.ai custom connectors can't send the Authorization header**, so the hosted URL shows "connected" but every tool fails. For Claude Desktop use the local server instead: Settings → Developer → Edit Config:
-  ```json
-  { "mcpServers": { "edgegap": { "command": "npx", "args": ["-y", "@edgegap/mcp"] } } }
-  ```
-  It asks for the token on first use (or set `"env": {"EDGEGAP_API_TOKEN": "..."}`). Needs Node 18+.
-- Cursor/VS Code: same URL + header in their MCP config.
+- **Claude Desktop / claude.ai**: Settings → Connectors → add a custom connector with the URL `https://mcp.edgegap.com/mcp`, then connect and sign in.
+- **Codex**: `codex mcp add edgegap --url https://mcp.edgegap.com/mcp`, then `codex mcp login edgegap`.
+- **Cursor / VS Code**: the same URL in their MCP config, no header; sign in when the client asks.
+- **API token instead of sign-in** (and for relay tools): the local server, `{ "mcpServers": { "edgegap": { "command": "npx", "args": ["-y", "@edgegap/mcp"] } } }`. It asks for the token on first use (or set `"env": {"EDGEGAP_API_TOKEN": "..."}`). Needs Node 18+.
 
 If MCP is impossible, everything below can be done in the dashboard (apps at https://app.edgegap.com/application-management/applications/list, deploy button on the version). Guide the developer click by click and ask them to paste results (deployment URL, external port, logs).
 
@@ -124,7 +119,7 @@ With `FirstPlayerTimeoutSeconds = 120`, the lifecycle script stops a direct depl
 
 ## 7. MCP tool caveats (@edgegap/mcp 0.3.3+, hosted and npm)
 
-- `edgegap_get_registry_credentials`: `status: "manual_steps_required"` with normal API tokens (only plugin quick-start tokens get credentials). Use the dashboard Container Registry page, or Docker Hub/GHCR with that registry's pull login on the version.
+- `edgegap_get_registry_credentials`: `status: "manual_steps_required"` with Edgegap sign-in or normal API tokens (only plugin quick-start tokens get credentials). Use the dashboard Container Registry page, or Docker Hub/GHCR with that registry's pull login on the version.
 - `edgegap_list_registry_tags`: image name only.
 - `edgegap_create_app_version`: accepts `tls_upgrade` per WS/HTTP port. Without a registry login it sends `registry_profile: "Edgegap"` for registry.edgegap.com (0.17.0+); for any other private registry it creates the version without a login and gives no warning, so pass that registry's pull login.
 - `edgegap_list_app_versions`: shows `registry_credentials_set` and per-port `tls_upgrade`. Use it to verify the version before deploying.

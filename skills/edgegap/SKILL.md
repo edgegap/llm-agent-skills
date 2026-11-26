@@ -2,12 +2,12 @@
 name: edgegap
 description: 'Start here for hosting a game on Edgegap (dedicated servers + matchmaking) when the engine is not Unity, Unreal or Godot, is unknown, or the question is about the platform. Use when someone wants to host or deploy a game server, wants a solo or co-op game always online or uncrackable, asks how players join, wants custom-engine servers, compares hosts, or asks what Edgegap apps, versions, deployments, fleets or matchmakers are, even without saying "hosting". It picks the server shape, explains vocabulary, safety rules, routes to a skill. For a Unity project, load edgegap-unity instead (NGO: edgegap-ngo, FishNet: edgegap-fishnet, PurrNet: edgegap-purrnet, Fusion: edgegap-fusion); Unreal: edgegap-unreal; Godot 4: edgegap-godot; Colyseus: edgegap-colyseus; Cocos: edgegap-cocos; Nakama: edgegap-nakama; Manus: edgegap-manus; Three.js/web: edgegap-threejs; WASM: edgegap-browser-wasm; vibe-coded: edgegap-vibe-coded; chat canvas game: edgegap-chat-canvas; fal.ai: edgegap-fal; matchmaking: edgegap-matchmaking.'
 metadata:
-  version: "0.45.1"
+  version: "0.46.0"
 ---
 
 # Edgegap
 
-Pack version: 0.45.1
+Pack version: 0.46.0
 
 Edgegap runs dedicated game servers. You push a **Linux container image** of your game server, register it as an **app version**, and ask for a **deployment** near a group of players. Edgegap picks the location with the best ping for that group, starts the container in seconds, and returns a URL (`<id>.pr.edgegap.net`), a public IP, and an external port per internal port. Players connect. The match ends, the server stops, billing stops.
 
@@ -89,7 +89,7 @@ For a Godot 4 game whose server is Godot itself (high-level multiplayer with ENe
 
 ## Accounts, tokens and money
 
-- **Edgegap API token** (dashboard: User Settings → Tokens). It is organization-wide and cannot be scoped, so it is a password. It lives only in the developer's backend, their CI secret store, or the MCP configuration. Never in a game client, a game server image, a deployment env var, a file in git, or chat output. Header format: `Authorization: token <uuid>`.
+- **Edgegap API token** (dashboard: User Settings → Tokens). It is organization-wide and cannot be scoped, so it is a password. It lives only in the developer's backend, their CI secret store, or a local MCP server's configuration; the hosted MCP signs in with the Edgegap account instead. Never in a game client, a game server image, a deployment env var, a file in git, or chat output. Header format: `Authorization: token <uuid>`.
 - **Registry credentials** (dashboard: Container Registry) let Docker push and let Edgegap pull. They are secrets too.
 - **Matchmaker Auth Token** is designed to ship in game clients. It grants no account access.
 - **Free tier**: one deployment at a time, 60-minute deployments, 2 applications, 2 versions, 10 GB registry, at most 1.5 vCPU / 3 GB per deployment, and the matchmaker stops 3 hours after each start. Paid tiers lift these and unlock image caching and detailed metrics.
