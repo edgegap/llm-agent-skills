@@ -14,6 +14,7 @@ What a dedicated server must do when Nakama starts it through the Fleet Manager.
 | `NAKAMA_INSTANCE_EVENT_URL` | Fleet Manager | `https://<nakama>/v2/rpc/edgegap_instance?http_key=<key>&unwrap` |
 | `NAKAMA_CONNECTION_EVENT_URL` | Fleet Manager | `https://<nakama>/v2/rpc/edgegap_connection?http_key=<key>&unwrap` |
 | `NAKAMA_INSTANCE_METADATA` | Fleet Manager | JSON: the `metadata` the module passed to `Create`, e.g. `{"user_ids": ["..."]}` |
+| `NAKAMA_EDGEGAP_NAMESPACE` | Fleet Manager (nakama-edgegap `902c9aa`+) | the namespace of the Fleet Manager that started this server; empty with the template's `RegisterFleetManager`. The event URLs above already point at that namespace's RPCs (`edgegap_<name>_instance`...), so the server only needs it to tell several Fleet Managers apart |
 
 The two URLs are hidden env vars on the deployment (they carry the http_key). Don't log them. Nothing needs to be set on the app version.
 

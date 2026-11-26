@@ -28,8 +28,9 @@ services:
       - "/bin/sh"
       # -ec, never -ecx: -x prints the expanded command, token and http_key included.
       - "-ec"
-      # The plugin reads its settings from Nakama's runtime env (--runtime.env),
-      # not from the container's environment. $$ defers expansion to this shell.
+      # main.go (edgegapConfigFromEnv) reads these from Nakama's runtime env
+      # (--runtime.env), not from the container's environment, and builds the
+      # Fleet Manager's EdgegapConfig. $$ defers expansion to this shell.
       - >
         /nakama/nakama migrate up --database.address postgres:localdb@postgres:5432/nakama &&
         exec /nakama/nakama --name nakama1

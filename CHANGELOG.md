@@ -2,6 +2,13 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.47.0 (unreleased)
+
+`edgegap-nakama` follows the Edgegap Fleet Manager for Nakama to Nakama 3.42.0 (edgegap/backend-nakama-edgegap-plugin#13, `902c9aa`). `NewEdgegapFleetManager` now takes an `EdgegapConfig` instead of the `initializer` and no longer reads the runtime env itself, and Fleet Managers can be registered by name with their own namespace.
+
+- `edgegap-nakama` 0.3.0: Nakama 3.42.0, `nakama-pluginbuilder:3.42.0` (one `NAKAMA_VERSION` build arg), nakama-common v1.49.0, Go 1.27.3 and nakama-edgegap `902c9aa`; `go.sum` checksums from sum.golang.org. `assets/nakama/main.go` builds the config with `edgegapConfigFromEnv` (the plugin's own code; same env var names, so `.env` and compose are unchanged). `references/nakama-module.md` §1 covers `EdgegapConfig`, its defaults, startup validation, `RegisterFleetManagerByName` and namespaced RPC and storage names; `references/game-server.md` lists `NAKAMA_EDGEGAP_NAMESPACE`; `references/infra.md` and `references/troubleshooting.md` give the version pairs for 3.42/3.41/3.39 and the new errors. Built with `nakama-pluginbuilder:3.42.0` and loaded in Nakama 3.42.0 on 2026-11-26: `InitModule` ran and the Fleet Manager reached its Edgegap application check.
+- Versions: `edgegap` 0.47.0, `edgegap-nakama` 0.3.0.
+
 ## 0.46.0 (unreleased)
 
 The hosted Edgegap MCP server (`https://mcp.edgegap.com/mcp`, MCP 0.20.1+) uses Edgegap sign-in (OAuth) and refuses API tokens. Every skill, the README and both plugins now connect without a token and sign in; the API token stays for the local server (`npx -y @edgegap/mcp`), backends and CI.
