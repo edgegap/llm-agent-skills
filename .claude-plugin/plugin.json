@@ -1,7 +1,7 @@
 {
   "name": "edgegap",
-  "version": "0.44.0",
-  "description": "Get multiplayer games online on Edgegap: dedicated servers, matchmaking, backend integration, launch and troubleshooting for Unity (including NGO, FishNet, PurrNet and Photon Fusion), Unreal Engine, Godot 4, Colyseus (including Cocos Creator clients), Nakama, PlayFab, Supabase, Three.js, HTML5 (Phaser, canvas), vibe-coded (including Claude artifacts, ChatGPT and Gemini Canvas games, and fal.ai) and Manus browser games and any other engine, plus Edgegap relays for host/client games, driven by your coding agent.",
+  "version": "0.48.0",
+  "description": "Get multiplayer games online on Edgegap: dedicated servers, matchmaking, backend integration, launch and troubleshooting for Unity (including NGO, FishNet, PurrNet and Photon Fusion), Unreal Engine, Godot 4, Colyseus (including Cocos Creator clients), Nakama, PlayFab, Supabase, Three.js, vibe-coded (including Claude artifacts, ChatGPT and Gemini Canvas games, and fal.ai) and Manus browser games and any other engine, plus Edgegap relays for host/client games, driven by your coding agent.",
   "author": {
     "name": "Edgegap",
     "url": "https://edgegap.com"
@@ -10,15 +10,6 @@
   "repository": "https://github.com/edgegap/llm-agent-skills",
   "license": "Apache-2.0",
   "privacyPolicyUrl": "https://edgegap.com/legal",
-  "userConfig": {
-    "edgegap_api_token": {
-      "type": "string",
-      "title": "Edgegap API token",
-      "description": "Your Edgegap API token (the UUID only), from https://app.edgegap.com/user-settings?tab=tokens. Used by the hosted Edgegap MCP server to manage your apps, versions and deployments. It is organization-wide, so keep it private.",
-      "sensitive": true,
-      "required": true
-    }
-  },
   "keywords": [
     "edgegap",
     "unity",

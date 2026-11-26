@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap samples"
+  short_description: "Public Edgegap sample projects"
+  default_prompt: "Use $edgegap-samples to find an Edgegap sample close to this game."
+policy:
+  allow_implicit_invocation: true

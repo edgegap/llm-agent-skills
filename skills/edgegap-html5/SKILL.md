@@ -24,7 +24,7 @@ From [netcode-sample-html5-phaser](https://github.com/edgegap/netcode-sample-htm
 
 - Locally: `npm test` (two headless players and a bot) played a full match to a winner; two browser tabs on the local server played in the same match with bots and saw the same state; Phaser loaded from the CDN with its SRI hash, no console errors.
 - On Edgegap: the image built with Docker Engine in WSL and was pushed to the Edgegap registry; an app version (WS port 7777, TLS Upgrade, 256 CPU units / 512 MB, restart never) deployed in about 10 s; two headless players played a full match over `wss://<fqdn>:<port>` (direct mode, `tools/e2e.mjs`), and the deployment stopped itself 25 s after the match.
-- Not yet run with this sample: the matchmaker path (Find Match) and a browser on the Edgegap deployment. The matchmaker code is the same `GroupAgent` flow verified with the Three.js minigames; prove it here in Phase 5 before calling the game done.
+- Through the matchmaker (profile `splat-arena`): two headless players were matched onto one deployment (`HOST_ASSIGNED` in about 23 s), played a full match and the deployment stopped itself 24 s after it; two Chrome tabs pressing Find Match landed on the same server, which stopped itself after both left.
 
 Why this shape, so you can defend it:
 - **Authoritative server, thin client.** The page sends intents (axes, aim angle, fire button) and draws snapshots; the server owns movement speed, fire rate, projectiles, hits and score. Anything decided in browser JavaScript can be changed in devtools.

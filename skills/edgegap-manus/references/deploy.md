@@ -10,9 +10,9 @@ Contents
 
 ## 1. Acting on Edgegap from Manus or another agent
 
-The game's own code never calls the Edgegap API: the backend talks only to the matchmaker, and the server only to its self-stop URL. The Edgegap API token is needed only for setup, by whoever does it:
-- **Claude Code, Cursor, Codex and other MCP clients**: the Edgegap MCP server (`https://mcp.edgegap.dev/mcp`, or `npx @edgegap/mcp` locally) gives you `edgegap_*` tools. Check with `edgegap_list_apps`.
-- **Manus**: if the workspace has a custom MCP connector for Edgegap, use it. Otherwise guide the developer through the dashboard (https://app.edgegap.com) step by step and ask them to paste back non-secret results: app and version names, the deployment URL and external port, log lines. Don't ask for the API token to call the API from the Manus sandbox, and never store it in the project.
+The game's own code never calls the Edgegap API: the backend talks only to the matchmaker, and the server only to its self-stop URL. Edgegap access is needed only for setup, by whoever does it:
+- **Claude Code, Cursor, Codex, claude.ai and other MCP clients**: the hosted Edgegap MCP server (`https://mcp.edgegap.com/mcp`) gives you `edgegap_*` tools; the developer signs in with their Edgegap account when the client asks, and no API token is pasted. (`npx @edgegap/mcp` runs it locally on an API token instead.) Check with `edgegap_list_apps`.
+- **Manus**: if the workspace has a custom MCP connector for Edgegap (URL `https://mcp.edgegap.com/mcp`, signed in with Edgegap), use it. Otherwise guide the developer through the dashboard (https://app.edgegap.com) step by step and ask them to paste back non-secret results: app and version names, the deployment URL and external port, log lines. Don't ask for the API token to call the API from the Manus sandbox, and never store it in the project.
 
 ## 2. Building and pushing the image
 

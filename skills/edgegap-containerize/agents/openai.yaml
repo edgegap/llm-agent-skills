@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap containers"
+  short_description: "Docker image and app version for Edgegap"
+  default_prompt: "Use $edgegap-containerize to package this game server for Edgegap."
+policy:
+  allow_implicit_invocation: true

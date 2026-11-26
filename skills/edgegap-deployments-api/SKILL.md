@@ -1,8 +1,8 @@
 ---
 name: edgegap-deployments-api
-description: 'Write backend code that starts, tracks and stops Edgegap game servers through the HTTP API: POST /v2/deployments with player IPs or coordinates, env vars and tags, ready/error/terminate webhooks, status polling within rate limits, stopping and cleaning up orphaned deployments, and handing players the address and external port. Use whenever building a custom matchmaker, allocator, lobby service or CI job for Edgegap (a CI job that only ships a new build: edgegap-launch, which uses edgegap/deploy-action), writing the allocator for EOS or Steam lobbies (choosing a matchmaker, or keeping Unity Matchmaker: edgegap-matchmaking; Nakama: edgegap-nakama), or when someone mentions api.edgegap.com, the Deploy API, deployment webhooks, request_id, or Edgegap error codes 422/429/410. Not for game clients, which must never hold the API token.'
+description: 'Write backend code that starts, tracks and stops Edgegap game servers through the HTTP API: POST /v2/deployments with player IPs or coordinates, env vars and tags, ready/error/terminate webhooks, polling deployment status (GET /v1/status) or Context within the 20 req/s organization limit, stopping and cleaning up orphaned deployments, and handing players the address and external port. Use whenever building a custom matchmaker, allocator, lobby service or CI job for Edgegap (a CI job that only ships a new build: edgegap-launch, which uses edgegap/deploy-action), writing the allocator for EOS or Steam lobbies (choosing a matchmaker, or keeping Unity Matchmaker: edgegap-matchmaking; Nakama: edgegap-nakama), or when someone mentions api.edgegap.com, the Deploy API, deployment webhooks, request_id, or Edgegap error codes 422/429/410. Not for game clients, which must never hold the API token.'
 metadata:
-  version: "0.2.13"
+  version: "0.2.14"
 ---
 
 # Edgegap Deployments API for your backend

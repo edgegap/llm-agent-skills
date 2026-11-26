@@ -13,12 +13,12 @@ Contents
 ## 1. Edgegap access and the MCP connection
 
 - **Account:** free at https://app.edgegap.com/auth/register (verify the email).
-- **API token:** https://app.edgegap.com/user-settings?tab=tokens. Organization-wide and unscoped: never in files, code, git, the game or chat output. It is not the matchmaker auth token.
-- **MCP:** first check whether `edgegap_*` tools already work (`edgegap_list_apps`). If this skill came with the `edgegap` Claude Code plugin, the plugin asks for the token. Otherwise the developer runs, in their own terminal:
+- **API token:** not needed for the hosted MCP, which signs in; the engine plugin, a backend, CI or the local MCP server (`npx -y @edgegap/mcp`) use one: https://app.edgegap.com/user-settings?tab=tokens. Organization-wide and unscoped: never in files, code, git, the game or chat output. It is not the matchmaker auth token.
+- **MCP**: if `edgegap_list_apps` already works, skip this. The `edgegap` Claude Code plugin already declares the server. Otherwise the developer runs, in their own terminal:
   ```bash
-  claude mcp add --transport http edgegap https://mcp.edgegap.dev/mcp -H "Authorization: token <YOUR_EDGEGAP_API_TOKEN>" --scope user
+  claude mcp add --transport http edgegap https://mcp.edgegap.com/mcp --scope user
   ```
-  and restarts the session. "does not contain an Edgegap API token" almost always means `token token <uuid>` (the pasted value already had the prefix).
+  then `/mcp` → `edgegap` → sign in with their Edgegap account (they pick the organization and approve what the connection may do; no API token is pasted anywhere). Claude Desktop and claude.ai: Settings → Connectors → add a custom connector with that URL, connect, sign in. An old entry that still sends an `Authorization` header is refused: `claude mcp remove edgegap --scope user`, add it again, sign in.
 
 ## 2. Package the Linux server
 

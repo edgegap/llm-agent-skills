@@ -234,5 +234,13 @@
   {
     "query": "Gemini wrote my game in Canvas as one HTML file; I want Find Match and servers on Edgegap.",
     "expected_skill": "edgegap-chat-canvas"
+  },
+  {
+    "query": "Write a Go service that polls api.edgegap.com/v1/status every second for all 10,000 of our running deployments and updates our lobby DB when they're ready.",
+    "expected_skill": "edgegap-deployments-api"
+  },
+  {
+    "query": "Our allocator needs to know when an Edgegap server is up so it can send the IP and port to the players. What's the best way to track deployment status from the backend?",
+    "expected_skill": "edgegap-deployments-api"
   }
 ]

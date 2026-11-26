@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap Fusion Simple FPS"
+  short_description: "Fusion Simple FPS on Edgegap"
+  default_prompt: "Use $edgegap-fusion-simplefps to run the Fusion Simple FPS sample on Edgegap."
+policy:
+  allow_implicit_invocation: true

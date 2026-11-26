@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap matchmaking"
+  short_description: "Matchmaker profiles, parties, regions, backfill"
+  default_prompt: "Use $edgegap-matchmaking to design the matchmaking for this game."
+policy:
+  allow_implicit_invocation: true

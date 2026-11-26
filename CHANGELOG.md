@@ -2,12 +2,67 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
-## 0.44.0 (unreleased)
+## 0.48.0 (unreleased)
 
-A skill for HTML5 2D games (Phaser, canvas, PixiJS, Kaplay), from [netcode-sample-html5-phaser](https://github.com/edgegap/netcode-sample-html5-phaser). Verified on Edgegap on 2026-11-24 with a direct deployment: the image built with Docker Engine in WSL and pushed to the Edgegap registry, an app version with WS + TLS Upgrade deployed in Toronto in about 10 s, two headless players played a full Splat Arena match over `wss`, and the deployment stopped itself 25 s after the match. Locally, `npm test` played a full match with bots and two browser tabs played together. The matchmaker path (Find Match) was not run with this sample yet.
+A skill for HTML5 2D games (Phaser, canvas, PixiJS, Kaplay), from [netcode-sample-html5-phaser](https://github.com/edgegap/netcode-sample-html5-phaser). Verified on Edgegap on 2026-11-24 with a direct deployment: the image built with Docker Engine in WSL and pushed to the Edgegap registry, an app version with WS + TLS Upgrade deployed in Toronto in about 10 s, two headless players played a full Splat Arena match over `wss`, and the deployment stopped itself 25 s after the match. Locally, `npm test` played a full match with bots and two browser tabs played together. Through the matchmaker, two headless players were matched onto one deployment (HOST_ASSIGNED in about 23 s) and it stopped itself 24 s after the match; two Chrome tabs pressing Find Match landed on the same server, which stopped after both left.
 
 - `edgegap-html5` 0.1.0: SKILL.md (2D server rules, Phaser client and its pitfalls, other renderers, Windows build-and-deploy with tokens kept in the console), `assets/client/` (Phaser 4 client), `assets/server/game.js` and `assets/server/util.js` (2D), `assets/tools/` (headless player, local test, `edgegap-env.ps1`, `edgegap-test.ps1`), `assets/matchmaker/splat-arena.json`. It shares the room, lifecycle, Dockerfile, e2e and references of `edgegap-threejs`.
-- Routing: `edgegap` 0.44.0, `edgegap-threejs` 0.3.9 (Phaser and 2D canvas go to `edgegap-html5`), `edgegap-samples` 0.1.13 (catalog), new `evals/html5-routing-eval.json`, two queries in `evals/threejs-routing-eval.json` now expect `edgegap-html5`.
+- Routing: `edgegap` 0.48.0, `edgegap-threejs` 0.3.9 (Phaser and 2D canvas go to `edgegap-html5`), `edgegap-samples` 0.1.13 (catalog), new `evals/html5-routing-eval.json`, two queries in `evals/threejs-routing-eval.json` now expect `edgegap-html5`.
+
+## 0.47.0 (unreleased)
+
+`edgegap-nakama` follows the Edgegap Fleet Manager for Nakama to Nakama 3.42.0 (edgegap/backend-nakama-edgegap-plugin#13, `902c9aa`). `NewEdgegapFleetManager` now takes an `EdgegapConfig` instead of the `initializer` and no longer reads the runtime env itself, and Fleet Managers can be registered by name with their own namespace.
+
+- `edgegap-nakama` 0.3.0: Nakama 3.42.0, `nakama-pluginbuilder:3.42.0` (one `NAKAMA_VERSION` build arg), nakama-common v1.49.0, Go 1.27.3 and nakama-edgegap `902c9aa`; `go.sum` checksums from sum.golang.org. `assets/nakama/main.go` builds the config with `edgegapConfigFromEnv` (the plugin's own code; same env var names, so `.env` and compose are unchanged). `references/nakama-module.md` §1 covers `EdgegapConfig`, its defaults, startup validation, `RegisterFleetManagerByName` and namespaced RPC and storage names; `references/game-server.md` lists `NAKAMA_EDGEGAP_NAMESPACE`; `references/infra.md` and `references/troubleshooting.md` give the version pairs for 3.42/3.41/3.39 and the new errors. Built with `nakama-pluginbuilder:3.42.0` and loaded in Nakama 3.42.0 on 2026-11-26: `InitModule` ran and the Fleet Manager reached its Edgegap application check.
+- Versions: `edgegap` 0.47.0, `edgegap-nakama` 0.3.0.
+
+## 0.46.0 (unreleased)
+
+The hosted Edgegap MCP server (`https://mcp.edgegap.com/mcp`, MCP 0.20.1+) uses Edgegap sign-in (OAuth) and refuses API tokens. Every skill, the README and both plugins now connect without a token and sign in; the API token stays for the local server (`npx -y @edgegap/mcp`), backends and CI.
+
+- Claude Code plugin: `.mcp.json` has no `Authorization` header and the plugin no longer asks for an API token; sign in through `/mcp`.
+- Codex plugin: `.codex-plugin/mcp.json` has no `bearer_token_env_var`; `codex mcp login edgegap` signs in.
+- `edgegap` 0.46.0: `references/agent-rules.md` covers sign-in, sign-in problems, the local server's token, and relay tools being local-only; `assets/AGENTS.md` no longer mentions a token for agents.
+- Engine and platform skills (`edgegap-unity`, `-ngo`, `-fishnet`, `-purrnet`, `-godot`, `-unreal`, `-cocos`, `-threejs`, `-browser-wasm`, `-vibe-coded`, `-chat-canvas`, `-fal`, `-manus`, `-relays`): MCP setup steps sign in instead of pasting a token.
+
+## 0.45.1 (unreleased)
+
+The hosted Edgegap MCP server's URL is now `https://mcp.edgegap.com/mcp` (MCP 0.19.16). The earlier `https://mcp.edgegap.dev/mcp` serves the same server, so installs made with it keep working.
+
+- `.mcp.json` (Claude Code plugin), `.codex-plugin/mcp.json` (Codex plugin) and the README use the new URL.
+- `edgegap-fishnet` 0.3.7, `edgegap-godot` 0.2.7, `edgegap-manus` 0.2.4, `edgegap-ngo` 0.2.7, `edgegap-purrnet` 0.3.7, `edgegap-unity` 0.2.7, `edgegap-unreal` 0.4.3 (`references/deploy.md`) and `edgegap` 0.45.1 (`assets/AGENTS.md`, `references/agent-rules.md`): the connect commands use the new URL.
+
+## 0.45.1 (unreleased)
+
+- `edgegap` 0.45.1: `references/agent-rules.md` no longer says a `token ` prefix in `EDGEGAP_API_TOKEN` is rejected. Checked 2026-11-25: the hosted MCP server accepts `Authorization: Bearer token <uuid>` as well as `Bearer <uuid>`.
+
+## 0.45.0 (unreleased)
+
+Codex worked example and Plugins Directory listing fields, from [netcode-sample-codex-slime-sumo](https://github.com/edgegap/netcode-sample-codex-slime-sumo). Verified on Edgegap on 2026-11-25: Codex CLI 0.172.0 with OpenAI's Game Studio plugin wrote Slime Sumo (Phaser + Vite, solo vs bots) from one prompt; with this plugin (0.44.0, installed from GitHub) and the hosted MCP server, one more prompt made it online: Codex loaded `edgegap-vibe-coded`, `edgegap-threejs` and `edgegap`, moved the rules into one module, added the server, Find Match and tests, validated the Dockerfile, pushed the image, created the app and version, deployed a test server, joined it from two browser tabs over `wss://` and stopped it. Through a matchmaker, two browser tabs were matched onto one server in 16 s and the server stopped itself about 30 s after both left.
+
+- `.codex-plugin/plugin.json`: `shortDescription` within the directory's 30 characters, `composerIcon`, icon moved to `assets/`. `scripts/validate.py` checks the directory's length limits and that both icons exist.
+- `edgegap` 0.45.0: `references/agent-rules.md` gives Codex's token variable. (0.45.1 removes a wrong claim there that a `token ` prefix in it is rejected: the hosted server accepts `Bearer token <uuid>` too, checked 2026-11-25.)
+- `edgegap-vibe-coded` 0.1.9 and `edgegap-samples` 0.1.13 (catalog): the Codex sample.
+- README: Codex worked example; the Codex CLI's Windows sandbox may only allow reading files.
+
+## 0.44.1 (unreleased)
+
+Backend code that polls deployment status now routes to `edgegap-deployments-api`, where the 20 requests per second organization limit on Status and Context and the webhook rules live. An agent asked to "poll /v1/status for every deployment" from a backend could otherwise skip the skill and hit constant 429s.
+
+- `edgegap` 0.44.1: the routing row names allocators, lobby services, custom matchmakers and status polling (`/v1/status`).
+- `edgegap-deployments-api` 0.2.14: the description names polling `GET /v1/status` or Context and the 20 req/s organization limit.
+- Two backend polling queries in `evals/routing-eval.json`.
+
+## 0.44.0 (unreleased)
+
+Codex plugin. The repository is now a Codex plugin marketplace as well as a Claude Code one. Verified on 2026-11-25 with Codex CLI 0.172.0: `codex plugin marketplace add` and `codex plugin add edgegap@edgegap` installed the plugin; Codex listed all 31 skills; `codex mcp list` showed the hosted Edgegap MCP server with `Bearer token` auth read from `EDGEGAP_API_TOKEN`, and `edgegap_context` with `check_token: true` reported the token accepted (MCP 0.19.13).
+
+- `.codex-plugin/plugin.json` (skills, MCP server and Plugins Directory listing fields), `.codex-plugin/mcp.json` (hosted server, token from `EDGEGAP_API_TOKEN`), `.agents/plugins/marketplace.json`.
+- `agents/openai.yaml` in every skill: Codex display name, short description and default prompt.
+- `edgegap-chat-canvas` 0.3.1: its description had a lone apostrophe inside single quotes, so Codex's YAML parser refused to load the skill. `scripts/validate.py` now fails on that, on a missing `agents/openai.yaml`, and on Codex and Claude plugin versions that differ.
+- `edgegap` 0.44.0: `assets/AGENTS.md`, a section to copy into a game repo's `AGENTS.md`; `references/agent-rules.md` gives the Codex command to add the MCP server.
+- README: Codex install section.
+
 ## 0.43.0 (unreleased)
 
 `edgegap-chat-canvas` covers Gemini Canvas, from [netcode-sample-gemini-bomb-tag](https://github.com/edgegap/netcode-sample-gemini-bomb-tag). Verified on Edgegap on 2026-11-20: Gemini (free account, Canvas tool, model on Auto) wrote Bomb Tag from the prompt that also asks for an empty `createWorld()`, a start spot per `addPlayer()`, `setInput()` for every player and bots in `step()`, and its first answer needed no fix; the split needed no edits to the block; two browser tabs played a match on a direct deployment (`?server=`), and on the matchmaker shared by all three chat samples two headless players and two browser tabs (Find match) were matched onto one deployment; every server stopped itself.

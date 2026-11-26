@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap Photon Fusion"
+  short_description: "Photon Fusion 2 servers on Edgegap"
+  default_prompt: "Use $edgegap-fusion to host this Fusion game's servers on Edgegap."
+policy:
+  allow_implicit_invocation: true

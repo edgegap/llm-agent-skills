@@ -6,10 +6,14 @@ Find the layer first: Nakama module → Edgegap deployment → game server event
 
 | Symptom | Cause / fix |
 |---|---|
-| `go get github.com/edgegap/nakama-edgegap@0.4.0` fails, or `invalid version` | tags have no `v` prefix: pin the commit, `go get github.com/edgegap/nakama-edgegap@cd9022a` (`infra.md` §3) |
+| `go get github.com/edgegap/nakama-edgegap@0.4.0` fails, or `invalid version` | tags have no `v` prefix: pin the commit, `go get github.com/edgegap/nakama-edgegap@902c9aa` (`infra.md` §3) |
 | `plugin was built with a different version of package ...` at Nakama start | pluginbuilder tag ≠ Nakama tag, or `nakama-common` not the version of that Nakama release. Change all three together |
+| `cannot use initializer ... as fleetmanager.EdgegapConfig value` | module written for nakama-edgegap `cd9022a` or older, built against `902c9aa`+: build the config with `edgegapConfigFromEnv` and pass it (`nakama-module.md` §1) |
+| Build errors in nakama-edgegap or nakama-common after bumping one of them | `902c9aa` needs nakama-common v1.49.0 and Nakama 3.42.0+; an older Nakama needs the older plugin commit (`infra.md` §3) |
 | `not enough arguments in call to ...Create` / `assignment mismatch` | README sample: `Create` takes 6 arguments and returns 2 values (`nakama-module.md` §3) |
-| Module fails to load: `NAKAMA_ACCESS_URL not found` | the value is in the container env but not passed with `--runtime.env` |
+| Module fails to load: `<KEY> not found in environment` | the value is in the container env but not passed with `--runtime.env`; all five of `EDGEGAP_API_URL`, `EDGEGAP_API_TOKEN`, `EDGEGAP_APPLICATION`, `EDGEGAP_PORT_NAME`, `NAKAMA_ACCESS_URL` are required |
+| Module fails to load: `failed to validate application with Edgegap API` | `NewEdgegapFleetManager` checks the application on Edgegap at startup: wrong `EDGEGAP_APPLICATION`, or the token is missing its `token ` prefix |
+| Client RPC `instance_create` not found, or a game server's events hit a missing RPC | the Fleet Manager was registered with `RegisterFleetManagerByName`: its RPCs are `edgegap_<name>_...` (`nakama-module.md` §1) |
 | Edgegap API token or http_key visible in `docker logs` | entrypoint uses `sh -x`: switch to `-ec`, then rotate the token (User Settings → Tokens) and the http_key |
 | Clients are sent to a Nakama match / "match not found" after matchmaking | the MatchmakerMatched hook returns something other than `""` |
 | Every match → 113 at once, log `failed to extract client IP` or `metadata does not contain PlayerIp` | no AfterAuthenticate hook for the method the client uses, or sessions from before the hook: register it (`nakama-module.md` §2), sign in again |

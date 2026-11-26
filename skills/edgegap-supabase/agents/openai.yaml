@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap Supabase"
+  short_description: "Supabase games with Edgegap servers"
+  default_prompt: "Use $edgegap-supabase to add Edgegap match servers to this Supabase game."
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Edgegap HTML5 games"
+  short_description: "HTML5 2D game servers (Phaser, canvas) on Edgegap"
+  default_prompt: "Use $edgegap-html5 to add an authoritative Node.js server and Find Match to this HTML5 game."
+policy:
+  allow_implicit_invocation: true
