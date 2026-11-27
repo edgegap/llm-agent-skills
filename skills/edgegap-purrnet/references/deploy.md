@@ -83,6 +83,7 @@ Read by `EdgegapBootstrap` in builds; they override the settings asset. Useful f
 | `-edgegapConnect` | Connect directly on startup |
 | `-edgegapMatchmaker true\|false` | Matchmaker mode |
 | `-edgegapMatchmakerUrl <url> -edgegapAuthToken <token>` | Matchmaker URL and Auth Token |
+| `-edgegapProfile <name>` | Matchmaker profile name (default `casual`) |
 | `-edgegapFindMatch` | Find a match on startup |
 | `-edgegapListenPort <port>` | Server listen port |
 

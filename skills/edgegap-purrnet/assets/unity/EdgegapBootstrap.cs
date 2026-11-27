@@ -88,6 +88,7 @@ public static class EdgegapBootstrap
         if (bool.TryParse(Arg("-edgegapMatchmaker"), out bool useMatchmaker)) s.UseEdgegapMatchmaker = useMatchmaker;
         if (Arg("-edgegapMatchmakerUrl") is string url) s.MatchmakerUrl = url;
         if (Arg("-edgegapAuthToken") is string token) s.MatchmakerAuthToken = token;
+        if (Arg("-edgegapProfile") is string profile) s.Profile = profile;
     }
 
     public static bool HasFlag(string name) => Array.IndexOf(Environment.GetCommandLineArgs(), name) >= 0;
