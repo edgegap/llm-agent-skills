@@ -1,6 +1,6 @@
 {
   "name": "edgegap",
-  "version": "0.48.0",
+  "version": "0.49.0",
   "description": "Get multiplayer games online on Edgegap: dedicated servers, matchmaking, backend integration, launch and troubleshooting for browser games (Phaser, Three.js, canvas), Unity, Unreal Engine, Godot 4, Colyseus, Nakama, PlayFab, Supabase and any other engine, driven by Codex.",
   "author": {
     "name": "Edgegap",

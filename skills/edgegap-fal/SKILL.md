@@ -2,7 +2,7 @@
 name: edgegap-fal
 description: 'fal.ai + Edgegap: make a browser game built with fal.ai online multiplayer on Edgegap (matchmaker, one authoritative server per match), keeping solo play. Load this when someone makes, or wants to make, a game with fal, fal.ai, the fal MCP, the genmedia CLI, fal game skills or fal Agent and wants Find Match, online play or real servers, or asks how to build a fal game that can go online. Two paths: a coding agent (Claude Code, Codex, Cursor, ChatGPT) writes a Three.js or canvas game and fal generates the assets (rigged 3D characters, props, sprites, textures, sounds); or fal Agent writes the code in a chat. Has the prompts that keep the rules in one DOM-free file the server runs, the fal asset pipeline (image to rigged GLB, clips, sizes, loader pitfalls, nothing in the server image), edgegap-threejs templates, CI image build, tests, clean-up. Verified samples: netcode-sample-fal-relic-rumble (3D, fal assets), netcode-sample-fal-orb-arena (fal Agent). Other AI tools: edgegap-vibe-coded.'
 metadata:
-  version: "0.2.2"
+  version: "0.2.3"
 ---
 
 # Edgegap for fal.ai games: fal makes the game's media, Edgegap runs the matches

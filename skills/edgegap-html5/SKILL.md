@@ -2,7 +2,7 @@
 name: edgegap-html5
 description: 'HTML5 multiplayer games on Edgegap: a 2D browser game (Phaser, plain canvas 2D, PixiJS, Kaplay) with an authoritative Node.js WebSocket server per match, Find Match from the page with the Edgegap JS SDK, wss with TLS Upgrade. Load this before using any Edgegap MCP tool on a Phaser or 2D canvas game that has or needs its own ws server. Templates from netcode-sample-html5-phaser (Splat Arena, Phaser 4): 2D server rules with movement, projectiles, hits, cooldowns and bots; a no-build Phaser client with interpolation and bullet extrapolation; a matchmaker profile; headless tests; a Windows script that builds, pushes, deploys and waits for the self-stop with tokens kept in the console. Use for "html5 multiplayer game", "make my Phaser game multiplayer", "host my canvas game server", "Find Match for a 2D web game". 3D web games (Three.js, Babylon.js, PlayCanvas): edgegap-threejs. Colyseus: edgegap-colyseus. Single-player games from an AI tool: edgegap-vibe-coded. One HTML file from a chat: edgegap-chat-canvas.'
 metadata:
-  version: "0.1.0"
+  version: "0.1.1"
 ---
 
 # Edgegap for HTML5 games: Phaser or canvas 2D, one Node.js server per match
