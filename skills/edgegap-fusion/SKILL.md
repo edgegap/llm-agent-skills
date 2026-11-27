@@ -29,7 +29,7 @@ Read, don't ask:
 - `Assets/Photon/Fusion/Resources/PhotonAppSettings.asset`: `AppIdFusion`, `AppVersion`, `FixedRegion`.
 - `Assets/Photon/Fusion/Resources/NetworkProjectConfig.fusion`: `PeerMode` (`0` = Single).
 - `scriptingBackend` → `Server:` in `ProjectSettings.asset` (`1` = IL2CPP) and `Packages/manifest.json` for `com.unity.toolchain.*` / `com.unity.sdk.*`.
-- Is it BR200 (`Assets/TPSBR/`, `TPSBR.Loader`, `StandaloneManager`)? Then follow the BR200 path below. Is it Photon's Simple FPS (`SimpleFPS` namespace in `Assets/Scripts/`, `Deathmatch` and `Startup` scenes, `MenuConnectionBehaviour`)? Load `edgegap-fusion-simplefps` instead: it has a tested kit for that sample. Another Fusion game: grep `StartGameArgs`, `GameMode.Server`, `Address =`, `CustomPublicAddress`, and read `references/fusion.md` §5.
+- Is it BR200 (`Assets/TPSBR/`, `TPSBR.Loader`, `StandaloneManager`)? Then follow the BR200 path below. Is it Photon's Simple FPS (`SimpleFPS` namespace in `Assets/Scripts/`, `Deathmatch` and `Startup` scenes, `MenuConnectionBehaviour`)? Load `edgegap-fusion-simplefps` instead: it has a tested kit for that sample. Is it Photon's Asteroids Simple sample (`Asteroids.HostSimple` namespace, `EdgegapServerManager.cs`)? It has no kit: follow `references/asteroids.md`. Another Fusion game: grep `StartGameArgs`, `GameMode.Server`, `Address =`, `CustomPublicAddress`, and read `references/fusion.md` §5.
 
 Ask, in one message, only what you couldn't infer: the Fusion App ID (if empty), players per match, the developer's Edgegap account and Docker.
 
@@ -79,6 +79,7 @@ If the developer is writing a guide for Photon's docs, the measured facts are in
 - `references/fusion1-tanknarok.md`: Photon's Fusion 1 Tanknarok sample (Fusion 1.1 App ID, port 5050, batch-mode server detection).
 - `references/br200.md`: BR200's Loader and command-line options (from its source), scenes, the 120-second timer, headless test clients.
 - `references/deploy.md`: toolchain packages, builds, Docker, local test, Edgegap app version and deploy, test commands.
+- `references/asteroids.md`: Photon's Asteroids Simple sample (plugin build, no kit), what was run and its pitfalls.
 - `references/troubleshooting.md`: symptom → fix tables.
 - `assets/br200/`: the kit (editor preflight and build, Dockerfile, start script, helper scripts, start-script tests, API examples). `assets/test/`: the CT probe and the test client build.
 
