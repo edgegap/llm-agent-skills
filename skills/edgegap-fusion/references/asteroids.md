@@ -16,4 +16,4 @@ Pitfalls seen:
 - Before the fix in repo PR #3, clients threw `NullReferenceException` in `SpaceshipController.HasHitAsteroid` on every tick (`Runner.LagCompensation` is null on clients). Use a repo that has the `HasStateAuthority` guard.
 - Older plugin pins (3.0.9) print all `ARBITRIUM_*` variables, including the self-stop token, to the deployment logs. Keep the lock on plugin 3.2.2 or later.
 - Unity re-resolves `Packages/manifest.json` entries when it opens the project (it bumped `com.unity.toolchain.win-x86_64-linux-x86_64` to 2.0.11 and left the build working). Don't commit that churn.
-- `Failed to get ...` / `Game Does Not Exist (32758)`: Photon region of the client differs from the server's (see `fusion.md` §4).
+- `Game Does Not Exist (32758)`: Photon region of the client differs from the server's (see `fusion.md` §4).
