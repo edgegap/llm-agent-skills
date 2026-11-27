@@ -2,6 +2,20 @@
 
 Each skill also carries its own `metadata.version` in its frontmatter, and the `edgegap` skill states the pack version (`Pack version:`), so an agent can tell which copy it has.
 
+## 0.49.0 (unreleased)
+
+Fixes from the 2026-11-27 end-to-end review of every public Edgegap sample: each repo was followed from its README to a deployment on Edgegap, and the skills were compared with what ran (#78-#86).
+
+- `edgegap-fishnet` 0.3.9: the sample now pins SDK 3.5.6 and plugin 3.2.2 (#78).
+- `edgegap-ngo` 0.2.9: plugin 3.2.2 in the verified-sample line; a client build after a server build needs the Player subtarget (#79).
+- `edgegap-purrnet` 0.3.9: matches the sample's pinned versions (#80).
+- `edgegap-nakama` 0.3.1: the Godot server template accepts anyone when there is no Nakama URL and no matched players, so a direct test deployment can be joined (#81).
+- `edgegap-fusion-simplefps` 0.1.6: `PHOTON_REGION` note updated (#82).
+- `@edgegap/sdk` 1.2.0 (new SRI hash) in the browser templates, beacon-env note matches 1.2.0: `edgegap-threejs` 0.3.11, `edgegap-html5` 0.1.1, `edgegap-fal` 0.2.3, `edgegap-manus` 0.2.6 (#83).
+- `edgegap-playfab` 0.3.6, `edgegap-samples` 0.1.15: the MPS Mirror sample is on `main`, re-verified 2026-11-27 (#84).
+- `edgegap-fusion` 0.2.0: new references for the Fusion 1 Tanknarok sample (#85) and the Fusion 2 Asteroids Simple sample (#86).
+- `edgegap` 0.49.0 (pack version).
+
 ## 0.48.0 (unreleased)
 
 A skill for HTML5 2D games (Phaser, canvas, PixiJS, Kaplay), from [netcode-sample-html5-phaser](https://github.com/edgegap/netcode-sample-html5-phaser). Verified on Edgegap on 2026-11-24 with a direct deployment: the image built with Docker Engine in WSL and pushed to the Edgegap registry, an app version with WS + TLS Upgrade deployed in Toronto in about 10 s, two headless players played a full Splat Arena match over `wss`, and the deployment stopped itself 25 s after the match. Locally, `npm test` played a full match with bots and two browser tabs played together. Through the matchmaker, two headless players were matched onto one deployment (HOST_ASSIGNED in about 23 s) and it stopped itself 24 s after the match; two Chrome tabs pressing Find Match landed on the same server, which stopped after both left.
