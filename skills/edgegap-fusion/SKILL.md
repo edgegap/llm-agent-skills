@@ -76,6 +76,7 @@ If the developer is writing a guide for Photon's docs, the measured facts are in
 ## Reference files
 
 - `references/fusion.md`: how a Fusion dedicated server finds and serves players, bind vs public address (measured), IL2CPP vs Mono, regions, App Version, the CT check, other Fusion games.
+- `references/fusion1-tanknarok.md`: Photon's Fusion 1 Tanknarok sample (Fusion 1.1 App ID, port 5050, batch-mode server detection).
 - `references/br200.md`: BR200's Loader and command-line options (from its source), scenes, the 120-second timer, headless test clients.
 - `references/deploy.md`: toolchain packages, builds, Docker, local test, Edgegap app version and deploy, test commands.
 - `references/troubleshooting.md`: symptom → fix tables.
