@@ -56,7 +56,7 @@ Ask, in one message, only what you couldn't infer: the Fusion App ID (if empty),
 
 1. The developer runs `docker login registry.edgegap.com`; push with `scripts/package.sh registry.edgegap.com/<project>/simplefps <new-tag>`.
 2. `edgegap_create_app` (once) and `edgegap_create_app_version`: port `7777` UDP named `gameport`, `to_check: false`, 1024 CPU units / 2048 MB, max duration 60 for tests. No registry login: the tool sends `registry_profile: "Edgegap"`; check `registry_credentials_set: true` with `edgegap_list_app_versions`.
-3. `edgegap_deploy` with the players' IPs and a test tag → `edgegap_wait_for_deployment` → `edgegap_get_deployment_logs`. Read the Photon region from `[edgegap-simplefps] server started: session=<fqdn> photon_region=<code>`. To force one, set `PHOTON_REGION` on the deployment (the verified runs used the best-ping region; the override isn't tested yet).
+3. `edgegap_deploy` with the players' IPs and a test tag → `edgegap_wait_for_deployment` → `edgegap_get_deployment_logs`. Read the Photon region from `[edgegap-simplefps] server started: session=<fqdn> photon_region=<code>`. To force one, set `PHOTON_REGION` on the deployment.
 
 ## Phase 4: Two clients through the Party menu
 
