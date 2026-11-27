@@ -25,7 +25,7 @@ fal did not generate the optional background image: the renderer draws the floor
 - `online.js`, `net.js`: templates (Find Match through `GroupAgent`, profile `arena`, WebSocket retries).
 - `config.js`: matchmaker URL and Auth Token, empty in the published repo.
 - `main.js`: fal's draw functions now take a view `{players, projectiles, big, sub, banner}`. `soloView()` builds it from the local world; `onlineView()` builds it from the latest snapshot and eases each ship toward its server position (snaps on respawn jumps over 120 units). Inputs go out every frame while the phase is `playing`, throttled by `online.js`. The fire button is sent as held (`fire: mouseDown`) online, so a click between two input messages is not lost.
-- `index.html`: an import map for `@edgegap/sdk` 1.1.0 with its SRI hash, and a menu (name, Find match, Play vs bots, Local server on localhost only, Cancel).
+- `index.html`: an import map for `@edgegap/sdk` 1.2.0 with its SRI hash, and a menu (name, Find match, Play vs bots, Local server on localhost only, Cancel).
 
 **Tests and CI:**
 - `tests/headless-player.mjs`, `tests/local-match.mjs`, `tests/e2e.mjs`: templates, with `playLikeABot()` calling `botInput` on a `{players}` view of the snapshot. Local result on the first run: `local-1 wins; scores: local-1 10, Rusty (bot) 8, local-2 6, Zed (bot) 6`.
