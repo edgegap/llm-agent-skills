@@ -109,10 +109,10 @@ func set_connected_users(user_ids: Array) -> void:
 ## Checks a Nakama session token with Nakama itself. Returns
 ## { user_id, username } or {} when the player doesn't belong on this server.
 func verify_player(token: String) -> Dictionary:
+	if nakama_url == '' and expected_user_ids.is_empty():
+		# No Nakama and no matched players (local run, or a direct test deployment): anyone may join.
+		return { user_id = "local-%d" % randi(), username = "Player %d" % (randi() % 1000) }
 	if nakama_url == '':
-		if instance_id == '':
-			# Local test without Nakama: anyone may join.
-			return { user_id = "local-%d" % randi(), username = "Player %d" % (randi() % 1000) }
 		push_error("No Nakama URL to verify players with")
 		return {}
 	if token == '':
