@@ -112,7 +112,7 @@ Verified on Edgegap 2026-11-20 with the public sample [netcode-sample-manus-orb-
 
 **Client** (the sample's `client/config.js` and `client/client.js`):
 - `config.js` with `matchmakerUrl` and `matchmakerToken` (empty by default), overridable by a git-ignored `config.local.js` or `?mm=&token=`. The token is the matchmaker's client token (made to ship in clients), never the Edgegap API token.
-- An import map for `@edgegap/sdk@1.1.0` (jsDelivr, with its integrity hash, as in `edgegap-threejs`), loaded with a dynamic `import()` only when a matchmaker is configured.
+- An import map for `@edgegap/sdk@1.2.0` (jsDelivr, with its integrity hash, as in `edgegap-threejs`), loaded with a dynamic `import()` only when a matchmaker is configured.
 - FIND MATCH: `matchmaking.GroupAgent` group of one, `profile: 'arena'`, `is_ready: true`; `await nextAssignment()`; keep `group.current.ticket_id`; `dispose()`; connect to `getConnectionUrl(assignment, 'gameport') + '/ws'` (add the server's path) with about 10 one-second retries, since a fresh server can refuse connections or answer 502 for a few seconds; send the ticket in the join message. Cancel calls `stopMatchmaking()`, as does `pagehide`.
 - Close the game socket on `pagehide`. Without it the server only noticed closed tabs at its 30 s ping, and the empty server ran longer (seen on Edgegap: about 2.5 min to stop instead of about 40 s).
 
